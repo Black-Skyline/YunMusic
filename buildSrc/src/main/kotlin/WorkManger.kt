@@ -3,19 +3,22 @@ import org.gradle.kotlin.dsl.dependencies
 
 /**
  * ...
- * @author 985892345 (Guo Xiangrui)
- * @email 2767465918@qq.com
- * @date 2022/6/15 13:37
+ * @author Black-skyline (Hu Shujun)
+ * @email 2031649401@qq.com
+ * @date 2023/7/15
  */
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object WorkManger {
   // https://developer.android.google.cn/kotlin/ktx?hl=zh_cn#workmanager
-  const val `work-runtime-ktx` = "androidx.work:work-runtime-ktx:2.7.1"
+  const val work_runtime_ktx = "androidx.work:work-runtime-ktx:2.7.1"
 }
 
+/**
+ * 导入WorkManger依赖
+ */
 fun Project.dependWorkManger() {
   dependencies {
-    "implementation"(WorkManger.`work-runtime-ktx`)
+    "implementation"(WorkManger.work_runtime_ktx)
   }
 }
 

@@ -1,5 +1,11 @@
 import org.gradle.api.Project
 
+/**
+ * ...
+ * @author Black-skyline (Hu Shujun)
+ * @email 2031649401@qq.com
+ * @date 2023/7/15
+ */
 object BuildConfig {
     const val isRelease = false  // false意味着可以单模块调试,true表示打包成app
     const val testInstrumentationRunner="androidx.test.runner.AndroidJUnitRunner"
@@ -11,18 +17,4 @@ object BuildConfig {
     const val versionCode = 1
     const val versionName = "1.0.0"
 
-//    fun getApplicationId(project: Project): String {
-//        return when (project.name) {
-//            "app" -> {
-//                "com.handsome.test"
-//                if (project.gradle.startParameter.taskNames.any { it.contains("Release") }) {
-//                    "com.handsome.test"
-//                } else {
-//                    // debug 状态下使用 debug 的包名，方便测试
-//                    "com.handsome.test.debug"
-//                }
-//            }
-//            else -> "com.handsome.${project.name}"
-//        }
-//    }
 }
