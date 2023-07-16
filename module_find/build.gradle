@@ -1,0 +1,68 @@
+def isLibrary = BuildConfig.isRelease
+plugins.apply('org.jetbrains.kotlin.android')
+plugins.apply('kotlin-kapt')
+if (isLibrary) {
+    plugins.apply('com.android.library')
+} else {
+    plugins.apply('com.android.application')
+}
+android {
+    namespace 'com.handsome.module.find'
+    compileSdk BuildConfig.compileSdk
+
+    defaultConfig {
+        if (!isLibrary) {
+            applicationId "com.handsome.module.find"
+            versionCode BuildConfig.versionCode
+            versionName BuildConfig.versionName
+        }
+        minSdk BuildConfig.minSdk
+        targetSdk BuildConfig.targetSdk
+
+        testInstrumentationRunner BuildConfig.testInstrumentationRunner
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+        }
+    }
+    compileOptions {
+        //AGP8.0及以上
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+    sourceSets {
+        main {
+            if (isLibrary) {
+                //集成模式
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+                //排除掉debug包的信息
+                java {
+                    exclude 'src/main/debug'
+                }
+
+            } else {
+                //组件化模式
+                manifest.srcFile 'src/main/debug/AndroidManifest.xml'
+                java.srcDirs = ['src/main/debug', 'src/main/java']
+            }
+        }
+    }
+}
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
+}
+
+dependencies {
+    implementation(project(":lib_util"))
+
+    kapt ARouter.arouter_compiler
+}
