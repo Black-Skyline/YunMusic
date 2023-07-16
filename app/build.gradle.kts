@@ -39,6 +39,9 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    viewBinding {
+        enable=true
+    }
 }
 
 dependTestBase()

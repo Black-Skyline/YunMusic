@@ -1,12 +1,14 @@
 package com.handsome.module.find
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.handsome.lib.util.base.BaseActivity
+import com.handsome.module.find.databinding.ActivityFindBinding
 
-class FIndActivity : AppCompatActivity() {
+class FindActivity : BaseActivity() {
+    private val mBinding by lazy { ActivityFindBinding.inflate(layoutInflater) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_find)
+        setContentView(mBinding.root)
 
         val test = BlankFragment()
         supportFragmentManager.beginTransaction().replace(R.id.abc, test).commit()

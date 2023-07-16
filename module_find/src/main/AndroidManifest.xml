@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".FIndActivity"
+            android:name=".FindActivity"
             android:exported="true">
         </activity>
     </application>
