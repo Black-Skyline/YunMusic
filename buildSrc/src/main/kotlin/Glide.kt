@@ -3,9 +3,9 @@ import org.gradle.kotlin.dsl.dependencies
 
 /**
  * ...
- * @author 985892345 (Guo Xiangrui)
- * @email 2767465918@qq.com
- * @date 2022/5/27 15:41
+ * @author Black-skyline (Hu Shujun)
+ * @email 2031649401@qq.com
+ * @date 2023/7/15
  */
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object Glide {
@@ -13,12 +13,17 @@ object Glide {
   const val glide_version = "4.15.1"
   
   const val glide = "com.github.bumptech.glide:glide:$glide_version"
-  const val `glide-ksp` = "com.github.bumptech.glide:ksp:$glide_version"
+
+  const val glide_compiler = "com.github.bumptech.glide:compiler:$glide_version"
 }
 
+/**
+ * 导入必要的Glide依赖，默认让java编译器处理注解
+ */
 fun Project.dependGlide() {
   dependencies {
     "implementation"(Glide.glide)
-    "ksp"(Glide.`glide-ksp`)
+//    "kapt"(Glide.glide_compiler)
+    "annotationProcessor"(Glide.glide_compiler)
   }
 }

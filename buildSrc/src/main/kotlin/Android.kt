@@ -1,7 +1,12 @@
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.dependencies
 
-
+/**
+ * ...
+ * @author Black-skyline (Hu Shujun)
+ * @email 2031649401@qq.com
+ * @date 2023/7/15
+ */
 @Suppress("MemberVisibilityCanBePrivate", "ObjectPropertyName", "SpellCheckingInspection")
 object Android {
     // 基础库 这个版本号跟 targetSdk 相关
@@ -18,32 +23,23 @@ object Android {
 
     // 官方扩展库
     // https://developer.android.google.cn/kotlin/ktx?hl=zh_cn#core
-    const val `core-ktx` = "androidx.core:core-ktx:1.10.0"
+    const val core_ktx = "androidx.core:core-ktx:1.10.0"
 
     // https://developer.android.google.cn/kotlin/ktx/extensions-list#dependency_4
-    const val `collection-ktx` = "androidx.collection:collection-ktx:1.2.0"
+    const val collection_ktx = "androidx.collection:collection-ktx:1.2.0"
 
     // https://developer.android.google.cn/kotlin/ktx/extensions-list#androidxfragmentapp
-    const val `fragment-ktx` = "androidx.fragment:fragment-ktx:1.5.6"
+    const val fragment_ktx = "androidx.fragment:fragment-ktx:1.5.6"
 
     // https://developer.android.google.cn/kotlin/ktx/extensions-list#androidxactivity
-    const val `activity-ktx` = "androidx.activity:activity-ktx:1.6.1"
+    const val activity_ktx = "androidx.activity:activity-ktx:1.6.1"
 }
+
+
 
 /**
- * 所有使用 build_logic 插件的模块都默认依赖了该 Android 最基础依赖
+ * 导入常用的view控件与Ui布局依赖
  */
-fun Project.dependAndroidBase() {
-    dependencies {
-        "implementation"(Android.appcompat)
-    }
-}
-
-/*
-* 所有 module 模块都已经默认依赖
-*
-* 如果你的 api 模块需要使用，建议自己按需依赖，一般情况下 api 模块是不需要这些东西的
-* */
 fun Project.dependAndroidView() {
     dependencies {
         "implementation"(Android.constraintlayout)
@@ -56,17 +52,15 @@ fun Project.dependAndroidView() {
     }
 }
 
-/*
-* 所有 module 模块都已经默认依赖
-*
-* 如果你的 api 模块需要使用，建议自己按需依赖，一般情况下 api 模块是不需要这些东西的
-* */
+/**
+ * 关于kts的官方拓展库
+ */
 fun Project.dependAndroidKtx() {
     dependencies {
-        "implementation"(Android.`core-ktx`)
-        "implementation"(Android.`collection-ktx`)
-        "implementation"(Android.`fragment-ktx`)
-        "implementation"(Android.`activity-ktx`)
+        "implementation"(Android.core_ktx)
+        "implementation"(Android.collection_ktx)
+        "implementation"(Android.fragment_ktx)
+        "implementation"(Android.activity_ktx)
     }
 }
 
@@ -76,10 +70,19 @@ fun Project.dependAndroidKtx() {
 fun Project.dependAndroidCommonBase() {
     dependencies {
         "api"(Android.appcompat)
-        "api"(Android.`core-ktx`)
+        "api"(Android.core_ktx)
         "api"(Android.constraintlayout)
         "api"(Android.material)
         "api"(ARouter.arouter_api)
         "kapt"(ARouter.arouter_compiler)
+    }
+}
+
+/**
+ * Android最基础的appcompat依赖，作为dependAndroidCommonBase()的低位替补
+ */
+fun Project.dependAndroidLowBase() {
+    dependencies {
+        "implementation"(Android.appcompat)
     }
 }
