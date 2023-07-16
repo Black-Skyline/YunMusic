@@ -3,11 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
 }
-//if(BuildConfig.isRelease){
-//    plugins.apply("com.android.library")
-//} else {
-//    plugins.apply("com.android.application")
-//}
 
 android {
     namespace = "com.handsome.yunmusic"
