@@ -96,7 +96,6 @@ class MainActivity : YunMusicActivity(){
             //这一行是menu的点击事件
             android.R.id.home -> {
                 mBinding.mainDrawer.openDrawer(GravityCompat.START)
-                throw Exception()
                 return true}
         }
         return super.onOptionsItemSelected(item)
