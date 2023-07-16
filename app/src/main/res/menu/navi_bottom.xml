@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_navi_bottom_find"
+        android:icon="@drawable/icon_bottom_navi_find"
+        android:title="发现"
+        />
+
+    <item
+        android:id="@+id/menu_navi_bottom_radio"
+        android:icon="@drawable/icon_bottom_navi_radio"
+        android:title="播客"
+        />
+
+    <item
+        android:id="@+id/menu_navi_bottom_music"
+        android:icon="@drawable/icon_bottom_navi_music"
+        android:title="我的"
+        />
+
+</menu>
