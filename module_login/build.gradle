@@ -70,6 +70,7 @@ kapt {
 
 dependencies {
     implementation(project(":lib_util"))
+    implementation(project(":lib_music"))
 
     kapt ARouter.arouter_compiler
 }
