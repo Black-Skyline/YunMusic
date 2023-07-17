@@ -6,7 +6,11 @@
 <!--    android:roundIcon="@mipmap/ic_launcher_round"-->
 <!--    android:supportsRtl="true"-->
 <!--    android:theme="@style/Theme.YunMusic"-->
-    <application>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <application
+        android:name="com.handsome.lib.util.BaseApp"
+        android:networkSecurityConfig="@xml/net_permission"
+        >
         <activity
             android:name="find.ui.DebugActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
@@ -18,7 +22,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FindActivity"
+            android:name=".view.FindActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true">
         </activity>

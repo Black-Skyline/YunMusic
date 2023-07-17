@@ -1,7 +1,8 @@
-package com.handsome.module.find
+package com.handsome.module.find.view
 
 import android.os.Bundle
 import com.handsome.lib.util.base.BaseActivity
+import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityFindBinding
 
 class FindActivity : BaseActivity() {
@@ -10,7 +11,7 @@ class FindActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
 
-        val test = BlankFragment()
+        val test = FindFragment()
         supportFragmentManager.beginTransaction().replace(R.id.abc, test).commit()
     }
 }

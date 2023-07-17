@@ -3,7 +3,7 @@ package find.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.handsome.module.find.FindActivity
+import com.handsome.module.find.view.FindActivity
 
 class DebugActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
