@@ -1,14 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FindFragment">
+    android:orientation="vertical"
+    tools:context=".view.FindFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--        android:id="@+id/home_fragment_swipe_refresh"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
 
-</FrameLayout>
+<!--        <androidx.core.widget.NestedScrollView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent">-->
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/find_vp_banner"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/find_rv_banner_below"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"/>
+
+            <SeekBar
+                android:id="@+id/find_rv_banner_below_sb"
+                android:layout_width="50dp"
+                android:layout_height="3dp"
+                android:focusable="true"
+                android:maxHeight="5dp"
+                android:minHeight="0dp"
+                android:layout_gravity="center"
+                android:progressDrawable="@drawable/bg_fast_scroll_bar_track"
+                android:thumb="@drawable/bg_fast_scroll_bar_thumb" />
+<!--        </androidx.core.widget.NestedScrollView>-->
+
+
+<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+
+</LinearLayout>

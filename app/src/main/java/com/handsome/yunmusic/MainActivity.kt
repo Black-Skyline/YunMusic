@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.core.view.GravityCompat
 import com.handsome.lib.util.adapter.FragmentVpAdapter
-import com.handsome.lib.util.extention.setImageFromId
 import com.handsome.lib.util.extention.toast
 import com.handsome.yunmusic.databinding.ActivityMainBinding
 
@@ -35,7 +34,7 @@ class MainActivity : YunMusicActivity(){
     private fun initVpAdapter() {
         val fragmentVpAdapter = FragmentVpAdapter(this)
         //todo 等待加入的fragment
-//        fragmentVpAdapter
+//        fragmentVpAdapter.add()
         mBinding.mainNaviVp.adapter = fragmentVpAdapter
         mBinding.mainNaviVp.isUserInputEnabled = false;  //禁止vp滑动的方法,会让banner不管用
     }
