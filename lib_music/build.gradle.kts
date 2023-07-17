@@ -40,4 +40,8 @@ android {
 }
 
 dependAndroidCommonBase()
+dependAndroidKtx()
 dependTestBase()
+dependencies {
+
+}
