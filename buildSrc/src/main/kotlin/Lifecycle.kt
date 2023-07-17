@@ -47,3 +47,14 @@ fun Project.dependLifecycleKtx() {
     "kapt"(Lifecycle.lifecycle_compiler)
   }
 }
+/**
+ * 以api关键字导入Lifecycle相关依赖，可传递给父模块，仍需手动添加lifecycle_compiler的注解处理依赖
+ */
+fun Project.dependLifecycleKtxByApi() {
+  dependencies {
+    "api"(Lifecycle.viewmodel_ktx)
+    "api"(Lifecycle.livedata_ktx)
+    "api"(Lifecycle.runtime_ktx)
+    "kapt"(Lifecycle.lifecycle_compiler)
+  }
+}
