@@ -73,4 +73,6 @@ dependencies {
     implementation(Rxjava.rxjava3_kotlin)
     implementation(Lifecycle.viewmodel_ktx)
     implementation(Lifecycle.runtime_ktx)
+    implementation(Paging.paging_runtime)
+    implementation 'androidx.palette:palette:1.0.0'
 }
