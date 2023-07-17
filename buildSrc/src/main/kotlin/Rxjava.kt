@@ -27,3 +27,13 @@ fun Project.dependRxjava() {
     "implementation"(Rxjava.rxjava3_kotlin)
   }
 }
+/**
+ * 以api关键字导入必要的Rxjava3依赖，可传递给父模块，有需要再用
+ */
+fun Project.dependRxjavaByApi() {
+  dependencies {
+    "api"(Rxjava.rxjava3)
+    "api"(Rxjava.rxjava3_android)
+    "api"(Rxjava.rxjava3_kotlin)
+  }
+}
