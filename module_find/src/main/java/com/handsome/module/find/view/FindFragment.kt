@@ -22,6 +22,7 @@ import com.handsome.module.find.R
 import com.handsome.module.find.databinding.FragmentFindBinding
 import com.handsome.module.find.view.adapter.FindBannerBelowRvAdapter
 import com.handsome.module.find.view.adapter.FindBannerVpAdapter
+import com.handsome.module.find.view.adapter.FindRecommendListVpAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -31,6 +32,7 @@ class FindFragment : Fragment() {
     private val mViewModel by lazy { ViewModelProvider(this)[FindFragmentViewModel::class.java] }
     private val findBannerVpAdapter = FindBannerVpAdapter()
     private val findBannerBelowRvAdapter = FindBannerBelowRvAdapter()
+    private val findRecommendListVpAdapter = FindRecommendListVpAdapter()
     private lateinit var autoScrollHandler : Handler
     private lateinit var autoScrollRunnable: Runnable
 
@@ -39,6 +41,36 @@ class FindFragment : Fragment() {
         setHasOptionsMenu(true)  //打开开关，让fragment也可以修改activity中的toolbar，同时会先监听activity中的menu
         initBanner()
         initBannerBelow()  //banner下面的图标,想不到起什么名字，就叫做bannerBelow了，下面同理
+        initRecommendList()
+    }
+
+    private fun initRecommendList() {
+        initRecommendListRvAdapter()
+        initRecommendListCollect()
+        getRecommendListData(6)
+    }
+
+    private fun initRecommendListRvAdapter() {
+        mBinding.findRvRecommend.apply {
+            layoutManager = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL,false)
+            adapter = findRecommendListVpAdapter
+        }
+    }
+
+    private fun getRecommendListData(size : Int) {
+        mViewModel.getRecommendListData(size)
+    }
+
+    private fun initRecommendListCollect() {
+        lifecycleScope.launch(){
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                mViewModel.recommendListStateFlow.collectLatest {
+                    if (it != null){
+                        findRecommendListVpAdapter.submitList(it.result)
+                    }
+                }
+            }
+        }
     }
 
     private fun initBannerBelow() {

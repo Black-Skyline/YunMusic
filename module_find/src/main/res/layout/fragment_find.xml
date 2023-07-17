@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -14,6 +15,7 @@
 <!--        <androidx.core.widget.NestedScrollView-->
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="match_parent">-->
+
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/find_vp_banner"
@@ -33,9 +35,47 @@
                 android:focusable="true"
                 android:maxHeight="5dp"
                 android:minHeight="0dp"
+                android:layout_marginTop="5dp"
                 android:layout_gravity="center"
                 android:progressDrawable="@drawable/bg_fast_scroll_bar_track"
                 android:thumb="@drawable/bg_fast_scroll_bar_thumb" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp">
+
+                <TextView
+                    android:id="@+id/find_tv_recommend_music_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 推荐歌单 >"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="5dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/find_img_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:src="@drawable/icon_more"
+                    app:layout_constraintBottom_toTopOf="@+id/find_rv_recommend"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/find_rv_recommend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/find_tv_recommend_music_list" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 <!--        </androidx.core.widget.NestedScrollView>-->
 
 
