@@ -27,3 +27,13 @@ fun Project.dependGlide() {
     "annotationProcessor"(Glide.glide_compiler)
   }
 }
+/**
+ * 以api关键字导入必要的Glide依赖，可传递给父模块 (仍然需要在父模块中添加注解处理依赖)
+ */
+fun Project.dependGlideByApi() {
+  dependencies {
+    "api"(Glide.glide)
+//    "kapt"(Glide.glide_compiler)
+    "annotationProcessor"(Glide.glide_compiler)
+  }
+}

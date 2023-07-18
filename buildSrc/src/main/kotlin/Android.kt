@@ -23,16 +23,16 @@ object Android {
 
     // 官方扩展库
     // https://developer.android.google.cn/kotlin/ktx?hl=zh_cn#core
-    const val core_ktx = "androidx.core:core-ktx:1.10.0"
+    const val core_ktx = "androidx.core:core-ktx:1.10.1"
 
     // https://developer.android.google.cn/kotlin/ktx/extensions-list#dependency_4
     const val collection_ktx = "androidx.collection:collection-ktx:1.2.0"
 
     // https://developer.android.google.cn/kotlin/ktx/extensions-list#androidxfragmentapp
-    const val fragment_ktx = "androidx.fragment:fragment-ktx:1.5.6"
+    const val fragment_ktx = "androidx.fragment:fragment-ktx:1.5.7"
 
     // https://developer.android.google.cn/kotlin/ktx/extensions-list#androidxactivity
-    const val activity_ktx = "androidx.activity:activity-ktx:1.6.1"
+    const val activity_ktx = "androidx.activity:activity-ktx:1.7.2"
 }
 
 

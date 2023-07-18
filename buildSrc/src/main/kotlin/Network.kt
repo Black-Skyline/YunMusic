@@ -37,6 +37,17 @@ fun Project.dependNetwork() {
 }
 
 /**
+ * 以api关键字导入必要的关于网络请求的依赖，可传递给父模块，有需要再用
+ */
+fun Project.dependNetworkByApi() {
+  dependencies {
+    "api"(Network.retrofit)
+    "api"(Network.okhttp)
+    "api"(Network.gson)
+  }
+}
+
+/**
  * 配合dependNetwork()里的依赖使用，有使用需求才依赖
  */
 fun Project.dependNetworkInternal() {
@@ -44,5 +55,16 @@ fun Project.dependNetworkInternal() {
     "implementation"(Network.converter_gson)
     "implementation"(Network.adapter_rxjava3)
     "implementation"(Network.logging_interceptor)
+  }
+}
+
+/**
+ * 以api关键字导入，配合dependNetwork()里的依赖使用，可传递给父模块，有使用需求才依赖
+ */
+fun Project.dependNetworkInternalByApi() {
+  dependencies {
+    "api"(Network.converter_gson)
+    "api"(Network.adapter_rxjava3)
+    "api"(Network.logging_interceptor)
   }
 }

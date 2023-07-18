@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 允许使用PowerManager唤醒锁来防止处理器休眠或屏幕变暗 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 从Android 10开始,变为危险权限, Android 11或更高,仅允许访问媒体文件, Android 13失效 -->
+    <!-- 但4.4以上可写getexternalfilesdir(String)和Context.getExternalCacheDir() -->
+    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+    <!-- 从Android 10开始,变为危险权限, Android 13失效 -->
+    <!-- 但4.4以上可读getexternalfilesdir(String)和Context.getExternalCacheDir() -->
+<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application>
+        <service
+            android:name=".sevice.MusicService"
+            android:exported="false" />
+
+        <activity
+            android:name=".MusicPlayActivity"
+            android:exported="false" />
+    </application>
 
 </manifest>
