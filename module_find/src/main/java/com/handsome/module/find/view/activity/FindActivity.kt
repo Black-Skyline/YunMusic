@@ -1,9 +1,10 @@
-package com.handsome.module.find.view
+package com.handsome.module.find.view.activity
 
 import android.os.Bundle
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityFindBinding
+import com.handsome.module.find.view.fragment.FindFragment
 
 class FindActivity : BaseActivity() {
     private val mBinding by lazy { ActivityFindBinding.inflate(layoutInflater) }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.FindFragment">
+    tools:context=".view.fragment.FindFragment">
 
 <!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
 <!--        android:id="@+id/home_fragment_swipe_refresh"-->
@@ -20,13 +20,17 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/find_vp_banner"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"/>
+                android:layout_height="150dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="20dp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/find_rv_banner_below"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"/>
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="16dp" />
 
             <SeekBar
                 android:id="@+id/find_rv_banner_below_sb"
@@ -50,9 +54,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" 推荐歌单 >"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
-                    android:layout_marginStart="5dp"
+                    android:layout_marginStart="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,8 +64,9 @@
                     android:id="@+id/find_img_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginEnd="16dp"
                     android:src="@drawable/icon_more"
+                    android:layout_marginBottom="10dp"
                     app:layout_constraintBottom_toTopOf="@+id/find_rv_recommend"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -70,6 +75,9 @@
                     android:id="@+id/find_rv_recommend"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     app:layout_constraintTop_toBottomOf="@+id/find_tv_recommend_music_list" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

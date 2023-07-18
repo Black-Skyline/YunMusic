@@ -10,9 +10,15 @@ import com.handsome.module.find.R
 import com.handsome.module.find.databinding.FindRvRecommendListItemBinding
 import com.handsome.module.find.network.model.RecommendMusicListData
 
-class FindRecommendListVpAdapter : ListAdapter<RecommendMusicListData.Result,FindRecommendListVpAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
+class FindRecommendListVpAdapter(val onClick : (RecommendMusicListData.Result) -> Unit) : ListAdapter<RecommendMusicListData.Result,FindRecommendListVpAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
 
-    class MyHolder(val binding : FindRvRecommendListItemBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class MyHolder(val binding : FindRvRecommendListItemBinding) : RecyclerView.ViewHolder(binding.root){
+        init {
+            binding.findVpRecommendListItemImg.setOnClickListener {
+                onClick(getItem(bindingAdapterPosition))
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         return MyHolder(FindRvRecommendListItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
