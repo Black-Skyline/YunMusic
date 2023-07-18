@@ -8,7 +8,7 @@
     <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
     <!-- 从Android 10开始,变为危险权限, Android 13失效 -->
     <!-- 但4.4以上可读getexternalfilesdir(String)和Context.getExternalCacheDir() -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application>
