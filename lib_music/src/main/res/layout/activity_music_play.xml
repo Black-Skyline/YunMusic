@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/textColorLink"
+    android:background="#1A4742"
     tools:context=".MusicPlayActivity">
 
     <TextView
@@ -48,7 +48,7 @@
         app:layout_constraintGuide_percent="0.25" />
 
     <TextView
-        android:id="@+id/tv_start_time"
+        android:id="@+id/tv_cur_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
@@ -64,9 +64,9 @@
         android:layout_marginEnd="35dp"
         android:text="00:00"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_start_time"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_cur_time"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tv_start_time"
+        app:layout_constraintTop_toTopOf="@+id/tv_cur_time"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -77,15 +77,14 @@
         app:layout_constraintGuide_percent="0.88" />
 
     <SeekBar
-        android:id="@+id/playback_progress"
+        android:id="@+id/play_progress"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:outlineAmbientShadowColor="@color/cardview_dark_background"
         android:outlineSpotShadowColor="@color/cardview_light_background"
-        android:progress="50"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintEnd_toStartOf="@+id/tv_all_time"
-        app:layout_constraintStart_toEndOf="@+id/tv_start_time" />
+        app:layout_constraintStart_toEndOf="@+id/tv_cur_time" />
 
     <ImageView
         android:id="@+id/bt_play_mode"
@@ -97,8 +96,8 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_start_time"
-        app:srcCompat="@drawable/ic_media_play_in_turn_24" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_cur_time"
+        app:srcCompat="@drawable/ic_media_playmode_single_cycle_24" />
 
     <ImageView
         android:id="@+id/bt_previous_song"
