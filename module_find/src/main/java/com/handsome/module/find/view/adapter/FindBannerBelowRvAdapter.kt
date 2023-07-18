@@ -7,15 +7,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.lib.util.util.MyDIffUtil
 import com.handsome.module.find.R
-import com.handsome.module.find.databinding.FindRvBannerBelowBinding
+import com.handsome.module.find.databinding.FindRvBannerBelowItemBinding
 import com.handsome.module.find.network.model.BannerBelowData
 
-class FindBannerBelowRvAdapter : ListAdapter<BannerBelowData.Data,FindBannerBelowRvAdapter.MyHolder>(MyDIffUtil.getNewDiff()){
+class FindBannerBelowRvAdapter(val onClick : (BannerBelowData.Data) -> Unit) : ListAdapter<BannerBelowData.Data,FindBannerBelowRvAdapter.MyHolder>(MyDIffUtil.getNewDiff()){
 
-    class MyHolder(val binding : FindRvBannerBelowBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class MyHolder(val binding : FindRvBannerBelowItemBinding) : RecyclerView.ViewHolder(binding.root){
+        init {
+            binding.findRvBannerBelowItemImg.setOnClickListener {
+                onClick(getItem(bindingAdapterPosition))
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-        return MyHolder(FindRvBannerBelowBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+        return MyHolder(FindRvBannerBelowItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {

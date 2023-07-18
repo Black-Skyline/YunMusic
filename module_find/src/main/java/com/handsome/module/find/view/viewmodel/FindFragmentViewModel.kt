@@ -1,4 +1,4 @@
-package com.handsome.module.find.view
+package com.handsome.module.find.view.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

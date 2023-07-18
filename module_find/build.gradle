@@ -67,6 +67,9 @@ kapt {
 dependencies {
     implementation(project(":lib_util"))
     implementation(Android.swiperefreshlayout)
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     kapt ARouter.arouter_compiler
     implementation(Network.retrofit)
     implementation(Rxjava.rxjava3_android)
@@ -74,5 +77,5 @@ dependencies {
     implementation(Lifecycle.viewmodel_ktx)
     implementation(Lifecycle.runtime_ktx)
     implementation(Paging.paging_runtime)
-    implementation 'androidx.palette:palette:1.0.0'
+    implementation 'androidx.palette:palette:1.0.0'  //调色的库
 }

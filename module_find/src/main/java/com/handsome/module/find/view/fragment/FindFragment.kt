@@ -1,4 +1,4 @@
-package com.handsome.module.find.view
+package com.handsome.module.find.view.fragment
 
 import android.os.Bundle
 import android.os.Handler
@@ -18,8 +18,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.handsome.lib.util.extention.toast
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.FragmentFindBinding
+import com.handsome.module.find.network.model.BannerBelowData
+import com.handsome.module.find.network.model.BannerData
+import com.handsome.module.find.network.model.RecommendMusicListData
+import com.handsome.module.find.view.viewmodel.FindFragmentViewModel
+import com.handsome.module.find.view.activity.WebViewActivity
 import com.handsome.module.find.view.adapter.FindBannerBelowRvAdapter
 import com.handsome.module.find.view.adapter.FindBannerVpAdapter
 import com.handsome.module.find.view.adapter.FindRecommendListVpAdapter
@@ -28,17 +34,17 @@ import kotlinx.coroutines.launch
 
 
 class FindFragment : Fragment() {
-   private val mBinding by lazy { FragmentFindBinding.inflate(layoutInflater) }
+    private val mBinding by lazy { FragmentFindBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[FindFragmentViewModel::class.java] }
-    private val findBannerVpAdapter = FindBannerVpAdapter()
-    private val findBannerBelowRvAdapter = FindBannerBelowRvAdapter()
-    private val findRecommendListVpAdapter = FindRecommendListVpAdapter()
-    private lateinit var autoScrollHandler : Handler
+    private val findBannerVpAdapter = FindBannerVpAdapter(::onBannerClick)
+    private val findBannerBelowRvAdapter = FindBannerBelowRvAdapter(::onBannerBelowClick)
+    private val findRecommendListVpAdapter = FindRecommendListVpAdapter(::onRecommendListClick)
+    private lateinit var autoScrollHandler: Handler
     private lateinit var autoScrollRunnable: Runnable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)  //打开开关，让fragment也可以修改activity中的toolbar，同时会先监听activity中的menu
+        setHasOptionsMenu(true)  //打开开关，让fragment也可以修改activity中的toolbar，同时会先监听activity中的menu，增加一个搜索图标
         initBanner()
         initBannerBelow()  //banner下面的图标,想不到起什么名字，就叫做bannerBelow了，下面同理
         initRecommendList()
@@ -52,24 +58,31 @@ class FindFragment : Fragment() {
 
     private fun initRecommendListRvAdapter() {
         mBinding.findRvRecommend.apply {
-            layoutManager = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL,false)
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
             adapter = findRecommendListVpAdapter
         }
     }
 
-    private fun getRecommendListData(size : Int) {
+    private fun getRecommendListData(size: Int) {
         mViewModel.getRecommendListData(size)
     }
 
     private fun initRecommendListCollect() {
-        lifecycleScope.launch(){
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+        lifecycleScope.launch() {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.recommendListStateFlow.collectLatest {
-                    if (it != null){
+                    if (it != null) {
                         findRecommendListVpAdapter.submitList(it.result)
                     }
                 }
             }
+        }
+    }
+
+    private fun onRecommendListClick(result: RecommendMusicListData.Result) {
+        result.name.toast()
+        when (result.name) {
+            //todo 点击事件
         }
     }
 
@@ -89,34 +102,30 @@ class FindFragment : Fragment() {
      * 这个方法用来rv和seekbar协作滑动，滑动事件监听
      */
     private fun initScroll() {
-        mBinding.findRvBannerBelow.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        mBinding.findRvBannerBelow.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                Log.d("lx", "onScrolled:dx = $dx ; dy = $dy")
                 val haveScrolled = recyclerView.computeHorizontalScrollOffset().toDouble()
                 val rvMaxWidth = recyclerView.computeHorizontalScrollRange().toDouble()
-                val percent : Double = haveScrolled / rvMaxWidth
-                Log.d("TAG", " percent:${percent}")
+                val percent: Double = haveScrolled / rvMaxWidth
                 val processWidth = mBinding.findRvBannerBelowSb.measuredWidth
-                Log.d("TAG", " processWidth:${processWidth}")
                 val scrollDistance = processWidth * percent
-                Log.d("TAG", " scrollDistance:${scrollDistance}")
                 mBinding.findRvBannerBelowSb.progress = scrollDistance.toInt()
             }
         })
 
-        mBinding.findRvBannerBelowSb.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+        mBinding.findRvBannerBelowSb.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser){
+                if (fromUser) {
                     val haveScrolled = progress.toDouble()
                     val sbMaxWidth = mBinding.findRvBannerBelowSb.measuredWidth.toDouble()
-                    val percent : Double = haveScrolled / sbMaxWidth
-                    val rvScrollWidth = mBinding.findRvBannerBelow.computeHorizontalScrollRange().toDouble()
+                    val percent: Double = haveScrolled / sbMaxWidth
+                    val rvScrollWidth =
+                        mBinding.findRvBannerBelow.computeHorizontalScrollRange().toDouble()
                     val scrollDistance = rvScrollWidth * percent
-                    Log.d("TAG", "scrollDistance:${scrollDistance} ")
                     mBinding.findRvBannerBelow.smoothScrollToPosition(scrollDistance.toInt())
                 }
-                Log.d("lx", "onProgressChanged:${progress} ")
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
@@ -126,14 +135,14 @@ class FindFragment : Fragment() {
     }
 
     private fun getBannerBelowData() {
-       mViewModel.getBannerBelowData()
+        mViewModel.getBannerBelowData()
     }
 
     private fun initBannerBelowCollect() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.bannerBelowStateFlow.collectLatest {
-                    if (it != null){
+                    if (it != null) {
                         findBannerBelowRvAdapter.submitList(it.data)
                     }
                 }
@@ -143,8 +152,19 @@ class FindFragment : Fragment() {
 
     private fun initBannerBelowAdapter() {
         mBinding.findRvBannerBelow.apply {
-            layoutManager = LinearLayoutManager(requireContext(),RecyclerView.HORIZONTAL,false)
+            layoutManager = LinearLayoutManager(requireContext(), RecyclerView.HORIZONTAL, false)
             adapter = findBannerBelowRvAdapter
+        }
+    }
+
+    private fun onBannerBelowClick(bannerBelowData: BannerBelowData.Data) {
+        bannerBelowData.name.toast()
+        when (bannerBelowData.name) {
+            "每日推荐" -> {}
+            "私人FM" -> {}
+            "歌单" -> {}
+            "排行榜" -> {}
+            else -> {}
         }
     }
 
@@ -161,14 +181,14 @@ class FindFragment : Fragment() {
         autoScrollHandler = Handler(Looper.getMainLooper())  //主线程上的handler
         autoScrollRunnable = Runnable {
             val currentItem = mBinding.findVpBanner.currentItem
-            val nextItem = currentItem+1
-            mBinding.findVpBanner.setCurrentItem(nextItem,true)
-            autoScrollHandler.postDelayed(autoScrollRunnable,5000)
+            val nextItem = currentItem + 1
+            mBinding.findVpBanner.setCurrentItem(nextItem, true)
+            autoScrollHandler.postDelayed(autoScrollRunnable, 5000)
         }
-        autoScrollHandler.postDelayed(autoScrollRunnable,5000)
+        autoScrollHandler.postDelayed(autoScrollRunnable, 5000)
     }
 
-    private fun stopAutoScroll(){
+    private fun stopAutoScroll() {
         autoScrollHandler.removeCallbacks(autoScrollRunnable)
     }
 
@@ -186,19 +206,43 @@ class FindFragment : Fragment() {
     }
 
     private fun initBannerCollect() {
-        lifecycleScope.launch{
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.bannerStateFlow.collectLatest {
-                    if (it != null){
+                    if (it != null) {
                         findBannerVpAdapter.submitList(it.banners)
                         mBinding.findVpBanner.apply {
-                            setCurrentItem(Int.MAX_VALUE/2,false)
+                            setCurrentItem(Int.MAX_VALUE / 2, false)
                             offscreenPageLimit = 3
                         }
                         startAutoScroll()  //banner自动滑动
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 用于传入banner的点击事件
+     */
+    private fun onBannerClick(bannerData: BannerData.Banner) {
+        if (bannerData.targetId == 0) {
+            //那就不是歌曲，是链接。
+            val url =  bannerData.url
+            val title = bannerData.typeTitle
+            WebViewActivity.startAction(requireContext(),url,title)
+            return
+        }
+        //可能是歌曲，也可能是专辑
+        when(bannerData.typeTitle){
+            //todo 等待播放做好
+            "新歌首发" -> {
+                "新歌首发".toast()
+            }
+            "新碟首发" -> {
+
+            }
+            else -> {bannerData.typeTitle.toast()}
         }
     }
 
@@ -222,11 +266,12 @@ class FindFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //要想轮到这里，必须在activity中设置点击事件调用父类的
         return when (item.itemId) {
-            R.id.item_tb_search-> {
+            R.id.item_tb_search -> {
                 //todo 等待点击搜索之后就会跳转
                 Log.d("lx", "menu点击事件出来了: ")
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
