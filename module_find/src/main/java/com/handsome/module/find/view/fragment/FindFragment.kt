@@ -24,6 +24,7 @@ import com.handsome.module.find.databinding.FragmentFindBinding
 import com.handsome.module.find.network.model.BannerBelowData
 import com.handsome.module.find.network.model.BannerData
 import com.handsome.module.find.network.model.RecommendMusicListData
+import com.handsome.module.find.view.activity.SpecialEditionActivity
 import com.handsome.module.find.view.viewmodel.FindFragmentViewModel
 import com.handsome.module.find.view.activity.WebViewActivity
 import com.handsome.module.find.view.adapter.FindBannerBelowRvAdapter
@@ -240,7 +241,7 @@ class FindFragment : Fragment() {
                 "新歌首发".toast()
             }
             "新碟首发" -> {
-
+                SpecialEditionActivity.startAction(requireContext(),bannerData.targetId)
             }
             else -> {bannerData.typeTitle.toast()}
         }
