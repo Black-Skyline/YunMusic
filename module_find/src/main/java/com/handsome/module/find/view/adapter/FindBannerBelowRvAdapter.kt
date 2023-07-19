@@ -27,7 +27,7 @@ class FindBannerBelowRvAdapter(val onClick : (BannerBelowData.Data) -> Unit) : L
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         holder.binding.apply {
             val item = getItem(position)
-            findRvBannerBelowItemImg.setImageFromUrl(item.iconUrl, placeholder = R.drawable.icon_search)
+            findRvBannerBelowItemImg.setImageFromUrl(item.iconUrl, placeholder = R.drawable.icon_qq)
             findRvBannerBelowItemTv.text = item.name
         }
     }

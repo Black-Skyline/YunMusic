@@ -19,11 +19,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.extention.toast
+import com.handsome.lib.util.util.gsonSaveToSp
+import com.handsome.lib.util.util.objectFromSp
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.FragmentFindBinding
+import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.BannerBelowData
 import com.handsome.module.find.network.model.BannerData
 import com.handsome.module.find.network.model.RecommendMusicListData
+import com.handsome.module.find.view.activity.RecommendDetailActivity
 import com.handsome.module.find.view.activity.SpecialEditionActivity
 import com.handsome.module.find.view.viewmodel.FindFragmentViewModel
 import com.handsome.module.find.view.activity.WebViewActivity
@@ -40,8 +44,8 @@ class FindFragment : Fragment() {
     private val findBannerVpAdapter = FindBannerVpAdapter(::onBannerClick)
     private val findBannerBelowRvAdapter = FindBannerBelowRvAdapter(::onBannerBelowClick)
     private val findRecommendListVpAdapter = FindRecommendListVpAdapter(::onRecommendListClick)
-    private lateinit var autoScrollHandler: Handler
-    private lateinit var autoScrollRunnable: Runnable
+    private var autoScrollHandler: Handler? = null
+    private var autoScrollRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,11 +73,23 @@ class FindFragment : Fragment() {
     }
 
     private fun initRecommendListCollect() {
+        fun doAfterGet(value : RecommendMusicListData){
+            findRecommendListVpAdapter.submitList(value.result)
+        }
         lifecycleScope.launch() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.recommendListStateFlow.collectLatest {
                     if (it != null) {
-                        findRecommendListVpAdapter.submitList(it.result)
+                        if (it.code == 200){
+                            doAfterGet(it)
+                            gsonSaveToSp(it,"recommend_music_list")
+                        }else{
+                            val value = objectFromSp<RecommendMusicListData>("recommend_music_list")
+                            if (value != null) doAfterGet(value)
+                        }
+                    }else{
+                        val value = objectFromSp<RecommendMusicListData>("recommend_music_list")
+                        if (value != null) doAfterGet(value)
                     }
                 }
             }
@@ -140,11 +156,23 @@ class FindFragment : Fragment() {
     }
 
     private fun initBannerBelowCollect() {
+        fun doAfterGet(value : BannerBelowData){
+            findBannerBelowRvAdapter.submitList(value.data)
+        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.bannerBelowStateFlow.collectLatest {
                     if (it != null) {
-                        findBannerBelowRvAdapter.submitList(it.data)
+                        if (it.code == 200){
+                            doAfterGet(it)
+                            gsonSaveToSp(it,"banner_below")
+                        }else{
+                            val value = objectFromSp<BannerBelowData>("banner_below")
+                            if (value != null) doAfterGet(value)
+                        }
+                    }else{
+                        val value = objectFromSp<BannerBelowData>("banner_below")
+                        if (value != null) doAfterGet(value)
                     }
                 }
             }
@@ -161,7 +189,9 @@ class FindFragment : Fragment() {
     private fun onBannerBelowClick(bannerBelowData: BannerBelowData.Data) {
         bannerBelowData.name.toast()
         when (bannerBelowData.name) {
-            "每日推荐" -> {}
+            "每日推荐" -> {
+                RecommendDetailActivity.startAction(requireContext())
+            }
             "私人FM" -> {}
             "歌单" -> {}
             "排行榜" -> {}
@@ -184,13 +214,13 @@ class FindFragment : Fragment() {
             val currentItem = mBinding.findVpBanner.currentItem
             val nextItem = currentItem + 1
             mBinding.findVpBanner.setCurrentItem(nextItem, true)
-            autoScrollHandler.postDelayed(autoScrollRunnable, 5000)
+            autoScrollHandler?.postDelayed(autoScrollRunnable!!, 5000)
         }
-        autoScrollHandler.postDelayed(autoScrollRunnable, 5000)
+        autoScrollHandler?.postDelayed(autoScrollRunnable!!, 5000)
     }
 
     private fun stopAutoScroll() {
-        autoScrollHandler.removeCallbacks(autoScrollRunnable)
+        autoScrollHandler?.removeCallbacks(autoScrollRunnable!!)
     }
 
     override fun onStop() {
@@ -207,16 +237,29 @@ class FindFragment : Fragment() {
     }
 
     private fun initBannerCollect() {
-        lifecycleScope.launch {
+        fun doAfterGet(value : BannerData){
+            stopAutoScroll()
+            findBannerVpAdapter.submitList(value.banners)
+            mBinding.findVpBanner.apply {
+                setCurrentItem(Int.MAX_VALUE / 2, false)
+                offscreenPageLimit = 3
+            }
+            startAutoScroll()  //banner自动滑动
+        }
+        lifecycleScope.launch(myCoroutineExceptionHandler) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.bannerStateFlow.collectLatest {
                     if (it != null) {
-                        findBannerVpAdapter.submitList(it.banners)
-                        mBinding.findVpBanner.apply {
-                            setCurrentItem(Int.MAX_VALUE / 2, false)
-                            offscreenPageLimit = 3
+                        if (it.code == 200){
+                            doAfterGet(it)
+                            gsonSaveToSp(it,"banner")
+                        }else{
+                            val value = objectFromSp<BannerData>("banner")
+                            if (value != null) doAfterGet(value)
                         }
-                        startAutoScroll()  //banner自动滑动
+                    }else{
+                        val value = objectFromSp<BannerData>("banner")
+                        if (value != null) doAfterGet(value)
                     }
                 }
             }

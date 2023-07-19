@@ -15,7 +15,6 @@ object CookieJarImpl : CookieJar {
 
     //请求之后调用，用于保存返回的新的cookie
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
-        saveCookies(cookies)
     }
 
     private fun parseCookie(cookieString: String): List<Cookie> {

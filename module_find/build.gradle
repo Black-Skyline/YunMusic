@@ -78,4 +78,5 @@ dependencies {
     implementation(Lifecycle.runtime_ktx)
     implementation(Paging.paging_runtime)
     implementation 'androidx.palette:palette:1.0.0'  //调色的库
+    implementation(Network.gson)
 }

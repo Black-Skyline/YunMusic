@@ -30,7 +30,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"/>
 
             <SeekBar
                 android:id="@+id/find_rv_banner_below_sb"
@@ -54,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" 推荐歌单 >"
-                    android:textSize="20sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
                     android:layout_marginStart="16dp"
                     app:layout_constraintStart_toStartOf="parent"

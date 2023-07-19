@@ -1,7 +1,6 @@
 package com.handsome.lib.util.network
 
 import android.util.Log
-import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -9,8 +8,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.net.CookieManager
-import java.net.CookiePolicy
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -33,15 +30,16 @@ object ApiGenerator {
         isNeedCookie: Boolean,
         config: (OkHttpClient.Builder.() -> Unit)? = null
     ): Retrofit {
-        val cookieJar: CookieJar = CookieJarImpl
+//        val cookieJar: CookieJar = CookieJarImpl
         Log.d("TAG", "getNewRetrofit: = ${getBaseUrl()}")
         return Retrofit
             .Builder()
             .baseUrl(getBaseUrl())
             .client(OkHttpClient().newBuilder().run {
-                cookieJar(cookieJar)
+//                cookieJar(cookieJar)
                 config?.invoke(this)
                 defaultOkhttpConfig(isNeedCookie)
+
             })
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
@@ -50,8 +48,8 @@ object ApiGenerator {
 
     //4defaultOkhttpConfig 函数：使用默认设置配置 OkHttpClient.Builder
     private fun OkHttpClient.Builder.defaultOkhttpConfig(isNeedCookie: Boolean): OkHttpClient {
-        connectTimeout(8000, TimeUnit.SECONDS)
-        readTimeout(8000, TimeUnit.SECONDS)
+        connectTimeout(5000, TimeUnit.SECONDS)
+        readTimeout(5000, TimeUnit.SECONDS)
         addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
         return build()
     }

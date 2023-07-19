@@ -1,5 +1,7 @@
 package com.handsome.module.find.view.activity
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.Menu
@@ -12,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.toast
+import com.handsome.lib.util.util.gsonSaveToSp
+import com.handsome.lib.util.util.objectFromSp
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityRecommendDetailBinding
 import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
@@ -49,19 +53,31 @@ class RecommendDetailActivity : BaseActivity() {
     }
 
     private fun initMusicCollect() {
-        lifecycleScope.launch(myCoroutineExceptionHandler){
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+        fun doAfterGet(value : RecommendDetailData){
+            mRecommendDetailRvAdapter.submitList(value.data.dailySongs)
+            mBinding.apply {
+                val time = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    LocalDate.now().toString()
+                } else {
+                    "21/5"
+                }
+                recommendDetailTvTime.text = time
+            }
+        }
+        lifecycleScope.launch(myCoroutineExceptionHandler) {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.recommendDetailStateFlow.collectLatest {
-                    if (it != null){
-                        mRecommendDetailRvAdapter.submitList(it.data.dailySongs)
-                        mBinding.apply {
-                            val time = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                LocalDate.now().toString()
-                            } else {
-                                "21/5"
-                            }
-                            recommendDetailTvTime.text = time
+                    if (it != null) {
+                        if (it.code == 200){
+                            doAfterGet(it)
+                            gsonSaveToSp(it,"recommend_detail")
+                        }else{
+                            val value = objectFromSp<RecommendDetailData>("recommend_detail")
+                            if (value!=null) doAfterGet(value)
                         }
+                    }else{
+                        val value = objectFromSp<RecommendDetailData>("recommend_detail")
+                        if (value!=null) doAfterGet(value)
                     }
                 }
             }
@@ -70,21 +86,24 @@ class RecommendDetailActivity : BaseActivity() {
 
     private fun initMusicAdapter() {
         mBinding.recommendDetailRvMusic.apply {
-            layoutManager = LinearLayoutManager(this@RecommendDetailActivity,RecyclerView.VERTICAL,false)
+            layoutManager =
+                LinearLayoutManager(this@RecommendDetailActivity, RecyclerView.VERTICAL, false)
             adapter = mRecommendDetailRvAdapter
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.item_more,menu)
+        menuInflater.inflate(R.menu.item_more, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> { finish()
+            android.R.id.home -> {
+                finish()
                 return true
             }
+
             R.id.menu_item_music_more -> {
                 "之后的道路，以后再来探索吧！".toast()
                 //todo 等待点击事件
@@ -96,5 +115,11 @@ class RecommendDetailActivity : BaseActivity() {
     private fun initBar() {
         setSupportActionBar(mBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    companion object {
+        fun startAction(context: Context) {
+            context.startActivity(Intent(context, RecommendDetailActivity::class.java))
+        }
     }
 }
