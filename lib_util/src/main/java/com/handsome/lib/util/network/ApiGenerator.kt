@@ -1,6 +1,7 @@
 package com.handsome.lib.util.network
 
 import android.util.Log
+import okhttp3.CookieJar
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -8,6 +9,8 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.CookieManager
+import java.net.CookiePolicy
 import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
@@ -30,11 +33,13 @@ object ApiGenerator {
         isNeedCookie: Boolean,
         config: (OkHttpClient.Builder.() -> Unit)? = null
     ): Retrofit {
+        val cookieJar: CookieJar = CookieJarImpl
         Log.d("TAG", "getNewRetrofit: = ${getBaseUrl()}")
         return Retrofit
             .Builder()
             .baseUrl(getBaseUrl())
             .client(OkHttpClient().newBuilder().run {
+                cookieJar(cookieJar)
                 config?.invoke(this)
                 defaultOkhttpConfig(isNeedCookie)
             })
