@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.util.BaseApp
+import com.handsome.module.login.page.view.LoginActivity
 
 
 class DebugActivity: AppCompatActivity() {
@@ -13,7 +14,7 @@ class DebugActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val baseContext = BaseApp.mContext
         Log.d("DebugActivity:","${baseContext.toString()}")
-        startActivity(Intent(this, MusicPlayActivity::class.java))
+        startActivity(Intent(this, LoginActivity::class.java))
     }
 
 }
