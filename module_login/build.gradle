@@ -60,6 +60,9 @@ android {
             }
         }
     }
+    viewBinding {
+        enabled = true
+    }
 }
 kapt {
     arguments {
@@ -73,4 +76,9 @@ dependencies {
     implementation(project(":lib_music"))
 
     kapt ARouter.arouter_compiler
+    implementation(Network.retrofit)
+    implementation(Rxjava.rxjava3_android)
+    implementation(Rxjava.rxjava3_kotlin)
+    implementation(Lifecycle.viewmodel_ktx)
+    implementation(Lifecycle.runtime_ktx)
 }

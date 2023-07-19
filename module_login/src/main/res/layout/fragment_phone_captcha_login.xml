@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/advertisement_position"
+        android:layout_width="317dp"
+        android:layout_height="277dp"
+        android:layout_marginTop="80dp"
+        android:contentDescription="广告位招租"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/image_advertisement" />
+
+    <TextView
+        android:id="@+id/anonymous_enter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="28dp"
+        android:text="立即体验"
+        android:textColor="#D3A88F"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_til_captcha"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="80dp"
+        app:boxBackgroundColor="#8BE6DADA"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxStrokeWidth="0dp"
+
+        app:boxStrokeWidthFocused="0dp"
+        app:layout_constraintEnd_toStartOf="@+id/bt_get_captcha"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_til_phone">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_et_captcha"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="输入验证码"
+            android:inputType="number"
+            android:maxLength="4"
+            android:paddingVertical="15dp"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textSize="15sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_btn_by_captcha"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="60dp"
+        android:background="@drawable/shape_round_corner_red"
+        android:text="登录"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:cornerRadius="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/login_btn_by_password"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_til_captcha"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/login_btn_by_password"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/shape_round_corner_red"
+        android:text="密码登录"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:cornerRadius="25dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/login_btn_by_captcha"
+        app:layout_constraintTop_toBottomOf="@+id/login_til_captcha"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <CheckBox
+        android:id="@+id/consent_clause"
+        android:layout_width="309dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="32dp"
+        android:minWidth="10dp"
+        android:minHeight="10dp"
+        android:scaleX="0.8"
+        android:scaleY="0.8"
+        android:text="我已阅读并同意《服务条款》、《隐私政策》"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_btn_by_captcha" />
+
+    <Button
+        android:id="@+id/login_btn_wechat"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginBottom="25dp"
+        android:background="@drawable/login_ic_wechat"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/login_btn_qq"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/consent_clause"
+        app:layout_constraintVertical_bias="0.663" />
+
+    <Button
+        android:id="@+id/login_btn_qq"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/login_ic_qq"
+        app:layout_constraintBottom_toBottomOf="@+id/login_btn_wechat"
+        app:layout_constraintEnd_toStartOf="@+id/login_btn_sina"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/login_btn_wechat"
+        app:layout_constraintTop_toTopOf="@+id/login_btn_wechat" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/login_btn_email"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/login_ic_email"
+        app:layout_constraintBottom_toBottomOf="@+id/login_btn_sina"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/login_btn_sina"
+        app:layout_constraintTop_toTopOf="@+id/login_btn_sina"
+        app:shapeAppearance="@style/CirclePictureStyle" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/login_btn_sina"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/login_ic_xina"
+
+        app:layout_constraintBottom_toBottomOf="@+id/login_btn_qq"
+        app:layout_constraintEnd_toStartOf="@+id/login_btn_email"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/login_btn_qq"
+        app:layout_constraintTop_toTopOf="@+id/login_btn_qq"
+        app:shapeAppearance="@style/CirclePictureStyle" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/login_til_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="40dp"
+        app:boxBackgroundColor="#8BE6DADA"
+        app:boxCornerRadiusBottomEnd="20dp"
+        app:boxCornerRadiusBottomStart="20dp"
+        app:boxCornerRadiusTopEnd="20dp"
+        app:boxCornerRadiusTopStart="20dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/advertisement_position">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/login_et_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="输入手机号"
+            android:inputType="number"
+            android:maxLength="11"
+            android:paddingVertical="15dp"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:textSize="18sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/bt_get_captcha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="40dp"
+        android:text="获取验证码"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_til_phone"
+        app:layout_constraintVertical_bias="0.393" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
