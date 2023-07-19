@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
+import com.handsome.lib.util.extention.toast
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivitySpecialEditionBinding
 import com.handsome.module.find.view.adapter.AlbumSongsAdapter
@@ -31,12 +32,12 @@ class SpecialEditionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-        val id = intent.getIntExtra("id",32311)  //网上随便找的id
+        val id = intent.getLongExtra("id",32311)  //网上随便找的专辑id
         initBar()
         initRv(id)
     }
 
-    private fun initRv(id : Int) {
+    private fun initRv(id : Long) {
         initMusicAdapter()
         initMusicCollect()
         getMusicData(id)
@@ -49,7 +50,7 @@ class SpecialEditionActivity : BaseActivity() {
         }
     }
 
-    private fun getMusicData(id: Int) {
+    private fun getMusicData(id: Long) {
         mViewModel.getAlbumData(id)
     }
 
@@ -92,12 +93,16 @@ class SpecialEditionActivity : BaseActivity() {
             android.R.id.home -> { finish()
                 return true
             }
+            R.id.menu_item_music_more -> {
+                "之后的道路，以后再来探索吧！".toast()
+                //todo 等待点击事件
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     companion object{
-        fun startAction(context : Context, id : Int){
+        fun startAction(context : Context, id : Long){
             val intent = Intent(context,SpecialEditionActivity::class.java)
             intent.putExtra("id",id)
             context.startActivity(intent)

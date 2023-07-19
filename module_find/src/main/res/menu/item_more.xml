@@ -2,8 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:title=""
-        android:icon="@drawable/icon_more"
+    <item
+        android:id="@+id/menu_item_music_more"
+        android:title=""
+        android:icon="@drawable/icon_more_black"
         app:showAsAction="ifRoom"/>
 
 </menu>

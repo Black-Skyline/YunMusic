@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface FindAlbumApiService {
 
     @GET("album")
-    suspend fun getAlbumData(@Query("id") id : Int) : AlbumData
+    suspend fun getAlbumData(@Query("id") id : Long) : AlbumData
 
     companion object{
         val INSTANCE by lazy {

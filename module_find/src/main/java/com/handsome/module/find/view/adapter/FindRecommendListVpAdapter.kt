@@ -27,7 +27,7 @@ class FindRecommendListVpAdapter(val onClick : (RecommendMusicListData.Result) -
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         val item = getItem(position)
         holder.binding.apply {
-            findVpRecommendListItemImg.setImageFromUrl(item.picUrl, placeholder = R.drawable.icon_big_picture)
+            findVpRecommendListItemImg.setImageFromUrl(item.picUrl, placeholder = R.drawable.icon_big_big_picture)
             val playNumber = "${item.playCount / 10000}万"
             findVpRecommendListItemNumber.text = playNumber
             findVpRecommendListItemTvDescribe.text = item.name

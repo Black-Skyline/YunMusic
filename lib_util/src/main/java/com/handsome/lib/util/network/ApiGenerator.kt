@@ -30,13 +30,16 @@ object ApiGenerator {
         isNeedCookie: Boolean,
         config: (OkHttpClient.Builder.() -> Unit)? = null
     ): Retrofit {
+//        val cookieJar: CookieJar = CookieJarImpl
         Log.d("TAG", "getNewRetrofit: = ${getBaseUrl()}")
         return Retrofit
             .Builder()
             .baseUrl(getBaseUrl())
             .client(OkHttpClient().newBuilder().run {
+//                cookieJar(cookieJar)
                 config?.invoke(this)
                 defaultOkhttpConfig(isNeedCookie)
+
             })
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava3CallAdapterFactory.createSynchronous())
@@ -45,8 +48,8 @@ object ApiGenerator {
 
     //4defaultOkhttpConfig 函数：使用默认设置配置 OkHttpClient.Builder
     private fun OkHttpClient.Builder.defaultOkhttpConfig(isNeedCookie: Boolean): OkHttpClient {
-        connectTimeout(10, TimeUnit.SECONDS)
-        readTimeout(10, TimeUnit.SECONDS)
+        connectTimeout(5000, TimeUnit.SECONDS)
+        readTimeout(5000, TimeUnit.SECONDS)
         addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
         return build()
     }
