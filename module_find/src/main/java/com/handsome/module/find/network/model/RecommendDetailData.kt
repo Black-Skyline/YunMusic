@@ -1,48 +1,16 @@
 package com.handsome.module.find.network.model
 
-data class BannerData(
-    val banners: List<Banner>,
-    val code: Int
+data class RecommendDetailData(
+    val code: Int,
+    val `data`: Data
 ) {
-    data class Banner(
-        val adDispatchJson: Any,
-        val adLocation: Any,
-        val adSource: Any,
-        val adid: Any,
-        val adurlV2: Any,
-        val alg: String,
-        val bannerBizType: String,
-        val bannerId: String,
-        val dynamicVideoData: Any,
-        val encodeId: String,
-        val event: Any,
-        val exclusive: Boolean,
-        val extMonitor: Any,
-        val extMonitorInfo: Any,
-        val logContext: Any,
-        val monitorBlackList: Any,
-        val monitorClick: Any,
-        val monitorClickList: List<Any>,
-        val monitorImpress: Any,
-        val monitorImpressList: List<Any>,
-        val monitorType: Any,
-        val pic: String,
-        val pid: Any,
-        val program: Any,
-        val requestId: String,
-        val s_ctrp: String,
-        val scm: String,
-        val showAdTag: Boolean,
-        val showContext: Any,
-        val song: Song,
-        val targetId: Long,
-        val targetType: Int,
-        val titleColor: String,
-        val typeTitle: String,
-        val url: String,
-        val video: Any
+    data class Data(
+        val dailySongs: List<DailySong>,
+        val mvResourceInfos: Any,
+        val orderSongs: List<Any>,
+        val recommendReasons: List<RecommendReason>
     ) {
-        data class Song(
+        data class DailySong(
             val a: Any,
             val al: Al,
             val alg: String,
@@ -70,17 +38,20 @@ data class BannerData(
             val no: Int,
             val noCopyrightRcmd: Any,
             val originCoverType: Int,
-            val originSongSimpleData: Any,
+            val originSongSimpleData: OriginSongSimpleData,
             val pop: Int,
             val privilege: Privilege,
             val pst: Int,
             val publishTime: Long,
+            val reason: String,
+            val recommendReason: String,
             val resourceState: Boolean,
             val rt: String,
             val rtUrl: Any,
             val rtUrls: List<Any>,
             val rtype: Int,
             val rurl: Any,
+            val s_ctrp: String,
             val s_id: Int,
             val single: Int,
             val songJumpInfo: Any,
@@ -88,6 +59,7 @@ data class BannerData(
             val st: Int,
             val t: Int,
             val tagPicList: Any,
+            val tns: List<String>,
             val v: Int,
             val version: Int
         ) {
@@ -97,7 +69,7 @@ data class BannerData(
                 val pic: Long,
                 val picUrl: String,
                 val pic_str: String,
-                val tns: List<Any>
+                val tns: List<String>
             )
 
             data class Ar(
@@ -138,6 +110,23 @@ data class BannerData(
                 val sr: Int,
                 val vd: Int
             )
+
+            data class OriginSongSimpleData(
+                val albumMeta: AlbumMeta,
+                val artists: List<Artist>,
+                val name: String,
+                val songId: Int
+            ) {
+                data class AlbumMeta(
+                    val id: Int,
+                    val name: String
+                )
+
+                data class Artist(
+                    val id: Int,
+                    val name: String
+                )
+            }
 
             data class Privilege(
                 val chargeInfoList: List<ChargeInfo>,
@@ -189,5 +178,12 @@ data class BannerData(
                 val vd: Int
             )
         }
+
+        data class RecommendReason(
+            val reason: String,
+            val reasonId: String,
+            val songId: Int,
+            val targetUrl: Any
+        )
     }
 }

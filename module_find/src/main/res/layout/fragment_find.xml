@@ -65,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"
-                    android:src="@drawable/icon_more"
+                    android:src="@drawable/icon_more_black"
                     android:layout_marginBottom="10dp"
                     app:layout_constraintBottom_toTopOf="@+id/find_rv_recommend"
                     app:layout_constraintEnd_toEndOf="parent"

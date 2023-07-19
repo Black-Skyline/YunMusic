@@ -227,7 +227,7 @@ class FindFragment : Fragment() {
      * 用于传入banner的点击事件
      */
     private fun onBannerClick(bannerData: BannerData.Banner) {
-        if (bannerData.targetId == 0) {
+        if (bannerData.targetId.toInt() == 0) {
             //那就不是歌曲，是链接。
             val url =  bannerData.url
             val title = bannerData.typeTitle
@@ -267,7 +267,7 @@ class FindFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //要想轮到这里，必须在activity中设置点击事件调用父类的
         return when (item.itemId) {
-            R.id.item_tb_search -> {
+            R.id.menu_item_tb_search -> {
                 //todo 等待点击搜索之后就会跳转
                 Log.d("lx", "menu点击事件出来了: ")
                 true

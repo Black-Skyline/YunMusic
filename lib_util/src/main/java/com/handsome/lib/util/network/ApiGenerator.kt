@@ -45,8 +45,8 @@ object ApiGenerator {
 
     //4defaultOkhttpConfig 函数：使用默认设置配置 OkHttpClient.Builder
     private fun OkHttpClient.Builder.defaultOkhttpConfig(isNeedCookie: Boolean): OkHttpClient {
-        connectTimeout(10, TimeUnit.SECONDS)
-        readTimeout(10, TimeUnit.SECONDS)
+        connectTimeout(8000, TimeUnit.SECONDS)
+        readTimeout(8000, TimeUnit.SECONDS)
         addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
         return build()
     }

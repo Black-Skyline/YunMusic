@@ -15,7 +15,7 @@ class SpecialEditionViewModel : ViewModel() {
     val stateFlow : StateFlow<AlbumData?>
         get() = _mutableAlbumStateFlow.asStateFlow()
 
-    fun getAlbumData(id : Int){
+    fun getAlbumData(id : Long){
         viewModelScope.launch {
             _mutableAlbumStateFlow.emit(FindAlbumApiService.INSTANCE.getAlbumData(id))
         }
