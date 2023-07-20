@@ -1,7 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--圆形图片-->
     <style name="CirclePictureStyle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="BottomUserAgreementDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowNoTitle">false</item>
+        <!--设置dialog空白背景-->
+<!--        <item name="android:windowFrame">@null</item>-->
+        <!--取消Actionbar-->
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <!-- dialog是否半透明 -->
+        <item name="android:windowIsTranslucent">false</item>
+        <!-- dialog横向宽度充满整个屏幕 -->
+        <item name="android:windowMinWidthMinor">100%</item>
+        <!--是否在悬浮Activity之上  -->
+<!--        <item name="android:windowIsFloating">false</item>-->
+        <item name="android:windowBackground">?android:attr/windowBackground</item>
+        <!--点击阴影的地方是否可以关闭对话框-->
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <!--是否允许对话框的背景变暗:如果允许背景就变暗了。-->
+        <item name="android:backgroundDimEnabled">true</item>
+        <!--对话框动画-->
+        <item name="android:windowAnimationStyle">@style/BottomUserAgreementDialog.Animation</item>
+    </style>
+
+    <style name="BottomUserAgreementDialog.Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_bottom_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_bottom_out</item>
     </style>
 </resources>

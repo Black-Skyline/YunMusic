@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient_front_cover">
 
     <ImageView
         android:id="@+id/advertisement_position"
         android:layout_width="317dp"
         android:layout_height="277dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="45dp"
         android:contentDescription="广告位招租"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/image_advertisement" />
@@ -21,20 +21,22 @@
         android:id="@+id/anonymous_enter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:text="立即体验"
-        android:textColor="#D3A88F"
+        android:textColor="#DAFB9E67"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_til_captcha"
-        android:layout_width="0dp"
+        android:id="@+id/til_captcha_to_login"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
+        android:layout_marginTop="25dp"
         android:layout_marginEnd="80dp"
+        android:background="@drawable/shape_round_corner"
         app:boxBackgroundColor="#8BE6DADA"
         app:boxCornerRadiusBottomEnd="20dp"
         app:boxCornerRadiusBottomStart="20dp"
@@ -43,26 +45,28 @@
         app:boxStrokeWidth="0dp"
 
         app:boxStrokeWidthFocused="0dp"
-        app:layout_constraintEnd_toStartOf="@+id/bt_get_captcha"
+        app:layout_constraintEnd_toStartOf="@+id/btn_get_captcha"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_til_phone">
+        app:layout_constraintTop_toBottomOf="@+id/til_phone_to_login">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_et_captcha"
+            android:id="@+id/edt_captcha_to_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@android:color/transparent"
             android:hint="输入验证码"
             android:inputType="number"
             android:maxLength="4"
             android:paddingVertical="15dp"
-            android:paddingStart="18dp"
-            android:paddingEnd="18dp"
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
             android:textSize="15sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/login_btn_by_captcha"
+    <Button
+        android:id="@+id/btn_login_by_captcha"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginStart="40dp"
@@ -72,16 +76,15 @@
         android:text="登录"
         android:textColor="@color/white"
         android:textSize="18sp"
-        app:cornerRadius="25dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/login_btn_by_password"
+        app:layout_constraintEnd_toStartOf="@+id/btn_login_by_password"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_til_captcha"
+        app:layout_constraintTop_toBottomOf="@+id/til_captcha_to_login"
         app:layout_constraintVertical_bias="0.0" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/login_btn_by_password"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_login_by_password"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginTop="20dp"
@@ -94,23 +97,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/login_btn_by_captcha"
-        app:layout_constraintTop_toBottomOf="@+id/login_til_captcha"
+        app:layout_constraintStart_toEndOf="@+id/btn_login_by_captcha"
+        app:layout_constraintTop_toBottomOf="@+id/til_captcha_to_login"
         app:layout_constraintVertical_bias="0.0" />
 
     <CheckBox
         android:id="@+id/consent_clause"
-        android:layout_width="309dp"
-        android:layout_height="24dp"
-        android:layout_marginTop="32dp"
+        android:layout_width="350dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="24dp"
         android:minWidth="10dp"
         android:minHeight="10dp"
-        android:scaleX="0.8"
-        android:scaleY="0.8"
+        android:scaleX="0.9"
+        android:scaleY="0.9"
         android:text="我已阅读并同意《服务条款》、《隐私政策》"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_btn_by_captcha" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_login_by_captcha" />
 
     <Button
         android:id="@+id/login_btn_wechat"
@@ -163,12 +167,13 @@
         app:shapeAppearance="@style/CirclePictureStyle" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_til_phone"
+        android:id="@+id/til_phone_to_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="40dp"
+        android:background="@drawable/shape_round_corner"
         app:boxBackgroundColor="#8BE6DADA"
         app:boxCornerRadiusBottomEnd="20dp"
         app:boxCornerRadiusBottomStart="20dp"
@@ -181,28 +186,31 @@
         app:layout_constraintTop_toBottomOf="@+id/advertisement_position">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_et_phone"
+            android:id="@+id/edt_phone_to_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@android:color/transparent"
             android:hint="输入手机号"
             android:inputType="number"
             android:maxLength="11"
             android:paddingVertical="15dp"
-            android:paddingStart="18dp"
-            android:paddingEnd="18dp"
-            android:textSize="18sp" />
+            android:paddingStart="40dp"
+            android:paddingEnd="40dp"
+            android:textSize="25sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/bt_get_captcha"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:id="@+id/btn_get_captcha"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
         android:layout_marginEnd="40dp"
+        android:textColor="@color/black"
+        android:background="#EFE6E6"
         android:text="获取验证码"
+        app:layout_constraintBottom_toBottomOf="@+id/til_captcha_to_login"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_til_phone"
-        app:layout_constraintVertical_bias="0.393" />
+        app:layout_constraintTop_toTopOf="@+id/til_captcha_to_login" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

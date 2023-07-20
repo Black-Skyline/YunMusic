@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/fragment_email_login">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -12,7 +13,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
 
-        app:layout_constraintBottom_toTopOf="@+id/login_til_captcha"
+        app:layout_constraintBottom_toTopOf="@+id/til_captcha_to_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,7 +21,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_til_captcha"
+        android:id="@+id/til_captcha_to_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
@@ -36,7 +37,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_et_captcha"
+            android:id="@+id/edt_captcha_to_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="网易邮箱"
@@ -69,7 +70,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_til_captcha"
+        app:layout_constraintTop_toBottomOf="@+id/til_captcha_to_login"
         app:layout_constraintVertical_bias="0.228"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="#C3000000">

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.util.BaseApp
 import com.handsome.module.login.page.view.LoginActivity
 
