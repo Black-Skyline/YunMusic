@@ -49,7 +49,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp">
+                android:layout_marginTop="16dp">
 
                 <TextView
                     android:id="@+id/find_tv_recommend_music_list"
@@ -84,6 +84,44 @@
                     app:layout_constraintTop_toBottomOf="@+id/find_tv_recommend_music_list" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/find_tv_top_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 排行榜 >"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/find_img_top_list_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/icon_more_black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/find_vp_top_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:overScrollMode="never"
+            app:layout_constraintEnd_toEndOf="@+id/find_img_top_list_more"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/find_tv_top_list" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

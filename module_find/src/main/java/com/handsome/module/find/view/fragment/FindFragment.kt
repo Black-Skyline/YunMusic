@@ -27,6 +27,7 @@ import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.BannerBelowData
 import com.handsome.module.find.network.model.BannerData
 import com.handsome.module.find.network.model.RecommendMusicListData
+import com.handsome.module.find.network.model.TopListData
 import com.handsome.module.find.view.activity.RecommendDetailActivity
 import com.handsome.module.find.view.activity.SpecialEditionActivity
 import com.handsome.module.find.view.activity.TopListActivity
@@ -35,6 +36,7 @@ import com.handsome.module.find.view.activity.WebViewActivity
 import com.handsome.module.find.view.adapter.FindBannerBelowRvAdapter
 import com.handsome.module.find.view.adapter.FindBannerVpAdapter
 import com.handsome.module.find.view.adapter.FindRecommendListVpAdapter
+import com.handsome.module.find.view.adapter.TopListVpAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -42,9 +44,10 @@ import kotlinx.coroutines.launch
 class FindFragment : Fragment() {
     private val mBinding by lazy { FragmentFindBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[FindFragmentViewModel::class.java] }
-    private val findBannerVpAdapter = FindBannerVpAdapter(::onBannerClick)
-    private val findBannerBelowRvAdapter = FindBannerBelowRvAdapter(::onBannerBelowClick)
-    private val findRecommendListVpAdapter = FindRecommendListVpAdapter(::onRecommendListClick)
+    private val findBannerVpAdapter by lazy{ FindBannerVpAdapter(::onBannerClick) }
+    private val findBannerBelowRvAdapter by lazy {FindBannerBelowRvAdapter(::onBannerBelowClick)}
+    private val findRecommendListVpAdapter by lazy{FindRecommendListVpAdapter(::onRecommendListClick)}
+    private val findTopListVpAdapter by lazy { TopListVpAdapter(::onClickTopList) }
     private var autoScrollHandler: Handler? = null
     private var autoScrollRunnable: Runnable? = null
 
@@ -54,6 +57,26 @@ class FindFragment : Fragment() {
         initBanner()
         initBannerBelow()  //banner下面的图标,想不到起什么名字，就叫做bannerBelow了，下面同理
         initRecommendList()
+        initTopList()
+    }
+
+
+
+    /**
+     * 初始化轮播图的方法
+     */
+    private fun initBanner() {
+        initBannerAdapter()
+        initBannerCollect()
+        getBannerData()
+    }
+
+    private fun initBannerBelow() {
+        initBannerBelowAdapter()
+        initBannerBelowCollect()
+        getBannerBelowData()
+        //下面是配套的滑条
+        initBannerBelowSb()
     }
 
     private fun initRecommendList() {
@@ -61,6 +84,14 @@ class FindFragment : Fragment() {
         initRecommendListCollect()
         getRecommendListData(6)
     }
+
+    private fun initTopList() {
+        initTopListAdapter()
+        initTopListCollect()
+        getTopListData()
+    }
+
+
 
     private fun initRecommendListRvAdapter() {
         mBinding.findRvRecommend.apply {
@@ -102,14 +133,6 @@ class FindFragment : Fragment() {
         when (result.name) {
             //todo 点击事件
         }
-    }
-
-    private fun initBannerBelow() {
-        initBannerBelowAdapter()
-        initBannerBelowCollect()
-        getBannerBelowData()
-        //下面是配套的滑条
-        initBannerBelowSb()
     }
 
     private fun initBannerBelowSb() {
@@ -202,14 +225,7 @@ class FindFragment : Fragment() {
         }
     }
 
-    /**
-     * 初始化轮播图的方法
-     */
-    private fun initBanner() {
-        initBannerAdapter()
-        initBannerCollect()
-        getBannerData()
-    }
+
 
     private fun startAutoScroll() {
         autoScrollHandler = Handler(Looper.getMainLooper())  //主线程上的handler
@@ -291,6 +307,57 @@ class FindFragment : Fragment() {
             }
             else -> {bannerData.typeTitle.toast()}
         }
+    }
+
+    private fun getTopListData() {
+        mViewModel.getTopList()
+    }
+
+    private fun initTopListCollect() {
+        fun doAfterGet(it : TopListData){
+            //遍历，留下来有简单歌名人名的
+            val list = ArrayList<TopListData.Data>()
+            for (i in it.list){
+                if (i.tracks.isNotEmpty()){
+                    list.add(i)
+                }else{
+                    break
+                }
+            }
+            findTopListVpAdapter.submitList(list)
+        }
+        lifecycleScope.launch(myCoroutineExceptionHandler){
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                mViewModel.topListStateFlow.collectLatest {
+                    if (it != null) {
+                        if (it.code == 200){
+                            doAfterGet(it)
+                            gsonSaveToSp(it,"top_list")
+                        }else{
+                            val value = objectFromSp<TopListData>("top_list")
+                            if (value != null) doAfterGet(value)
+                        }
+                    }else{
+                        val value = objectFromSp<TopListData>("top_list")
+                        if (value != null) doAfterGet(value)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initTopListAdapter() {
+        mBinding.findVpTopList.adapter = findTopListVpAdapter
+        //取消边部阴影
+        val childView = mBinding.findVpTopList.getChildAt(0)
+        if (childView is RecyclerView){
+            childView.overScrollMode = View.OVER_SCROLL_NEVER
+        }
+    }
+
+    private fun onClickTopList(data: TopListData.Data) {
+        //todo 点击事件
+        data.name.toast()
     }
 
     override fun onCreateView(
