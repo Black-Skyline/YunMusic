@@ -29,6 +29,7 @@ import com.handsome.module.find.network.model.BannerData
 import com.handsome.module.find.network.model.RecommendMusicListData
 import com.handsome.module.find.view.activity.RecommendDetailActivity
 import com.handsome.module.find.view.activity.SpecialEditionActivity
+import com.handsome.module.find.view.activity.TopListActivity
 import com.handsome.module.find.view.viewmodel.FindFragmentViewModel
 import com.handsome.module.find.view.activity.WebViewActivity
 import com.handsome.module.find.view.adapter.FindBannerBelowRvAdapter
@@ -194,7 +195,9 @@ class FindFragment : Fragment() {
             }
             "私人FM" -> {}
             "歌单" -> {}
-            "排行榜" -> {}
+            "排行榜" -> {
+                TopListActivity.startAction(requireContext())
+            }
             else -> {}
         }
     }
