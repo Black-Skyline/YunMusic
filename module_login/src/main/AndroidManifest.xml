@@ -3,9 +3,8 @@
 
     <application>
         <activity
-            android:name=".LoginActivity"
+            android:name=".page.view.LoginActivity"
             android:exported="true">
-
         </activity>
     </application>
 
