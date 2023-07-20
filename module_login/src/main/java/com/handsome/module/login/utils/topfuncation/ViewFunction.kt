@@ -1,10 +1,12 @@
 package com.handsome.module.login.utils.topfuncation
 
+import android.annotation.SuppressLint
 import android.view.View
+import com.handsome.module.login.R
 
 
-const val SINGLE_CLICK_RECORD = 0x001
-const val DOUBLE_CLICK_RECORD = 0x001
+val SINGLE_CLICK_RECORD = R.id.listener_single_click_is
+val DOUBLE_CLICK_RECORD = R.id.listener_double_click_is
 
 /**
  * On single click listener

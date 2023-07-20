@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".page.view.LoginActivity">
+    android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/entrance_fragment_place"
+        android:id="@+id/entrance_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
