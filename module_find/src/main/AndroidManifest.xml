@@ -18,6 +18,11 @@
             android:name=".view.activity.RecommendDetailActivity"
             android:exported="true"
             android:theme="@style/Theme.YunMusic.Find"/>
+        <activity
+            android:name=".view.activity.TopListActivity"
+            android:exported="true"
+            android:theme="@style/Theme.YunMusic.Find"
+            />
     </application>
 
 </manifest>

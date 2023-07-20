@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.handsome.module.find.network.api.FindBannerApiService
 import com.handsome.module.find.network.api.FindBannerBelowApiService
 import com.handsome.module.find.network.api.FindRecommendListApiService
+import com.handsome.module.find.network.api.FindTopListApiService
 import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.BannerBelowData
 import com.handsome.module.find.network.model.BannerData
 import com.handsome.module.find.network.model.RecommendMusicListData
+import com.handsome.module.find.network.model.TopListData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +31,11 @@ class FindFragmentViewModel : ViewModel() {
     val recommendListStateFlow : StateFlow<RecommendMusicListData?>
         get() = _mutableRecommendListStateFlow.asStateFlow()
 
+    private val _mutableTopListStateFlow = MutableStateFlow<TopListData?>(null)
+    val topListStateFlow: StateFlow<TopListData?>
+        get() = _mutableTopListStateFlow.asStateFlow()
+
+
     fun getBannerData(){
         viewModelScope.launch(myCoroutineExceptionHandler + Dispatchers.IO) {
             _mutableBannerStateFlow.emit(FindBannerApiService.INSTANCE.getBanner())
@@ -44,6 +51,12 @@ class FindFragmentViewModel : ViewModel() {
     fun getRecommendListData(size : Int){
         viewModelScope.launch(myCoroutineExceptionHandler + Dispatchers.IO) {
             _mutableRecommendListStateFlow.emit(FindRecommendListApiService.INSTANCE.getRecommendList(size))
+        }
+    }
+
+    fun getTopList() {
+        viewModelScope.launch(myCoroutineExceptionHandler + Dispatchers.IO) {
+            _mutableTopListStateFlow.emit(FindTopListApiService.INSTANCE.getTopList())
         }
     }
 }

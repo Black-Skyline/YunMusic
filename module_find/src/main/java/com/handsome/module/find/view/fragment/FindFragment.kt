@@ -3,11 +3,7 @@ package com.handsome.module.find.view.fragment
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
@@ -21,19 +17,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.extention.toast
 import com.handsome.lib.util.util.gsonSaveToSp
 import com.handsome.lib.util.util.objectFromSp
-import com.handsome.module.find.R
 import com.handsome.module.find.databinding.FragmentFindBinding
 import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.BannerBelowData
 import com.handsome.module.find.network.model.BannerData
 import com.handsome.module.find.network.model.RecommendMusicListData
+import com.handsome.module.find.network.model.TopListData
 import com.handsome.module.find.view.activity.RecommendDetailActivity
 import com.handsome.module.find.view.activity.SpecialEditionActivity
+import com.handsome.module.find.view.activity.TopListActivity
 import com.handsome.module.find.view.viewmodel.FindFragmentViewModel
 import com.handsome.module.find.view.activity.WebViewActivity
 import com.handsome.module.find.view.adapter.FindBannerBelowRvAdapter
 import com.handsome.module.find.view.adapter.FindBannerVpAdapter
 import com.handsome.module.find.view.adapter.FindRecommendListVpAdapter
+import com.handsome.module.find.view.adapter.TopListVpAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -41,18 +39,36 @@ import kotlinx.coroutines.launch
 class FindFragment : Fragment() {
     private val mBinding by lazy { FragmentFindBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[FindFragmentViewModel::class.java] }
-    private val findBannerVpAdapter = FindBannerVpAdapter(::onBannerClick)
-    private val findBannerBelowRvAdapter = FindBannerBelowRvAdapter(::onBannerBelowClick)
-    private val findRecommendListVpAdapter = FindRecommendListVpAdapter(::onRecommendListClick)
+    private val findBannerVpAdapter by lazy{ FindBannerVpAdapter(::onBannerClick) }
+    private val findBannerBelowRvAdapter by lazy {FindBannerBelowRvAdapter(::onBannerBelowClick)}
+    private val findRecommendListVpAdapter by lazy{FindRecommendListVpAdapter(::onRecommendListClick)}
+    private val findTopListVpAdapter by lazy { TopListVpAdapter(::onClickTopList) }
     private var autoScrollHandler: Handler? = null
     private var autoScrollRunnable: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)  //打开开关，让fragment也可以修改activity中的toolbar，同时会先监听activity中的menu，增加一个搜索图标
         initBanner()
         initBannerBelow()  //banner下面的图标,想不到起什么名字，就叫做bannerBelow了，下面同理
         initRecommendList()
+        initTopList()
+    }
+
+    /**
+     * 初始化轮播图的方法
+     */
+    private fun initBanner() {
+        initBannerAdapter()
+        initBannerCollect()
+        getBannerData()
+    }
+
+    private fun initBannerBelow() {
+        initBannerBelowAdapter()
+        initBannerBelowCollect()
+        getBannerBelowData()
+        //下面是配套的滑条
+        initBannerBelowSb()
     }
 
     private fun initRecommendList() {
@@ -60,6 +76,14 @@ class FindFragment : Fragment() {
         initRecommendListCollect()
         getRecommendListData(6)
     }
+
+    private fun initTopList() {
+        initTopListAdapter()
+        initTopListCollect()
+        getTopListData()
+    }
+
+
 
     private fun initRecommendListRvAdapter() {
         mBinding.findRvRecommend.apply {
@@ -76,7 +100,7 @@ class FindFragment : Fragment() {
         fun doAfterGet(value : RecommendMusicListData){
             findRecommendListVpAdapter.submitList(value.result)
         }
-        lifecycleScope.launch() {
+        lifecycleScope.launch(myCoroutineExceptionHandler) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.recommendListStateFlow.collectLatest {
                     if (it != null) {
@@ -101,14 +125,6 @@ class FindFragment : Fragment() {
         when (result.name) {
             //todo 点击事件
         }
-    }
-
-    private fun initBannerBelow() {
-        initBannerBelowAdapter()
-        initBannerBelowCollect()
-        getBannerBelowData()
-        //下面是配套的滑条
-        initBannerBelowSb()
     }
 
     private fun initBannerBelowSb() {
@@ -159,7 +175,7 @@ class FindFragment : Fragment() {
         fun doAfterGet(value : BannerBelowData){
             findBannerBelowRvAdapter.submitList(value.data)
         }
-        lifecycleScope.launch {
+        lifecycleScope.launch(myCoroutineExceptionHandler) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.bannerBelowStateFlow.collectLatest {
                     if (it != null) {
@@ -194,19 +210,14 @@ class FindFragment : Fragment() {
             }
             "私人FM" -> {}
             "歌单" -> {}
-            "排行榜" -> {}
+            "排行榜" -> {
+                TopListActivity.startAction(requireContext())
+            }
             else -> {}
         }
     }
 
-    /**
-     * 初始化轮播图的方法
-     */
-    private fun initBanner() {
-        initBannerAdapter()
-        initBannerCollect()
-        getBannerData()
-    }
+
 
     private fun startAutoScroll() {
         autoScrollHandler = Handler(Looper.getMainLooper())  //主线程上的handler
@@ -290,34 +301,62 @@ class FindFragment : Fragment() {
         }
     }
 
+    private fun getTopListData() {
+        mViewModel.getTopList()
+    }
+
+    private fun initTopListCollect() {
+        fun doAfterGet(it : TopListData){
+            //遍历，留下来有简单歌名人名的
+            val list = ArrayList<TopListData.Data>()
+            for (i in it.list){
+                if (i.tracks.isNotEmpty()){
+                    list.add(i)
+                }else{
+                    break
+                }
+            }
+            findTopListVpAdapter.submitList(list)
+        }
+        lifecycleScope.launch(myCoroutineExceptionHandler){
+            repeatOnLifecycle(Lifecycle.State.STARTED){
+                mViewModel.topListStateFlow.collectLatest {
+                    if (it != null) {
+                        if (it.code == 200){
+                            doAfterGet(it)
+                            gsonSaveToSp(it,"top_list")
+                        }else{
+                            val value = objectFromSp<TopListData>("top_list")
+                            if (value != null) doAfterGet(value)
+                        }
+                    }else{
+                        val value = objectFromSp<TopListData>("top_list")
+                        if (value != null) doAfterGet(value)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initTopListAdapter() {
+        mBinding.findVpTopList.adapter = findTopListVpAdapter
+        //取消边部阴影
+        val childView = mBinding.findVpTopList.getChildAt(0)
+        if (childView is RecyclerView){
+            childView.overScrollMode = View.OVER_SCROLL_NEVER
+        }
+    }
+
+    private fun onClickTopList(data: TopListData.Data) {
+        //todo 点击事件
+        data.name.toast()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return mBinding.root
-    }
-
-    /**
-     *重写这个方法让fragment修改所在activity中的toolbar
-     */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.item_tb, menu)
-    }
-
-    /**
-     * 重写这个方法等到activity中没有消费这个事件之后然后进入这个fragment消费，如果匹配就在这里消费。
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        //要想轮到这里，必须在activity中设置点击事件调用父类的
-        return when (item.itemId) {
-            R.id.menu_item_tb_search -> {
-                //todo 等待点击搜索之后就会跳转
-                Log.d("lx", "menu点击事件出来了: ")
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     companion object {
