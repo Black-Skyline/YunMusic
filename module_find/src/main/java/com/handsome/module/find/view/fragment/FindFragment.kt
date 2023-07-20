@@ -3,11 +3,7 @@ package com.handsome.module.find.view.fragment
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
@@ -21,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.extention.toast
 import com.handsome.lib.util.util.gsonSaveToSp
 import com.handsome.lib.util.util.objectFromSp
-import com.handsome.module.find.R
 import com.handsome.module.find.databinding.FragmentFindBinding
 import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.BannerBelowData
@@ -53,14 +48,11 @@ class FindFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)  //打开开关，让fragment也可以修改activity中的toolbar，同时会先监听activity中的menu，增加一个搜索图标
         initBanner()
         initBannerBelow()  //banner下面的图标,想不到起什么名字，就叫做bannerBelow了，下面同理
         initRecommendList()
         initTopList()
     }
-
-
 
     /**
      * 初始化轮播图的方法
@@ -108,7 +100,7 @@ class FindFragment : Fragment() {
         fun doAfterGet(value : RecommendMusicListData){
             findRecommendListVpAdapter.submitList(value.result)
         }
-        lifecycleScope.launch() {
+        lifecycleScope.launch(myCoroutineExceptionHandler) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.recommendListStateFlow.collectLatest {
                     if (it != null) {
@@ -183,7 +175,7 @@ class FindFragment : Fragment() {
         fun doAfterGet(value : BannerBelowData){
             findBannerBelowRvAdapter.submitList(value.data)
         }
-        lifecycleScope.launch {
+        lifecycleScope.launch(myCoroutineExceptionHandler) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.bannerBelowStateFlow.collectLatest {
                     if (it != null) {
@@ -365,29 +357,6 @@ class FindFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         return mBinding.root
-    }
-
-    /**
-     *重写这个方法让fragment修改所在activity中的toolbar
-     */
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.item_tb, menu)
-    }
-
-    /**
-     * 重写这个方法等到activity中没有消费这个事件之后然后进入这个fragment消费，如果匹配就在这里消费。
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        //要想轮到这里，必须在activity中设置点击事件调用父类的
-        return when (item.itemId) {
-            R.id.menu_item_tb_search -> {
-                //todo 等待点击搜索之后就会跳转
-                Log.d("lx", "menu点击事件出来了: ")
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
     }
 
     companion object {

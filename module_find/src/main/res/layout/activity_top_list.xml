@@ -16,8 +16,9 @@
 
         <ImageView
             android:id="@+id/top_list_bar_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
             android:src="@drawable/icon_back"
             android:layout_marginLeft="10dp"/>
 
@@ -26,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="排行榜"
-            android:textSize="18dp"
+            android:textSize="20dp"
             android:textStyle="bold"
             android:layout_toEndOf="@id/top_list_bar_back"
             android:layout_marginStart="16dp"
@@ -34,9 +35,10 @@
 
         <ImageView
             android:id="@+id/top_list_bar_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_gravity="right"
+            android:layout_centerVertical="true"
             android:src="@drawable/icon_share"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"/>

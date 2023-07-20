@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.core.view.GravityCompat
 import com.handsome.lib.util.adapter.FragmentVpAdapter
 import com.handsome.lib.util.extention.toast
+//import com.handsome.module.find.view.fragment.FindFragment
 import com.handsome.yunmusic.databinding.ActivityMainBinding
 
 class MainActivity : YunMusicActivity(){
@@ -21,20 +22,17 @@ class MainActivity : YunMusicActivity(){
     }
 
     private fun initBar() {
-        setSupportActionBar(mBinding.mainTb)
-        supportActionBar?.let {
-            title = ""
-            //下面的方法是让导航按钮显示出来，原来是返回的箭头
-            it.setDisplayHomeAsUpEnabled(true)
-            //下面是更改导航的图标
-            it.setHomeAsUpIndicator(R.drawable.icon_bottom_music_list)
+        //点击事件
+        mBinding.mainTopNavi.setOnClickListener {
+            //打开侧边栏
+            mBinding.mainDrawer.openDrawer(GravityCompat.START)
         }
     }
 
     private fun initVpAdapter() {
         val fragmentVpAdapter = FragmentVpAdapter(this)
         //todo 等待加入的fragment
-//        fragmentVpAdapter.add()
+//        fragmentVpAdapter.add(FindFragment::class.java)
         mBinding.mainNaviVp.adapter = fragmentVpAdapter
         mBinding.mainNaviVp.isUserInputEnabled = false;  //禁止vp滑动的方法,会让banner不管用
     }
@@ -86,17 +84,5 @@ class MainActivity : YunMusicActivity(){
                 return@setNavigationItemSelectedListener true
             }
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d("lx", "我被点击了: ")
-        when(item.itemId){
-            //home按钮的id永远是android.R.id.home，
-            //这一行是menu的点击事件
-            android.R.id.home -> {
-                mBinding.mainDrawer.openDrawer(GravityCompat.START)
-                return true}
-        }
-        return super.onOptionsItemSelected(item)
     }
 }
