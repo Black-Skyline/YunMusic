@@ -1,7 +1,5 @@
 package com.handsome.module.login.page.view
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -23,7 +21,10 @@ import com.handsome.module.login.R
 import com.handsome.module.login.databinding.FragmentPhoneCaptchaLoginBinding
 import com.handsome.module.login.page.viewmodel.LoginViewModel
 import com.handsome.module.login.utils.BaseTextWatcher
-import com.handsome.module.login.utils.topfuncation.ValidityCheckUtil
+import com.handsome.module.login.utils.topfuncation.EmailLogin
+import com.handsome.module.login.utils.topfuncation.PasswordLogin
+import com.handsome.module.login.utils.ValidityCheckUtil
+import com.handsome.module.login.utils.topfuncation.gotoFragmentPage
 import com.handsome.module.login.utils.topfuncation.setOnSingleClickListener
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -63,12 +64,24 @@ class PhoneCaptchaLoginFragment : Fragment() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.captchaResponseFlow.collectLatest {
-                    model.dealCaptchaResponse(it)
-                    if (it == null)
-                        Log.d("DataTest", "null")
+                    if (it != null)
+                        model.dealCaptchaResponse(it)
                 }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.anonymousLoginResponseFlow.collectLatest {
-                    model.dealAnonymousLoginResponse(it)
+                    if (it != null)
+                        model.dealAnonymousLoginResponse(it)
+                }
+            }
+        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.captchaLoginResponseFlow.collectLatest {
+                    if (it != null)
+                        model.dealCaptchaLoginResponse(it)
                 }
             }
         }
@@ -77,12 +90,14 @@ class PhoneCaptchaLoginFragment : Fragment() {
     private fun initEvent() {
         binding.edtPhoneToLogin.addTextChangedListener(object : BaseTextWatcher() {
             override fun afterTextChanged(text: Editable?) {
-                model.isPhoneNumberNull(text.isNullOrBlank())
+                model.isPhoneNumber1Null(text.isNullOrBlank())
+                model.checkClickableLoginByCaptcha()
             }
         })
         binding.edtCaptchaToLogin.addTextChangedListener(object : BaseTextWatcher() {
             override fun afterTextChanged(text: Editable?) {
                 model.isCaptchaNull(text.isNullOrBlank())
+                model.checkClickableLoginByCaptcha()
             }
         })
         binding.consentClause.setOnCheckedChangeListener { self, state ->
@@ -107,44 +122,45 @@ class PhoneCaptchaLoginFragment : Fragment() {
             } else {
                 val phoneNumber = binding.edtPhoneToLogin.text?.toString()
                 val captcha = binding.edtCaptchaToLogin.text?.toString()
-//            if (phoneNumber.isNullOrBlank())
-//                toast("请输入手机号")
-//            else if (captcha.isNullOrBlank())
-//                toast("请填写验证码")
                 if (!ValidityCheckUtil.isValidPhoneNumber(phoneNumber)) {
                     toast("请按中国大陆手机号码格式正确输入手机号")
                 } else if (!ValidityCheckUtil.isValidCaptcha(captcha)) toast("非法验证码")
                 else {
-                    // 设定此处为成功登录情况
+                    // 设定此处为成功发出登录请求的情况
 
+                    model.captchaLogin(phoneNumber!!.toLong(), captcha!!.toInt())
                 }
             }
         }
 
         // 获取验证码的逻辑
         binding.btnGetCaptcha.setOnSingleClickListener { view ->
-            // 禁用一分钟的触摸响应，结束后恢复
-            var times = 60
-            model.delayedUITask(60, before = { view.isEnabled = false }, waiting = {
-                times--
-                (view as Button).text = "剩余${times}秒"
-            }, after = {
-                (view as Button).text = "获取验证码"
-                view.isEnabled = true
-            })
             // 当手机号码合法时
             val phone = binding.edtPhoneToLogin.text?.toString()
             if (ValidityCheckUtil.isValidPhoneNumber(phone)) {
-                // 发起获取验证码请求, 以123为例
+                // 发起获取验证码请求
                 model.getCaptcha(phone!!.toLong())
+                // 禁用一分钟的触摸响应，结束后恢复
+                var times = 60
+                model.delayedUITask(60, before = { view.isEnabled = false }, waiting = {
+                    times--
+                    (view as Button).text = "剩余${times}秒"
+                }, after = {
+                    (view as Button).text = "获取验证码"
+                    view.isEnabled = true
+                })
+            } else {
+                toast("请正确输入手机号之后再获取验证码")
             }
         }
         // 跳转PhonePasswordLoginFragment
-        binding.btnLoginByPassword.setOnSingleClickListener {
+        binding.btnChangeLoginByPassword.setOnSingleClickListener {
             if (!model.isConsentClause.value!!) {
                 dialog.show()
             } else {
-                gotoFragmentPage(R.id.fragment_phone_password_login, "PasswordLogin_INSTANCE")
+                gotoFragmentPage(this, PasswordLogin, PasswordLogin) {
+                    PhonePasswordLoginFragment()
+                }
             }
         }
         // 游客登录
@@ -152,7 +168,8 @@ class PhoneCaptchaLoginFragment : Fragment() {
             if (!model.isConsentClause.value!!) {
                 dialog.show()
             } else {
-                model.anonymousLoginResponseFlow
+                toast("点击了游客登录")
+                model.anonymousLogin()
             }
         }
         // 跳转EmailLoginFragment
@@ -160,24 +177,10 @@ class PhoneCaptchaLoginFragment : Fragment() {
             if (!model.isConsentClause.value!!) {
                 dialog.show()
             } else {
-                gotoFragmentPage(R.id.fragment_email_login, "EmailLogin_INSTANCE")
+                gotoFragmentPage(this, EmailLogin, EmailLogin) {
+                    EmailLoginFragment()
+                }
             }
-//            requireActivity().supportFragmentManager.apply {
-//                val target = this.findFragmentById(R.id.fragment_email_login)
-//                beginTransaction().apply {
-//                    hide(this@PhoneCaptchaLoginFragment)
-//                    if (target == null) {
-//                        add(
-//                            R.id.entrance_fragment_container,
-//                            EmailLoginFragment(),
-//                            "EmailLogin_INSTANCE"
-//                        )
-//                    } else {
-//                        show(target)
-//                    }
-//                    commit()
-//                }
-//            }
         }
         // 底部的摆设按钮
         binding.loginBtnQq.setOnClickListener {
@@ -194,39 +197,15 @@ class PhoneCaptchaLoginFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Log.d("onDestroyView", "Captcha destroy")
     }
 
-    /**
-     * 跳转fragment页面的渐变写法
-     *
-     * @param id
-     * @param tag
-     */
-    private fun gotoFragmentPage(id: Int, tag: String? = null) {
-        requireActivity().supportFragmentManager.apply {
-            val target = this.findFragmentById(id)
-            beginTransaction().apply {
-                hide(this@PhoneCaptchaLoginFragment)
-                if (target == null) {
-                    add(
-                        R.id.entrance_fragment_container, EmailLoginFragment(), tag
-                    )
-                } else {
-                    show(target)
-                }
-                commit()
-            }
-        }
-    }
-
-    fun popUserAgreementDialog(): AlertDialog {
+    private fun popUserAgreementDialog(): AlertDialog {
         val view = LayoutInflater.from(requireActivity())
             .inflate(R.layout.alertdialog_bottom_user_agreement, null, false)
         val bottomDialog =
             AlertDialog.Builder(requireActivity(), R.style.BottomUserAgreementDialog).setView(view)
                 .create()
-//        val bottomDialog = AlertDialog.Builder(requireActivity(), R.style.BottomUserAgreementDialog).create()
-//        bottomDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         bottomDialog.setCanceledOnTouchOutside(true)
 
         view.findViewById<Button>(R.id.disagree).setOnClickListener {
@@ -247,26 +226,10 @@ class PhoneCaptchaLoginFragment : Fragment() {
             )
             setWindowAnimations(R.style.BottomUserAgreementDialog_Animation)
         }
-
-//        apply {
-////                setView(R.layout.alertdialog_bottom_user_agreement)
-//                setTitle("服务协议和隐私政策等指引")
-//                setMessage("进入下一步之前，请${binding.consentClause.text.substring(2)}")
-//
-//                setCancelable(true)
-//                setPositiveButton("同意并继续") { dialog, which ->
-//                    model.isConsentClause(true)
-//                }
-//                setNegativeButton("不同意") { dialog, which ->
-//                    model.isConsentClause(false)
-//                }
-//            }
-//        val result = bottomDialog.create()
-//        result.setCanceledOnTouchOutside(true)
-//        result.window?.apply {
-//            setGravity(Gravity.CENTER)
-//            setWindowAnimations(R.style.BottomUserAgreementDialog_Animation)
-//        }
         return bottomDialog
     }
+
+    fun getCookies() =
+        model.internalCookies.value
+
 }

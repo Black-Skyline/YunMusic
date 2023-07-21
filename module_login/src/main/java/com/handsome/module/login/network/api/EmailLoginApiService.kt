@@ -3,7 +3,7 @@ package com.handsome.module.login.network.api
 import com.handsome.lib.util.network.ApiGenerator
 import com.handsome.module.login.model.EmailData
 import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * ...
@@ -15,10 +15,10 @@ import retrofit2.http.Path
  */
 interface EmailLoginApiService {
 
-    @GET("/login?email={email}&password={password}")
+    @GET("/login")
     suspend fun getResponse(
-        @Path("email") email: String,
-        @Path("password") password: String
+        @Query("email") email: String,
+        @Query("password") password: String
     ): EmailData
 
     companion object {

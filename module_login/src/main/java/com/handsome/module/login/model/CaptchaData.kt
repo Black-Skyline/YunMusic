@@ -5,3 +5,7 @@ data class CaptchaResponseData(
     val code: Int,
     val `data`: Boolean
 )
+data class VerifyCaptchaResponseData(
+    val code: Int,
+    val `data`: Boolean
+)

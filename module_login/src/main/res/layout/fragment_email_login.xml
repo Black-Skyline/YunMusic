@@ -2,26 +2,29 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_email_login"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/fragment_email_login">
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_in_login_by_email"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/cardview_light_background"
+        android:background="@android:color/transparent"
+        app:title="云音乐"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-
-        app:layout_constraintBottom_toTopOf="@+id/til_captcha_to_login"
+        app:layout_constraintBottom_toTopOf="@+id/til_email_to_login"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        app:navigationIcon="@drawable/ic_toolbar_back_24"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="#9D6A4B" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_captcha_to_login"
+        android:id="@+id/til_email_to_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
@@ -37,16 +40,17 @@
         app:layout_constraintVertical_bias="0.0">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_captcha_to_login"
+            android:id="@+id/edt_email_to_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:hint="网易邮箱"
+            android:lines="1"
+            android:maxLength="40"
+            android:maxLines="1"
             android:paddingVertical="15dp"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
-            android:lines="1"
-            android:maxLines="1"
-            android:maxLength="40"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -58,7 +62,7 @@
         app:layout_constraintGuide_percent="0.20" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_til_password"
+        android:id="@+id/til_password_to_login"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
@@ -70,41 +74,44 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_captcha_to_login"
+        app:layout_constraintTop_toBottomOf="@+id/til_email_to_login"
         app:layout_constraintVertical_bias="0.228"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="#C3000000">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/login_et_password"
+            android:id="@+id/edt_password_to_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:hint="密码"
             android:imeOptions="actionDone"
             android:inputType="textPassword"
             android:lines="1"
-            android:maxLines="1"
             android:maxLength="20"
+            android:maxLines="1"
             android:paddingVertical="15dp"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:textSize="20sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/login_btn_by_email"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_login_by_email"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
+        android:background="@drawable/btn_enable_select"
         android:text="登录"
+        android:textColor="@color/white"
         android:theme="@style/Theme.MaterialComponents.Light"
         app:cornerRadius="25dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_til_password"
+        app:layout_constraintTop_toBottomOf="@+id/til_password_to_login"
         app:layout_constraintVertical_bias="1.0" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -115,12 +122,13 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/reset_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="重设密码"
         android:textColor="@color/material_dynamic_primary40"
-        app:layout_constraintTop_toBottomOf="@+id/login_btn_by_email"
-        tools:layout_editor_absoluteX="176dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login_by_email" />
 </androidx.constraintlayout.widget.ConstraintLayout>
