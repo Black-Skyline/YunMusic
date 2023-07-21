@@ -3,7 +3,7 @@ package com.handsome.module.login.network.api
 import com.handsome.lib.util.network.ApiGenerator
 import com.handsome.module.login.model.CaptchaResponseData
 import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * ...
@@ -14,13 +14,13 @@ import retrofit2.http.Path
  *
  */
 interface CaptchaManageApiService {
-    @GET("captcha/sent?phone={phone}")
-    suspend fun getCaptcha(@Path("phone") phone: Long): CaptchaResponseData
+    @GET("captcha/sent")
+    suspend fun getCaptcha(@Query("phone") phone: Long): CaptchaResponseData
 
-    @GET("captcha/verify?phone={phone}&captcha={captcha}")
+    @GET("captcha/verify")
     suspend fun verifyCaptcha(
-        @Path("phone") phone: Long,
-        @Path("captcha") captcha: Int
+        @Query("phone") phone: Long,
+        @Query("captcha") captcha: Int
     ): CaptchaResponseData
 
 

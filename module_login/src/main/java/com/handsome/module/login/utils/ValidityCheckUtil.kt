@@ -1,4 +1,4 @@
-package com.handsome.module.login.utils.topfuncation
+package com.handsome.module.login.utils
 
 /**
  * ...
@@ -19,6 +19,12 @@ object ValidityCheckUtil {
         if (input.isNullOrBlank())
             return false
         val pattern = Regex("^\\d{4}$")
+        return pattern.matches(input)
+    }
+    fun isValidEmail(input: String?): Boolean {
+        if (input.isNullOrBlank())
+            return false
+        val pattern = Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}")
         return pattern.matches(input)
     }
 }

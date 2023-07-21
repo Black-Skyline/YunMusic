@@ -1,8 +1,11 @@
 package com.handsome.module.login.network.api
 
 import com.handsome.lib.util.network.ApiGenerator
+import com.handsome.module.login.model.PhoneCaptchaData
+import com.handsome.module.login.model.PhonePasswordData
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * ...
@@ -14,11 +17,11 @@ import retrofit2.http.Path
  */
 interface PhoneNumberLoginApiService {
 
-    @GET("login/cellphone?phone={phone}&password={password}")
-    suspend fun getResponseByPassword(@Path("phone") phone: Long, @Path("password") password: String)
+    @GET("login/cellphone")
+    suspend fun getResponseByPassword(@Query("phone") phone: Long, @Query("password") password: String) : PhonePasswordData
 
-    @GET("login/cellphone?phone={phone}&captcha={captcha}")
-    suspend fun getResponseByCaptcha(@Path("phone") phone: Long, @Path("captcha") captcha: Int)
+    @GET("login/cellphone")
+    suspend fun getResponseByCaptcha(@Query("phone") phone: Long, @Query("captcha") captcha: Int) : PhoneCaptchaData
 
     companion object {
         val INSTANCE by lazy {

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_captcha_login"
     android:background="@drawable/background_gradient_front_cover">
 
     <ImageView
@@ -30,7 +31,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_captcha_to_login"
+        android:id="@+id/til_phone_number_to_login"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
@@ -72,19 +73,19 @@
         android:layout_marginStart="40dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="60dp"
-        android:background="@drawable/shape_round_corner_red"
+        android:background="@drawable/btn_enable_select"
         android:text="登录"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_login_by_password"
+        app:layout_constraintEnd_toStartOf="@+id/btn_change_login_by_password"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/til_captcha_to_login"
+        app:layout_constraintTop_toBottomOf="@+id/til_phone_number_to_login"
         app:layout_constraintVertical_bias="0.0" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_login_by_password"
+        android:id="@+id/btn_change_login_by_password"
         android:layout_width="0dp"
         android:layout_height="55dp"
         android:layout_marginTop="20dp"
@@ -98,7 +99,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btn_login_by_captcha"
-        app:layout_constraintTop_toBottomOf="@+id/til_captcha_to_login"
+        app:layout_constraintTop_toBottomOf="@+id/til_phone_number_to_login"
         app:layout_constraintVertical_bias="0.0" />
 
     <CheckBox
@@ -206,11 +207,11 @@
         android:layout_height="60dp"
         android:layout_marginEnd="40dp"
         android:textColor="@color/black"
-        android:background="#EFE6E6"
+        android:background="#FACACA"
         android:text="获取验证码"
-        app:layout_constraintBottom_toBottomOf="@+id/til_captcha_to_login"
+        app:layout_constraintBottom_toBottomOf="@+id/til_phone_number_to_login"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/til_captcha_to_login" />
+        app:layout_constraintTop_toTopOf="@+id/til_phone_number_to_login" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -81,4 +81,7 @@ dependencies {
     implementation(Rxjava.rxjava3_kotlin)
     implementation(Lifecycle.viewmodel_ktx)
     implementation(Lifecycle.runtime_ktx)
+    implementation(Network.gson)
+    implementation(Network.converter_gson)
+    implementation(Network.okhttp)
 }
