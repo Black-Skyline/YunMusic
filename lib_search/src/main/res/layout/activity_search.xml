@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SearchActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/search_tb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:theme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:popupTheme="@style/Theme.AppCompat.Light">
+
+            <ImageView
+                android:id="@+id/main_top_navi"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/icon_back"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="260dp"
+                android:layout_height="28dp"
+                app:cardCornerRadius="14dp"
+                android:layout_gravity="center">
+
+                <SearchView
+                    android:id="@+id/search_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:iconifiedByDefault="false" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:id="@+id/search_tv_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="16dp"
+                android:text="搜索"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/search_tb">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="搜索历史"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.handsome.lib.search.view.selfview.MyFlowLayout
+                    android:id="@+id/search_history_flow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:FlowLayout_itemSpacing="5dp"
+                    app:FlowLayout_lineSpacing="5dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_garbage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/search_fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:background="@color/white"/>
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>
