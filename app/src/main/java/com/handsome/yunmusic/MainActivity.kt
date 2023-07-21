@@ -2,8 +2,9 @@ package com.handsome.yunmusic
 
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
+import android.view.ViewGroup
 import androidx.core.view.GravityCompat
+import com.handsome.lib.search.SearchActivity
 import com.handsome.lib.util.adapter.FragmentVpAdapter
 import com.handsome.lib.util.extention.toast
 //import com.handsome.module.find.view.fragment.FindFragment
@@ -26,6 +27,11 @@ class MainActivity : YunMusicActivity(){
         mBinding.mainTopNavi.setOnClickListener {
             //打开侧边栏
             mBinding.mainDrawer.openDrawer(GravityCompat.START)
+        }
+        //获取搜索img所在的父布局，并且设置监听事件
+        val viewGroup = mBinding.mainImgSearch.parent as ViewGroup
+        viewGroup.setOnClickListener {
+            SearchActivity.startAction(this)
         }
     }
 

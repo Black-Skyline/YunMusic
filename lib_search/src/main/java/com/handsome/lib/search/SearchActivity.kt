@@ -36,11 +36,11 @@ class SearchActivity : BaseActivity() {
     private var mHandler: Handler = Handler(Looper.getMainLooper())
     private var mRunnable: Runnable? = null
     private val delayTime: Long = 500
+    private var isBack = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-//        gsonSaveToSp(null,"search_history")
         initSearch()
         initSearchHistory()
     }
@@ -52,7 +52,7 @@ class SearchActivity : BaseActivity() {
         if (list.isNotEmpty()) {
             //非空就遍历增加view然后设置点击事件
             for (i in list) {
-                addSearchHistoryView(" $i ")
+                addSearchHistoryView(i)
             }
             initSearchHistoryClick()
         }
@@ -111,10 +111,13 @@ class SearchActivity : BaseActivity() {
         //开启一个新的fragment并且在新的fragment中网络请求
         //每次保存下来搜索历史,将搜索历史在创建时传递给fragment
         if (query != null && query != "") {
+            removeAllFragment()
+            mBinding.searchFragmentContainer.VISIBLE()
             mSearchResultFragment = SearchResultFragment(query, ::onClickSearchResult) //创建新的
             replaceFragment(mSearchResultFragment!!)  //将这个fragment放进去
             list.add(query)
             gsonSaveToSp(list ,"search_history")
+            isBack = false
         }
     }
 
@@ -123,9 +126,10 @@ class SearchActivity : BaseActivity() {
         //搜索改变的时候的搜索提示
         if (newText != "") {
             mBinding.searchFragmentContainer.VISIBLE()  //设置可见
-            mSearchSuggestionFragment?.let { removeFragment(it) }  //移除老的
+            removeAllFragment()
             mSearchSuggestionFragment = SearchSuggestionFragment(newText, ::onSearchSuggestionClick)
             replaceFragment(mSearchSuggestionFragment!!)   //展示新的
+            isBack = false
         } else {
             mBinding.searchFragmentContainer.GONE()  //当啥也没有的时候显示本来的面目
         }
@@ -158,7 +162,6 @@ class SearchActivity : BaseActivity() {
         val transaction = supportFragmentManager.beginTransaction()
         transaction.apply {
             add(R.id.search_fragment_container, fragment)
-            addToBackStack(null)
             commit()
         }
     }
@@ -176,6 +179,15 @@ class SearchActivity : BaseActivity() {
     private fun removeAllFragment(){
         for (fragment in supportFragmentManager.fragments){
             fragment.onDestroy()
+        }
+    }
+
+    override fun onBackPressed() {
+        if (isBack){
+            mBinding.searchFragmentContainer.GONE()
+            isBack = true
+        }else{
+            super.onBackPressed()
         }
     }
 
