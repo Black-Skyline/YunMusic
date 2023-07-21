@@ -20,14 +20,14 @@
             android:layout_height="20dp"
             android:layout_centerVertical="true"
             android:src="@drawable/icon_back"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginStart="10dp"/>
 
         <TextView
             android:id="@+id/top_list_bar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="排行榜"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:layout_toEndOf="@id/top_list_bar_back"
             android:layout_marginStart="16dp"
@@ -74,7 +74,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_gravity="center"
                     android:text="官方榜"
-                    android:textSize="18dp"/>
+                    android:textSize="18sp"/>
 
             </LinearLayout>
 

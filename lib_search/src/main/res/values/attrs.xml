@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MyFlowLayout">
+        <attr name="FlowLayout_lineSpacing" format="dimension"/>
+        <attr name="FlowLayout_itemSpacing" format="dimension"/>
+    </declare-styleable>
+
+</resources>

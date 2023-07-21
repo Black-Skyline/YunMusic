@@ -76,7 +76,7 @@
                 android:id="@+id/main_bottom_music_image_image"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:src="@drawable/icon_bottom_music_record" />
 
             <LinearLayout
@@ -89,10 +89,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:lines="1"
                     android:text="haof"
-                    android:textSize="20dp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -100,10 +100,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:lines="1"
                     android:text=" - 1561"
-                    android:textSize="20dp" />
+                    android:textSize="20sp" />
 
             </LinearLayout>
 
@@ -112,7 +112,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:background="@color/transparent"
                 android:src="@drawable/icon_bottom_music_play" />
 
@@ -121,7 +121,7 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:background="@color/transparent"
                 android:src="@drawable/icon_bottom_music_list" />
 

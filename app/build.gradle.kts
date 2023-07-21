@@ -53,7 +53,7 @@ dependencies {
 
     if(BuildConfig.isRelease) {
         implementation(project(":lib_music"))
-        implementation(project(":lib_mv"))
+//        implementation(project(":lib_mv"))
         implementation(project(":lib_search"))
 
         implementation(project(":module_login"))

@@ -26,6 +26,6 @@ fun <T> gsonSaveToSp(value: T, sharedPreferencesName: String, key: String? = nul
  */
 inline fun <reified T> objectFromSp(sharedPreferencesName: String, key: String? = null): T? {
     val sp = getSharePreference(sharedPreferencesName)
-    val str = sp.getString(key ?: sharedPreferencesName, null)
+    val str = sp.getString(key ?: sharedPreferencesName, null) ?: return null
     return gson.fromJson(str, T::class.java)
 }
