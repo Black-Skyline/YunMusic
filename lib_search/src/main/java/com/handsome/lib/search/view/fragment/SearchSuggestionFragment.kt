@@ -9,6 +9,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.search.databinding.FragmentSearchSuggestionBinding
@@ -53,6 +54,7 @@ class SearchSuggestionFragment(private val keywords : String, onSearchSuggestion
         mBinding.searchSuggestionRv.apply {
             layoutManager = LinearLayoutManager(requireContext(),RecyclerView.VERTICAL,false)
             adapter = mSearchSuggestionRvAdapter
+            addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
         }
     }
 
