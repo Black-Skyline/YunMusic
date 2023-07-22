@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -54,6 +55,14 @@ class SearchActivity : BaseActivity() {
             builder.setPositiveButton("是") { _, _ ->  removeAllHistory()}
             builder.setNegativeButton("否") { _, _ -> }
             builder.show()
+        }
+        mBinding.searchBottomMusicImagePlay.setOnClickListener {
+            //todo 播放操作
+            mBinding.searchBottomMusicImagePlay.setImageResource(R.drawable.icon_stop)
+        }
+        val viewGroup = mBinding.searchBottomMusicTvName.parent as ViewGroup
+        viewGroup.setOnClickListener {
+            //todo 进入歌曲详情页面
         }
     }
 
@@ -151,7 +160,7 @@ class SearchActivity : BaseActivity() {
 
     //点击搜索结果之后
     private fun onClickSearchResult(song: SearchResultData.Result.Song) {
-        //todo 测试
+        //todo 回调播放
         song.name.toast()
     }
 
