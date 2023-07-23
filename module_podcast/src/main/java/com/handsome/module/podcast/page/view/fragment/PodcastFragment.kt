@@ -5,8 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.handsome.module.podcast.databinding.FragmentPodcastBinding
+import com.handsome.module.podcast.model.PersonalizeRecommendationData
+import com.handsome.module.podcast.page.adapter.InterestRadioRecommendAdapter
+import com.handsome.module.podcast.page.viewmodel.PodcastFragmentViewModel
 
 /**
  * ...
@@ -19,6 +23,11 @@ import com.handsome.module.podcast.databinding.FragmentPodcastBinding
 class PodcastFragment : Fragment() {
     private var _binding: FragmentPodcastBinding? = null
     private val binding: FragmentPodcastBinding get() = _binding!!
+
+    private val model by lazy { ViewModelProvider(this)[PodcastFragmentViewModel::class.java] }
+
+
+    private val podcastInterestRecommendAdapter by lazy { InterestRadioRecommendAdapter(::contentClickEvent) }
 
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
@@ -42,11 +51,9 @@ class PodcastFragment : Fragment() {
 
     private fun initSubscribe() {
 
-
     }
 
     private fun initEvent() {
-
 
     }
 
@@ -65,11 +72,17 @@ class PodcastFragment : Fragment() {
         initRadioRecommendList()
     }
 
+
+    /**
+     * 把多个adapter初始化以后concat起来
+     */
     private fun initRadioRecommendList() {
         binding.podcastRvRadioRecommend.apply {
-            layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-
+            layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = podcastInterestRecommendAdapter
         }
+
     }
 
     private fun initPartFM() {
@@ -77,6 +90,14 @@ class PodcastFragment : Fragment() {
     }
 
     private fun initTopFunction() {
+
+    }
+
+    /**
+     * 兴趣推荐的具体item电台 的点击事件交由展示兴趣推荐Fragment实现
+     * @param response
+     */
+    private fun contentClickEvent(response: PersonalizeRecommendationData.Data) {
 
     }
 

@@ -80,4 +80,5 @@ dependencies {
     implementation(Network.gson)
     implementation(Network.converter_gson)
     implementation(Network.okhttp)
+    implementation(Android.recyclerview)
 }

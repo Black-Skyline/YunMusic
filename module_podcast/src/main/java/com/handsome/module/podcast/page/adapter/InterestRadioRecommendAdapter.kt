@@ -4,13 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView.ViewHolder
+import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.lib.util.util.MyDIffUtil
 import com.handsome.module.podcast.R
 import com.handsome.module.podcast.databinding.ItemPodcastInterestRecommendContentBinding
 import com.handsome.module.podcast.databinding.ItemPodcastInterestRecommendTitleBinding
 import com.handsome.module.podcast.model.PersonalizeRecommendationData
+import com.handsome.module.podcast.utils.setOnSingleClickListener
 
 /**
  * ...
@@ -20,10 +21,7 @@ import com.handsome.module.podcast.model.PersonalizeRecommendationData
  * @Description:
  *
  */
-class InterestRadioRecommendAdapter(
-    val titleClickEvent: (() -> Unit)? = null,
-    val contentClickEvent: (PersonalizeRecommendationData.Data) -> Unit
-) :
+class InterestRadioRecommendAdapter(val contentClickEvent: (PersonalizeRecommendationData.Data) -> Unit) :
     ListAdapter<InterestRadioRecommendAdapter.Data, InterestRadioRecommendAdapter.Holder>(MyDIffUtil.getNewDiff()) {
 
     companion object {
@@ -32,28 +30,54 @@ class InterestRadioRecommendAdapter(
     }
 
     sealed class Data(val type: Int) {
-        data class TitleBean(val titleText: String = "") : Data(TYPE_TITLE)
+        data class TitleBean(
+            val titleText: String? = null,
+            val refreshCallback: (() -> Unit)? = null,  // 可传入刷新的逻辑
+            val customCallback: (() -> Unit)? = null,   // 可传入兴趣定制的逻辑
+        ) : Data(TYPE_TITLE)
+
         data class ContentBean(val need: PersonalizeRecommendationData.Data) : Data(TYPE_CONTENT)
     }
 
-    sealed class Holder(root: View) : ViewHolder(root)
+    sealed class Holder(root: View) : RecyclerView.ViewHolder(root)
 
-    inner class TitleHolder(val binding: ItemPodcastInterestRecommendTitleBinding) :
+    inner class TitleHolder(binding: ItemPodcastInterestRecommendTitleBinding) :
         Holder(binding.root) {
-
+        init {
+            val callbackData = getItem(bindingAdapterPosition) as Data.TitleBean
+            if (!callbackData.titleText.isNullOrBlank())
+                binding.podcastTvInterestRecommendTitle.text = callbackData.titleText
+            binding.podcastImgInterestRecommendRefresh.setOnSingleClickListener(500) {
+                callbackData.refreshCallback?.invoke()
+            }
+            binding.podcastTvInterestRecommendTitle.setOnSingleClickListener(500) {
+                callbackData.refreshCallback?.invoke()
+            }
+            binding.podcastTvInterestRecommendCustom.setOnSingleClickListener(500) {
+                callbackData.customCallback?.invoke()
+            }
+        }
     }
 
     inner class ContentHolder(val binding: ItemPodcastInterestRecommendContentBinding) :
         Holder(binding.root) {
-            init {
-                binding.itemPodcastRecommendBackgroundImg.setOnClickListener {
-//                    contentClickEvent(getItem())
-                }
+        init {
+            binding.podcastImgInterestRecommendItemBackground.setOnClickListener {
+                // 拿到请求到的位于当前位置的response数据,传入PersonalizeRecommendationData.Data
+                contentClickEvent((getItem(bindingAdapterPosition) as Data.ContentBean).need)
             }
+            binding.podcastTvInterestRecommendItemDescription.setOnClickListener {
+                // 拿到请求到的位于当前位置的response数据,传入PersonalizeRecommendationData.Data
+                contentClickEvent((getItem(bindingAdapterPosition) as Data.ContentBean).need)
+            }
+        }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return getItem(position).type
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-
         return when (viewType) {
             TYPE_TITLE -> TitleHolder(
                 ItemPodcastInterestRecommendTitleBinding.inflate(
@@ -82,22 +106,21 @@ class InterestRadioRecommendAdapter(
             }
 
             is ContentHolder -> {  //position != 0
-                val item =
-                    (getItem(position) as Data.ContentBean).need // getItem()类型InterestRadioRecommendAdapter.Data
+                // getItem()类型InterestRadioRecommendAdapter.Data
+                val item = (getItem(position) as Data.ContentBean).need
                 holder.apply {
-                    binding.itemPodcastRecommendBackgroundImg.setImageFromUrl(
+                    binding.podcastImgInterestRecommendItemBackground.setImageFromUrl(
                         item.picUrl, placeholder = R.drawable.ic_image_not_supported_100
                     )
                     val playNumber =
                         if (item.playCount / 100000000 > 0) "${item.playCount / 100000000}亿"
-                        else if (item.playCount / 100000 > 0) "${item.playCount / 100000}亿"
+                        else if (item.playCount / 100000 > 0) "${item.playCount / 100000}万"
                         else "${item.playCount}"
-                    binding.itemPodcastRecommendBackgroundNumber.text = playNumber
-                    binding.itemPodcastRecommendDescription.text = item.rcmdText
-                    binding.itemPodcastRecommendLabel.text = item.category
+                    binding.podcastTvInterestRecommendItemPlayNumber.text = playNumber
+                    binding.podcastTvInterestRecommendItemDescription.text = item.rcmdText
+                    binding.podcastTvInterestRecommendItemLabel.text = item.category
                 }
             }
         }
     }
-
 }

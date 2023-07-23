@@ -6,7 +6,7 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/podcast_img_refresh"
+        android:id="@+id/podcast_img_interest_recommend_refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
@@ -21,14 +21,14 @@
         android:id="@+id/podcast_tv_interest_recommend_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@+id/podcast_img_refresh"
+        android:layout_toEndOf="@+id/podcast_img_interest_recommend_refresh"
         android:text="猜你喜欢"
         android:textColor="@color/black"
         android:textSize="17sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/podcast_img_refresh"
-        app:layout_constraintStart_toEndOf="@+id/podcast_img_refresh"
-        app:layout_constraintTop_toTopOf="@+id/podcast_img_refresh" />
+        app:layout_constraintBottom_toBottomOf="@+id/podcast_img_interest_recommend_refresh"
+        app:layout_constraintStart_toEndOf="@+id/podcast_img_interest_recommend_refresh"
+        app:layout_constraintTop_toTopOf="@+id/podcast_img_interest_recommend_refresh" />
 
     <TextView
         android:id="@+id/podcast_tv_interest_recommend_custom"
