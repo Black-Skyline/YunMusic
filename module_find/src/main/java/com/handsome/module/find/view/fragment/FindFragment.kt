@@ -346,8 +346,7 @@ class FindFragment : Fragment() {
     }
 
     private fun onClickTopList(data: TopListData.Data) {
-        //todo 点击事件
-        data.name.toast()
+        MusicListDetailActivity.startAction(requireContext(),data.id)
     }
 
     override fun onCreateView(

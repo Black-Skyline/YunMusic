@@ -13,7 +13,7 @@ class DebugActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 //        startActivity(Intent(this, FindActivity::class.java))
 //        startActivity(Intent(this, MusicListDetailActivity::class.java))
-//        startActivity(Intent(this, TopListActivity::class.java))
+        startActivity(Intent(this, TopListActivity::class.java))
 //        startActivity(Intent(this, RecommendDetailActivity::class.java))
 //        startActivity(Intent(this, SpecialEditionActivity::class.java))
 
