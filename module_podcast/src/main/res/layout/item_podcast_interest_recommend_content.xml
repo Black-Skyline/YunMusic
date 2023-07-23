@@ -12,7 +12,7 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/item_podcast_recommend_background_img"
+            android:id="@+id/podcast_img_interest_recommend_item_background"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="0dp"
@@ -33,7 +33,7 @@
                 android:src="@drawable/ic_play_white_24" />
 
             <TextView
-                android:id="@+id/item_podcast_recommend_background_number"
+                android:id="@+id/podcast_tv_interest_recommend_item_play_number"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
@@ -51,9 +51,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-
         <TextView
-            android:id="@+id/item_podcast_recommend_label"
+            android:id="@+id/podcast_tv_interest_recommend_item_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
@@ -64,13 +63,13 @@
             android:textSize="7sp" />
 
         <TextView
-            android:id="@+id/item_podcast_recommend_description"
+            android:id="@+id/podcast_tv_interest_recommend_item_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:lines="2"
             android:text="星穹铁道"
-            android:textSize="11sp"></TextView>
+            android:textSize="11sp"/>
     </LinearLayout>
 
 
