@@ -83,6 +83,11 @@ class MusicListDetailActivity : BaseActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(connection)
+    }
+
     private fun initTop(id : Long) {
         initTopCollect()
         getTopInfo(id)

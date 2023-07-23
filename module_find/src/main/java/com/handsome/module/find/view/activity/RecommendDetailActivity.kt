@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
-import com.handsome.lib.util.extention.toast
 import com.handsome.lib.util.util.gsonSaveToSp
 import com.handsome.lib.util.util.objectFromSp
 import com.handsome.lib.util.util.shareText
@@ -83,6 +82,11 @@ class RecommendDetailActivity : BaseActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(connection)
+    }
+
     private fun initMusic() {
         initMusicAdapter()
         initMusicCollect()
@@ -125,7 +129,6 @@ class RecommendDetailActivity : BaseActivity() {
     }
 
     private fun recommendDetailOnClick(dailySong: RecommendDetailData.Data.DailySong) {
-        dailySong.name.toast()
         //todo 播放逻辑！！！
     }
 

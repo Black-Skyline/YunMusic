@@ -11,6 +11,7 @@ import android.widget.ImageView
 import androidx.core.view.GravityCompat
 import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.music.sevice.MusicService
+import com.handsome.lib.search.SearchActivity
 //import com.handsome.lib.search.SearchActivity
 import com.handsome.lib.util.adapter.FragmentVpAdapter
 import com.handsome.lib.util.extention.toast
@@ -92,7 +93,7 @@ class MainActivity : YunMusicActivity() {
         //获取搜索img所在的父布局，并且设置监听事件
         val viewGroup = mBinding.mainImgSearch.parent as ViewGroup
         viewGroup.setOnClickListener {
-//            SearchActivity.startAction(this)
+            SearchActivity.startAction(this)
         }
     }
 
@@ -163,5 +164,10 @@ class MainActivity : YunMusicActivity() {
                 mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(connection)
     }
 }

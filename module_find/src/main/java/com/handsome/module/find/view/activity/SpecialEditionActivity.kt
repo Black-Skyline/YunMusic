@@ -89,6 +89,11 @@ class SpecialEditionActivity : BaseActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        unbindService(connection)
+    }
+
     private fun initService() {
         Intent(this, MusicService::class.java).also { intent ->
             bindService(intent, connection, BIND_AUTO_CREATE)
