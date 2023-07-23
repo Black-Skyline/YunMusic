@@ -56,14 +56,14 @@ class SearchActivity : BaseActivity() {
             builder.setNegativeButton("否") { _, _ -> }
             builder.show()
         }
-        mBinding.searchBottomMusicImagePlay.setOnClickListener {
-            //todo 播放操作
-            mBinding.searchBottomMusicImagePlay.setImageResource(R.drawable.icon_stop)
-        }
-        val viewGroup = mBinding.searchBottomMusicTvName.parent as ViewGroup
-        viewGroup.setOnClickListener {
-            //todo 进入歌曲详情页面
-        }
+//        mBinding.searchBottomMusicImagePlay.setOnClickListener {
+//            //todo 播放操作
+//            mBinding.searchBottomMusicImagePlay.setImageResource(R.drawable.icon_stop)
+//        }
+//        val viewGroup = mBinding.searchBottomMusicTvName.parent as ViewGroup
+//        viewGroup.setOnClickListener {
+//            //todo 进入歌曲详情页面
+//        }
     }
 
     private fun removeAllHistory() {

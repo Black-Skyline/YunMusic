@@ -1,10 +1,14 @@
 package com.handsome.yunmusic
 
+import android.content.ComponentName
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.ViewGroup
 import androidx.core.view.GravityCompat
-import com.handsome.lib.search.SearchActivity
+import com.handsome.lib.music.sevice.MusicService
+//import com.handsome.lib.search.SearchActivity
 import com.handsome.lib.util.adapter.FragmentVpAdapter
 import com.handsome.lib.util.extention.toast
 //import com.handsome.module.find.view.fragment.FindFragment
@@ -12,6 +16,22 @@ import com.handsome.yunmusic.databinding.ActivityMainBinding
 
 class MainActivity : YunMusicActivity(){
     private val mBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    // Service实例
+    private lateinit var mMusicService : MusicService
+    // Service是否已绑定
+    private var mIsBound: Boolean = false
+    //service的回调
+    private val connection = object : ServiceConnection{
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MusicService.MusicPlayBinder
+            mMusicService = binder.service
+            mIsBound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            mIsBound = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +40,12 @@ class MainActivity : YunMusicActivity(){
         initVpAdapter()
         initNaviBottomClick()
         initDrawerNavi()
+        initClickPlay()
+    }
+
+    //播放逻辑
+    private fun initClickPlay() {
+
     }
 
     private fun initBar() {
@@ -31,7 +57,7 @@ class MainActivity : YunMusicActivity(){
         //获取搜索img所在的父布局，并且设置监听事件
         val viewGroup = mBinding.mainImgSearch.parent as ViewGroup
         viewGroup.setOnClickListener {
-            SearchActivity.startAction(this)
+//            SearchActivity.startAction(this)
         }
     }
 
