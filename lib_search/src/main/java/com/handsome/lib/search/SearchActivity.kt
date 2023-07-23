@@ -1,20 +1,19 @@
 package com.handsome.lib.search
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
+import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.handsome.lib.search.databinding.ActivitySearchBinding
 import com.handsome.lib.search.network.model.SearchResultData
 import com.handsome.lib.search.network.model.SearchSuggestionData
-import com.handsome.lib.search.network.myCoroutineExceptionHandler
 import com.handsome.lib.search.view.fragment.SearchResultFragment
 import com.handsome.lib.search.view.fragment.SearchSuggestionFragment
 import com.handsome.lib.search.view.viewmodel.SearchActivityViewModel
@@ -24,18 +23,14 @@ import com.handsome.lib.util.extention.VISIBLE
 import com.handsome.lib.util.extention.toast
 import com.handsome.lib.util.util.gsonSaveToSp
 import com.handsome.lib.util.util.objectFromSp
-import kotlinx.coroutines.launch
 
 class SearchActivity : BaseActivity() {
     private val mBinding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[SearchActivityViewModel::class.java] }
     private var mTv: TextView? = null
-    private var list: ArrayList<String> = ArrayList()
+    private var list: HashSet<String> = HashSet()
     private var mSearchSuggestionFragment: SearchSuggestionFragment? = null
     private var mSearchResultFragment: SearchResultFragment? = null
-    private var mHandler: Handler = Handler(Looper.getMainLooper())
-    private var mRunnable: Runnable? = null
-    private val delayTime: Long = 500
     private var isBack = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,11 +38,43 @@ class SearchActivity : BaseActivity() {
         setContentView(mBinding.root)
         initSearch()
         initSearchHistory()
+        initClick()
+    }
+
+    private fun initClick() {
+        mBinding.searchImgBack.setOnClickListener {
+            finish()
+        }
+        mBinding.searchTvSearch.setOnClickListener {
+            val query = mBinding.searchSearch.query.toString()
+            setSearchViewQuery(query)
+        }
+        mBinding.searchGarbage.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("确定清空所有搜索历史?")
+            builder.setPositiveButton("是") { _, _ ->  removeAllHistory()}
+            builder.setNegativeButton("否") { _, _ -> }
+            builder.show()
+        }
+        mBinding.searchBottomMusicImagePlay.setOnClickListener {
+            //todo 播放操作
+            mBinding.searchBottomMusicImagePlay.setImageResource(R.drawable.icon_stop)
+        }
+        val viewGroup = mBinding.searchBottomMusicTvName.parent as ViewGroup
+        viewGroup.setOnClickListener {
+            //todo 进入歌曲详情页面
+        }
+    }
+
+    private fun removeAllHistory() {
+        mBinding.searchHistoryFlow.removeAllViews()
+        list.clear()
+        gsonSaveToSp(list,"search_history")
     }
 
     //初始化搜索历史
     private fun initSearchHistory() {
-        val list1 = objectFromSp<List<String>>("search_history") ?: return
+        val list1 = objectFromSp<Set<String>>("search_history") ?: return
         list.addAll(list1)
         if (list.isNotEmpty()) {
             //非空就遍历增加view然后设置点击事件
@@ -87,7 +114,6 @@ class SearchActivity : BaseActivity() {
         mBinding.searchSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             //提交搜索的时候
             override fun onQueryTextSubmit(query: String?): Boolean {
-                mRunnable?.let { mHandler.removeCallbacks(it) }  //提交的时候将之前延时任务删除掉
                 doAfterSubmit(query)
                 //表示已经处理，系统无需再次处理
                 return true
@@ -95,12 +121,8 @@ class SearchActivity : BaseActivity() {
 
             //搜索改变的时候
             override fun onQueryTextChange(newText: String?): Boolean {
-                mRunnable?.let { mHandler.removeCallbacks(it) } //改变的时候将之前延时任务删除掉
                 mSearchResultFragment?.let { removeFragment(it) } //当改变的时候如果搜索结果还在就移除
-                mRunnable = Runnable {
-                    doAfterChange(newText)
-                }
-                mHandler.postDelayed(mRunnable!!, delayTime)
+                doAfterChange(newText)
                 return false
             }
         })
@@ -116,8 +138,8 @@ class SearchActivity : BaseActivity() {
             mSearchResultFragment = SearchResultFragment(query, ::onClickSearchResult) //创建新的
             replaceFragment(mSearchResultFragment!!)  //将这个fragment放进去
             list.add(query)
-            gsonSaveToSp(list ,"search_history")
-            isBack = false
+            gsonSaveToSp(list, "search_history")
+            isBack = true
         }
     }
 
@@ -129,15 +151,16 @@ class SearchActivity : BaseActivity() {
             removeAllFragment()
             mSearchSuggestionFragment = SearchSuggestionFragment(newText, ::onSearchSuggestionClick)
             replaceFragment(mSearchSuggestionFragment!!)   //展示新的
-            isBack = false
+            isBack = true
         } else {
+            removeAllFragment()
             mBinding.searchFragmentContainer.GONE()  //当啥也没有的时候显示本来的面目
         }
     }
 
     //点击搜索结果之后
     private fun onClickSearchResult(song: SearchResultData.Result.Song) {
-        //todo 测试
+        //todo 回调播放
         song.name.toast()
     }
 
@@ -176,17 +199,17 @@ class SearchActivity : BaseActivity() {
         }
     }
 
-    private fun removeAllFragment(){
-        for (fragment in supportFragmentManager.fragments){
+    private fun removeAllFragment() {
+        for (fragment in supportFragmentManager.fragments) {
             fragment.onDestroy()
         }
     }
 
     override fun onBackPressed() {
-        if (isBack){
+        if (isBack) {
             mBinding.searchFragmentContainer.GONE()
-            isBack = true
-        }else{
+            isBack = false
+        } else {
             super.onBackPressed()
         }
     }

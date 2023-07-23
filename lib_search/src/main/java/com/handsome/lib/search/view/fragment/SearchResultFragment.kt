@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class SearchResultFragment(private val key : String,private val onClick : (SearchResultData.Result.Song) -> Unit) : BaseFragment() {
+class SearchResultFragment(private val key : String,onClick : (SearchResultData.Result.Song) -> Unit) : BaseFragment() {
     private val mBinding by lazy { FragmentSearchResultBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[SearchResultFragmentViewModel::class.java] }
     private val mSearchResultPagingDataAdapter by lazy { SearchResultRvAdapter(onClick) }

@@ -88,14 +88,12 @@ class TopListActivity : BaseActivity() {
 
 
     private fun onTopListClick(data: TopListData.Data) {
-        //todo 等待点击事件
-        data.name.toast()
+        MusicListDetailActivity.startAction(this,data.id)
     }
 
 
     private fun onTopPictureListClick(data: TopListData.Data) {
-        //todo 等待点击事件
-        data.name.toast()
+        MusicListDetailActivity.startAction(this,data.id)
     }
 
     companion object{
