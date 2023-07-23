@@ -1,27 +1,35 @@
 package com.handsome.yunmusic
 
 import android.content.ComponentName
+import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.GravityCompat
+import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.music.sevice.MusicService
 //import com.handsome.lib.search.SearchActivity
 import com.handsome.lib.util.adapter.FragmentVpAdapter
 import com.handsome.lib.util.extention.toast
+import com.handsome.module.find.view.fragment.FindFragment
 //import com.handsome.module.find.view.fragment.FindFragment
 import com.handsome.yunmusic.databinding.ActivityMainBinding
 
-class MainActivity : YunMusicActivity(){
+class MainActivity : YunMusicActivity() {
     private val mBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    private lateinit var mImgPlay : ImageView
+
     // Service实例
-    private lateinit var mMusicService : MusicService
+    private lateinit var mMusicService: MusicService
+
     // Service是否已绑定
     private var mIsBound: Boolean = false
+
     //service的回调
-    private val connection = object : ServiceConnection{
+    private val connection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicService.MusicPlayBinder
             mMusicService = binder.service
@@ -41,11 +49,38 @@ class MainActivity : YunMusicActivity(){
         initNaviBottomClick()
         initDrawerNavi()
         initClickPlay()
+        initService()
+    }
+
+    private fun initService() {
+        Intent(this, MusicService::class.java).also { intent ->
+            bindService(intent, connection, BIND_AUTO_CREATE)
+        }
     }
 
     //播放逻辑
     private fun initClickPlay() {
-
+        mImgPlay = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_play)
+        //播放的点击事件，dj！
+        mImgPlay.setOnClickListener {
+            if (!mIsBound) {  //还未绑定service直接返回
+                return@setOnClickListener
+            }
+            if (!mMusicService.isPrepared) {
+                return@setOnClickListener
+            }
+            if (mMusicService.isPlaying()) {
+                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
+                mMusicService.pausePlay()
+            } else {
+                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
+                mMusicService.startPlay()
+            }
+        }
+        val viewGroup = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).parent as ViewGroup
+        viewGroup.setOnClickListener {
+            startActivity(Intent(this,MusicPlayActivity::class.java)) //todo
+        }
     }
 
     private fun initBar() {
@@ -64,7 +99,7 @@ class MainActivity : YunMusicActivity(){
     private fun initVpAdapter() {
         val fragmentVpAdapter = FragmentVpAdapter(this)
         //todo 等待加入的fragment
-//        fragmentVpAdapter.add(FindFragment::class.java)
+        fragmentVpAdapter.add(FindFragment::class.java)
         mBinding.mainNaviVp.adapter = fragmentVpAdapter
         mBinding.mainNaviVp.isUserInputEnabled = false;  //禁止vp滑动的方法,会让banner不管用
     }
@@ -114,6 +149,18 @@ class MainActivity : YunMusicActivity(){
                     }
                 }
                 return@setNavigationItemSelectedListener true
+            }
+        }
+    }
+
+    //每次重新恢复页面的时候也要进行判断播放状态
+    override fun onStart() {
+        super.onStart()
+        if (mIsBound){
+            if (mMusicService.isPlaying()) {
+                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
+            } else {
+                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
             }
         }
     }
