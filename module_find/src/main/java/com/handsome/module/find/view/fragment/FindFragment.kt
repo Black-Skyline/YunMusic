@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.extention.toast
 import com.handsome.lib.util.util.gsonSaveToSp
 import com.handsome.lib.util.util.objectFromSp
+import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.databinding.FragmentFindBinding
 import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.BannerBelowData
@@ -75,15 +76,28 @@ class FindFragment : Fragment() {
     private fun initRecommendList() {
         initRecommendListRvAdapter()
         initRecommendListCollect()
-        getRecommendListData(6)
+        getRecommendListData(10)
+        initRecommendListShare()
+    }
+
+    private fun initRecommendListShare() {
+        mBinding.findImgMore.setOnClickListener {
+            requireContext().shareText("小帅哥快来玩啊: http://why.vin:2023/personalized")
+        }
     }
 
     private fun initTopList() {
         initTopListAdapter()
         initTopListCollect()
         getTopListData()
+        initTopListShare()
     }
 
+    private fun initTopListShare() {
+        mBinding.findImgTopListMore.setOnClickListener {
+            requireContext().shareText("小帅哥快来玩啊: http://why.vin:2023/toplist/detail")
+        }
+    }
 
 
     private fun initRecommendListRvAdapter() {

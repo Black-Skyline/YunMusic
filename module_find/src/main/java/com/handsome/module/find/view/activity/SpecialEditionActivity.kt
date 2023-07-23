@@ -21,6 +21,7 @@ import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.lib.util.extention.toast
+import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivitySpecialEditionBinding
 import com.handsome.module.find.view.adapter.AlbumSongsAdapter
@@ -170,8 +171,7 @@ class SpecialEditionActivity : BaseActivity() {
                 return true
             }
             R.id.menu_item_music_more -> {
-                "之后的道路，以后再来探索吧！".toast()
-                //todo 等待点击事件
+                shareText("小帅哥快来玩啊: http://why.vin:2023/album?id=32311")
             }
         }
         return super.onOptionsItemSelected(item)

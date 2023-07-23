@@ -24,6 +24,7 @@ import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.toast
 import com.handsome.lib.util.util.gsonSaveToSp
 import com.handsome.lib.util.util.objectFromSp
+import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityRecommendDetailBinding
 import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
@@ -181,8 +182,7 @@ class RecommendDetailActivity : BaseActivity() {
             }
 
             R.id.menu_item_music_more -> {
-                "之后的道路，以后再来探索吧！".toast()
-                //todo 等待点击事件
+                shareText("小帅哥快来玩啊: http://why.vin:2023/recommend/songs")
             }
         }
         return super.onOptionsItemSelected(item)
