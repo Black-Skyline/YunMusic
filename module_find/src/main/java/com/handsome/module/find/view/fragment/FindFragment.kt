@@ -23,6 +23,7 @@ import com.handsome.module.find.network.model.BannerBelowData
 import com.handsome.module.find.network.model.BannerData
 import com.handsome.module.find.network.model.RecommendMusicListData
 import com.handsome.module.find.network.model.TopListData
+import com.handsome.module.find.view.activity.MusicListDetailActivity
 import com.handsome.module.find.view.activity.RecommendDetailActivity
 import com.handsome.module.find.view.activity.SpecialEditionActivity
 import com.handsome.module.find.view.activity.TopListActivity
@@ -121,10 +122,7 @@ class FindFragment : Fragment() {
     }
 
     private fun onRecommendListClick(result: RecommendMusicListData.Result) {
-        result.name.toast()
-        when (result.name) {
-            //todo 点击事件
-        }
+        MusicListDetailActivity.startAction(requireContext(),result.id)
     }
 
     private fun initBannerBelowSb() {

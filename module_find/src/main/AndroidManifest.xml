@@ -4,6 +4,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <application>
         <activity
+            android:name=".view.activity.MusicListDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.YunMusic.Find"/>
+        <activity
             android:name=".view.activity.FindActivity"
             android:exported="true">
         </activity>
