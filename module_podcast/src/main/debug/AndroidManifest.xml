@@ -6,7 +6,8 @@
     <!--    android:roundIcon="@mipmap/ic_launcher_round"-->
     <!--    android:supportsRtl="true"-->
     <!--    android:theme="@style/Theme.YunMusic"-->
-    <application>
+    <application
+        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <activity
             android:name="podcast.ui.DebugActivity"
             android:exported="true">

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="listener_single_click_is" type="id"/>
+    <item name="listener_double_click_is" type="id"/>
+</resources>
