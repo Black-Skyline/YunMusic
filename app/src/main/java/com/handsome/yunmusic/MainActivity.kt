@@ -6,18 +6,25 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.search.SearchActivity
 //import com.handsome.lib.search.SearchActivity
 import com.handsome.lib.util.adapter.FragmentVpAdapter
+import com.handsome.lib.util.extention.setImageFromLocalUri
+import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.lib.util.extention.toast
 import com.handsome.module.find.view.fragment.FindFragment
 //import com.handsome.module.find.view.fragment.FindFragment
 import com.handsome.yunmusic.databinding.ActivityMainBinding
+import java.io.File
 
 class MainActivity : YunMusicActivity() {
     private val mBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -39,6 +46,13 @@ class MainActivity : YunMusicActivity() {
 
         override fun onServiceDisconnected(name: ComponentName?) {
             mIsBound = false
+        }
+    }
+
+    //从相册中拿结果
+    val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+        if (uri != null) {
+            findViewById<ImageView>(R.id.drawer_header_user_icon).setImageFromLocalUri(uri)
         }
     }
 
@@ -152,6 +166,24 @@ class MainActivity : YunMusicActivity() {
                 return@setNavigationItemSelectedListener true
             }
         }
+        //增加侧滑监听，drawerlayout只有在显示的时候才会创建。
+        mBinding.mainDrawer.addDrawerListener(object : DrawerLayout.DrawerListener{
+            override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
+            }
+
+            override fun onDrawerOpened(drawerView: View) {
+                val imageUser = findViewById<ImageView>(R.id.drawer_header_user_icon)
+                imageUser.setOnClickListener {
+                    pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
+                }
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+            }
+
+            override fun onDrawerStateChanged(newState: Int) {
+            }
+        })
     }
 
     //每次重新恢复页面的时候也要进行判断播放状态

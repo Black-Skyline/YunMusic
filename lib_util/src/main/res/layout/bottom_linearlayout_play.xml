@@ -15,7 +15,7 @@
         android:src="@drawable/icon_bottom_music_record" />
 
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
 
@@ -24,9 +24,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="16dp"
             android:lines="1"
-            android:text="haof"
+            android:text="军哥"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -37,7 +37,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
             android:lines="1"
-            android:text=" - 1561"
+            android:text=" - 最炫民族风"
             android:textSize="20sp" />
 
     </LinearLayout>

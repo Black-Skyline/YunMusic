@@ -8,9 +8,9 @@ open class YunMusicActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //只进行一次异常捕获
-        if (intent.getBooleanExtra("restart",true)) {
-            Thread.setDefaultUncaughtExceptionHandler(MyExceptionHandler())
-        }
+//        //只进行一次异常捕获
+//        if (intent.getBooleanExtra("restart",true)) {
+//            Thread.setDefaultUncaughtExceptionHandler(MyExceptionHandler())
+//        }
     }
 }
