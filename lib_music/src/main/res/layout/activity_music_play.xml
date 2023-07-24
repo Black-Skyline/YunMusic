@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A4742"
+    android:background="@drawable/background_page_light"
     tools:context=".MusicPlayActivity">
 
     <TextView
-        android:id="@+id/tv_music_title"
+        android:id="@+id/tv_audio_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="骚麦"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="80dp"
+        android:textColor="@color/cardview_light_background"
+        android:textSize="20sp"
+        android:lines="1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:layout_constraintVertical_bias="0.0"
         tools:text="24岁，事先辈" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -26,18 +26,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.05" />
+        app:layout_constraintGuide_percent="0.02" />
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_music_pic"
         android:layout_width="300dp"
-        android:layout_height="200dp"
+        android:layout_height="300dp"
         android:contentDescription="点击切换歌词界面"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline2"
+        app:shapeAppearance="@style/circleBackground"
         app:srcCompat="@drawable/oh_good" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -53,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
         android:text="00:00"
+        android:textColor="#ffffff"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="parent" />
@@ -63,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="35dp"
         android:text="00:00"
+        android:textColor="#ffffff"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_cur_time"
         app:layout_constraintEnd_toEndOf="parent"
@@ -97,7 +100,7 @@
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_cur_time"
-        app:srcCompat="@drawable/ic_media_playmode_single_cycle_24" />
+        app:srcCompat="@drawable/ic_media_playmode_single_cycle_35" />
 
     <ImageView
         android:id="@+id/bt_previous_song"
@@ -109,7 +112,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/bt_play_mode"
         app:layout_constraintTop_toTopOf="@+id/bt_play_mode"
-        app:srcCompat="@drawable/ic_media_skip_previous_24" />
+        app:srcCompat="@drawable/ic_media_skip_previous_35" />
 
     <ImageView
         android:id="@+id/bt_play_select"
@@ -121,7 +124,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/bt_previous_song"
         app:layout_constraintTop_toTopOf="@+id/bt_previous_song"
-        app:srcCompat="@drawable/ic_media_click_play_50" />
+        app:srcCompat="@drawable/ic_media_click_play_60" />
 
     <ImageView
         android:id="@+id/bt_next_song"
@@ -133,7 +136,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/bt_play_select"
         app:layout_constraintTop_toTopOf="@+id/bt_play_select"
-        app:srcCompat="@drawable/ic_media_skip_next_24" />
+        app:srcCompat="@drawable/ic_media_skip_next_35" />
 
     <ImageView
         android:id="@+id/bt_playlist"
@@ -145,6 +148,27 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/bt_next_song"
         app:layout_constraintTop_toTopOf="@+id/bt_next_song"
-        app:srcCompat="@drawable/ic_media_playlist_play_24" />
+        app:srcCompat="@drawable/ic_media_playlist_play_35" />
+
+    <TextView
+        android:id="@+id/tv_artist_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/cardview_light_background"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/tv_audio_name"
+        app:layout_constraintStart_toStartOf="@+id/tv_audio_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_audio_name"
+        tools:text="林檎" />
+
+    <ImageView
+        android:id="@+id/bt_leave_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:srcCompat="@drawable/ic_media_leave_page_35" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
