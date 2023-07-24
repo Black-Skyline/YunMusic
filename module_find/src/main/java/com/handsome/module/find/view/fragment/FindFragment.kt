@@ -135,8 +135,8 @@ class FindFragment : Fragment() {
         }
     }
 
-    private fun onRecommendListClick(result: RecommendMusicListData.Result) {
-        MusicListDetailActivity.startAction(requireContext(),result.id)
+    private fun onRecommendListClick(result: RecommendMusicListData.Result,sharedView: View) {
+        MusicListDetailActivity.startAction(requireActivity(),result.id,sharedView)
     }
 
     private fun initBannerBelowSb() {
@@ -359,8 +359,8 @@ class FindFragment : Fragment() {
         }
     }
 
-    private fun onClickTopList(data: TopListData.Data) {
-        MusicListDetailActivity.startAction(requireContext(),data.id)
+    private fun onClickTopList(data: TopListData.Data,sharedView: View) {
+        MusicListDetailActivity.startAction(requireActivity(),data.id,sharedView)
     }
 
     override fun onCreateView(

@@ -3,6 +3,7 @@ package com.handsome.module.find.view.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -90,13 +91,13 @@ class TopListActivity : BaseActivity() {
     }
 
 
-    private fun onTopListClick(data: TopListData.Data) {
-        MusicListDetailActivity.startAction(this,data.id)
+    private fun onTopListClick(data: TopListData.Data,sharedView : View) {
+        MusicListDetailActivity.startAction(this,data.id,sharedView)
     }
 
 
-    private fun onTopPictureListClick(data: TopListData.Data) {
-        MusicListDetailActivity.startAction(this,data.id)
+    private fun onTopPictureListClick(data: TopListData.Data,sharedView: View) {
+        MusicListDetailActivity.startAction(this,data.id,sharedView)
     }
 
     companion object{

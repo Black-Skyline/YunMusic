@@ -1,6 +1,7 @@
 package com.handsome.module.find.view.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -9,14 +10,14 @@ import com.handsome.lib.util.util.MyDIffUtil
 import com.handsome.module.find.databinding.TopListTvItemBinding
 import com.handsome.module.find.network.model.TopListData
 
-class TopListRvAdapter(private val onClick : (TopListData.Data) -> Unit) : ListAdapter<TopListData.Data,TopListRvAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
+class TopListRvAdapter(private val onClick : (TopListData.Data,sharedView : View) -> Unit) : ListAdapter<TopListData.Data,TopListRvAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
 
     inner class MyHolder(val binding : TopListTvItemBinding) : RecyclerView.ViewHolder(binding.root){
         init {
             //todo 点击事件
             val viewGroup = binding.topListItemImg.rootView as ViewGroup
             viewGroup.setOnClickListener {
-                onClick(getItem(bindingAdapterPosition))
+                onClick(getItem(bindingAdapterPosition),binding.topListItemImg)
             }
         }
     }

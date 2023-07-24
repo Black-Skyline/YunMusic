@@ -1,5 +1,7 @@
 package com.handsome.module.find.view.activity
 
+import android.app.Activity
+import android.app.ActivityOptions
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -8,6 +10,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.Lifecycle
@@ -201,10 +204,11 @@ class MusicListDetailActivity : BaseActivity() {
     }
 
     companion object {
-        fun startAction(context: Context, id: Long) {
+        fun startAction(context: Activity, id: Long ,sharedView: View) {
+            val options = ActivityOptions.makeSceneTransitionAnimation(context, sharedView, "music_detail_list")
             val intent = Intent(context, MusicListDetailActivity::class.java)
             intent.putExtra("id", id)
-            context.startActivity(intent)
+            context.startActivity(intent,options.toBundle())
         }
     }
 }
