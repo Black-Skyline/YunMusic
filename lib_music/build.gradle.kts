@@ -42,6 +42,17 @@ android {
 dependAndroidCommonBase()
 dependAndroidKtx()
 dependTestBase()
-dependencies {
+dependNetwork()
 
+dependencies {
+    implementation(project(":lib_util"))
+
+    implementation(Rxjava.rxjava3_android)
+    implementation(Rxjava.rxjava3_kotlin)
+    implementation(Network.adapter_rxjava3)
+    implementation(Lifecycle.viewmodel_ktx)
+    implementation(Lifecycle.runtime_ktx)
+    implementation(Network.converter_gson)
+
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:2.10")
 }
