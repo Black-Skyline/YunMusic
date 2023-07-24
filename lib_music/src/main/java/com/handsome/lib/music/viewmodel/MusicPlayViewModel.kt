@@ -1,10 +1,13 @@
 package com.handsome.lib.music.viewmodel
 
+import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.handsome.lib.music.utils.PlayMode
+import com.handsome.lib.music.utils.PlayModeHelper
+import com.handsome.lib.util.extention.toast
 import java.util.Timer
 import java.util.TimerTask
 
@@ -19,7 +22,8 @@ import java.util.TimerTask
 class MusicPlayViewModel : ViewModel() {
 
     // 帮助后台线程获取数据后，完成setValue
-    val handler = android.os.Handler(Looper.getMainLooper())
+    private var trackTaskHandler: Handler? = null
+    private var trackSongProgress: Runnable? = null
 
     // 控制播放界面的 音乐的播放状态
     private val _isPlaying = MutableLiveData<Boolean>(false)
@@ -41,12 +45,8 @@ class MusicPlayViewModel : ViewModel() {
     val duration: LiveData<Int>
         get() = _duration
 
-    // 播放界面的歌曲名称
-    private val _songName = MutableLiveData<String>("")
-    val songName: LiveData<String>
-        get() = _songName
 
-    // 播放界面的播放模式
+    // 播放界面的  播放模式
     private val _playMode = MutableLiveData<PlayMode>(PlayMode.PLAY_MODE_LIST_LOOP)
     val playMode: LiveData<PlayMode>
         get() = _playMode
@@ -56,12 +56,25 @@ class MusicPlayViewModel : ViewModel() {
 
     // 当前歌曲id列表
     private val idList = mutableListOf<String>()
+//    // 播放界面的歌曲名称
+//    private val _songName = MutableLiveData<String>()
 
-    // 当前歌曲id
-    private val curId = MutableLiveData<String>()
 
-    // 当前歌曲url
-    private val curSongOfUrl = MutableLiveData<String>()
+    // 当前音频名称
+    private val _curAudioName = MutableLiveData<String>()
+    val curAudioName: LiveData<String>
+        get() = _curAudioName
+
+    // 当前创作者名称
+    private val _curArtistName = MutableLiveData<String>()
+    val curArtistName: LiveData<String>
+        get() = _curArtistName
+
+    // 当前音频url
+    private val _curAudioUrl = MutableLiveData<String>()
+    val curAudioUrl: LiveData<String>
+        get() = _curAudioUrl
+
 
     /**
      * 设置音乐的播放状态，true为正播放，false为已暂停
@@ -73,22 +86,30 @@ class MusicPlayViewModel : ViewModel() {
 
     /**
      * 传入当前播放进度数据
-     *
      * @param time
      * @receiver
      */
     fun setCurProgress(time: () -> Int) {
-        val trackSongProgress = object : TimerTask() {
+        trackTaskHandler = Handler(Looper.getMainLooper())
+        trackSongProgress = object : Runnable {
             override fun run() {
                 // 仅当 正在播放且进度条未被拖拽时
                 if (isPlaying.value!! && !isSeekbarDragging) {
-                    handler.post {
+                    trackTaskHandler!!.post {
                         _curProgress.value = time()
                     }
                 }
+                trackTaskHandler!!.postDelayed(this, 200)
             }
         }
-        Timer().schedule(trackSongProgress, 0, 200)
+        trackTaskHandler!!.postDelayed(trackSongProgress!!, 200)
+    }
+
+    /**
+     * 在服务与activity解除绑定之后移除监听任务
+     */
+    fun removeTrackTask() {
+        trackTaskHandler?.removeCallbacks(trackSongProgress!!)
     }
 
     /**
@@ -101,17 +122,35 @@ class MusicPlayViewModel : ViewModel() {
     }
 
     /**
-     * 改变播放模式
-     *
+     * 按一定的顺序改变播放模式
      */
     fun changePlayMode() {
         _playMode.apply {
             when (this.value!!) {
-                PlayMode.PLAY_MODE_LIST_LOOP -> this.value = PlayMode.PLAY_MODE_RANDOM
-                PlayMode.PLAY_MODE_RANDOM -> this.value = PlayMode.PLAY_MODE_SINGLE_CYCLE
-                PlayMode.PLAY_MODE_SINGLE_CYCLE -> this.value = PlayMode.PLAY_MODE_LIST_LOOP
+                PlayMode.PLAY_MODE_LIST_LOOP -> {
+                    this.value = PlayMode.PLAY_MODE_RANDOM
+                    toast(PlayModeHelper.random)
+                }
+
+                PlayMode.PLAY_MODE_RANDOM -> {
+                    this.value = PlayMode.PLAY_MODE_SINGLE_CYCLE
+                    toast(PlayModeHelper.single_cycle)
+                }
+
+                PlayMode.PLAY_MODE_SINGLE_CYCLE -> {
+                    this.value = PlayMode.PLAY_MODE_LIST_LOOP
+                    toast(PlayModeHelper.list_loop)
+                }
             }
         }
+    }
+
+    /**
+     * 直接改变播放模式，用于和service数据同步
+     * @param mode
+     */
+    fun setPlayMode(mode: PlayMode) {
+        _playMode.value = mode
     }
 
     /**
@@ -121,5 +160,17 @@ class MusicPlayViewModel : ViewModel() {
      */
     fun setSeekbarDragState(switch: Boolean) {
         isSeekbarDragging = switch
+    }
+
+    fun setCurrentAudioName(audioName: String) {
+        _curAudioName.value = audioName
+    }
+
+    fun setCurrentArtistName(artistName: String) {
+        _curArtistName.value = artistName
+    }
+
+    fun setCurrentAudioUrl(audioUrl: String) {
+        _curAudioUrl.value = audioUrl
     }
 }
