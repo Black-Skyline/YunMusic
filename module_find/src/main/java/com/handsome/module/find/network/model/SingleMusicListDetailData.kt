@@ -40,7 +40,7 @@ data class SingleMusicListDetailData(
         val officialPlaylistType: Any,
         val opRecommend: Boolean,
         val ordered: Boolean,
-        val playCount: Int,
+        val playCount: Long,
         val privacy: Int,
         val relateResType: Any,
         val remixVideo: Any,

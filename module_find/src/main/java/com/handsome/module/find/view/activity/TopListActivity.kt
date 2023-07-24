@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.toast
+import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.databinding.ActivityTopListBinding
 import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.TopListData
@@ -37,7 +38,9 @@ class TopListActivity : BaseActivity() {
     private fun initBarClick() {
         mBinding.apply {
             topListBarBack.setOnClickListener { finish() }
-            topListBarShare.setOnClickListener { "前面的道路，以后再来探索吧！".toast() }
+            topListBarShare.setOnClickListener {
+                shareText("小帅哥快来玩啊: http://why.vin:2023/toplist/detail")
+            }
         }
     }
 
