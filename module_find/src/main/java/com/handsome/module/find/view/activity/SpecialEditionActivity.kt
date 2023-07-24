@@ -17,6 +17,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.music.MusicPlayActivity
+import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
@@ -35,7 +36,8 @@ import java.util.*
 class SpecialEditionActivity : BaseActivity() {
     private val mBinding by lazy { ActivitySpecialEditionBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[SpecialEditionViewModel::class.java] }
-    private val mAlbumSongsAdapter = AlbumSongsAdapter()
+    private val mAlbumSongsAdapter = AlbumSongsAdapter(::onClickAlbum)
+    private var isStartActivity = false  //是否第一次启动播放activity
 
     private lateinit var mImgPlay : ImageView
 
@@ -159,6 +161,18 @@ class SpecialEditionActivity : BaseActivity() {
             }
         }
     }
+
+    //初始化
+    private fun onClickAlbum(list: MutableList<WrapPlayInfo>, index: Int) {
+        if (isStartActivity){
+            mMusicService.setPlayInfoList(list,index)
+            //todo 需要增加
+        }else{
+            MusicPlayActivity.startWithPlayList(this, list, index)
+            isStartActivity = true
+        }
+    }
+
 
     private fun initBar() {
         setSupportActionBar(mBinding.toolbar)

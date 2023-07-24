@@ -60,7 +60,7 @@ data class BannerData(
             val ftype: Int,
             val h: H,
             val hr: Hr,
-            val id: Int,
+            val id: Long,
             val l: L,
             val m: M,
             val mark: Int,

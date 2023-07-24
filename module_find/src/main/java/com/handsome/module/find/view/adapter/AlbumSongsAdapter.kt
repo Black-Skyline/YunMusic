@@ -4,15 +4,41 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.util.util.MyDIffUtil
 import com.handsome.module.find.databinding.ItemMusicBinding
 import com.handsome.module.find.network.model.AlbumData
+import java.lang.StringBuilder
 
-class AlbumSongsAdapter : ListAdapter<AlbumData.Song, AlbumSongsAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
+class AlbumSongsAdapter(private val onClick: (list: MutableList<WrapPlayInfo>, index: Int) -> Unit) : ListAdapter<AlbumData.Song, AlbumSongsAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
 
     inner class MyHolder(val binding : ItemMusicBinding) : RecyclerView.ViewHolder(binding.root){
         init {
-            //todo 点击事件
+            val viewGroup = binding.itemMusicNumber.parent as ViewGroup
+            viewGroup.setOnClickListener {
+                val list = ArrayList<WrapPlayInfo>()
+                var wrapPlayInfo: WrapPlayInfo?
+                //取点的item的前十个和后十个，每次点击每次刷新
+                val beforeIndex =
+                    if (bindingAdapterPosition - 10 >= 0) bindingAdapterPosition - 10 else 0
+                val afterIndex =
+                    if (bindingAdapterPosition + 10 <= itemCount) bindingAdapterPosition + 10 else itemCount
+                for (i in beforeIndex until afterIndex) {
+                    val song = getItem(i)
+                    if (song!=null){
+                        val audioName = song.name
+                        val artist = StringBuilder()
+                        for (j in song.ar) {
+                            artist.append(j.name).append("  ")
+                        }
+                        val songId = song.id
+                        val picUrl = song.al.picUrl
+                        wrapPlayInfo = WrapPlayInfo(audioName, artist.toString(), songId, picUrl)
+                        list.add(wrapPlayInfo)
+                    }
+                }
+                onClick(list, bindingAdapterPosition - beforeIndex)
+            }
         }
     }
 

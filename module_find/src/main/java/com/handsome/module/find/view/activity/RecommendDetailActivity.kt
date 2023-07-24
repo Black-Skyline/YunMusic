@@ -19,6 +19,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.music.MusicPlayActivity
+import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.util.gsonSaveToSp
@@ -39,6 +40,7 @@ class RecommendDetailActivity : BaseActivity() {
     private val mViewModel by lazy { ViewModelProvider(this)[RecommendDetailViewModel::class.java] }
     private val mRecommendDetailRvAdapter = RecommendDetailRvAdapter(::recommendDetailOnClick)
     private lateinit var mImgPlay : ImageView
+    private var isStartActivity = false  //是否第一次启动播放activity
 
     // Service实例
     private lateinit var mMusicService: MusicService
@@ -128,8 +130,14 @@ class RecommendDetailActivity : BaseActivity() {
         mViewModel.getRecommendDetailData()
     }
 
-    private fun recommendDetailOnClick(dailySong: RecommendDetailData.Data.DailySong) {
-        //todo 播放逻辑！！！
+    private fun recommendDetailOnClick(list: MutableList<WrapPlayInfo>, index: Int) {
+        if (isStartActivity){
+            mMusicService.setPlayInfoList(list,index)
+            //todo 需要增加
+        }else{
+            MusicPlayActivity.startWithPlayList(this, list, index)
+            isStartActivity = true
+        }
     }
 
     private fun initMusicCollect() {

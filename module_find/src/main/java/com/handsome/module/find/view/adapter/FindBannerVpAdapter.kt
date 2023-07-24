@@ -8,13 +8,13 @@ import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.module.find.databinding.FindVpBannerItemBinding
 import com.handsome.module.find.network.model.BannerData
 
-class FindBannerVpAdapter(private val onClick : (bannerData : BannerData.Banner) -> Unit) : RecyclerView.Adapter<FindBannerVpAdapter.MyHolder>() {
+class FindBannerVpAdapter(private val onClick : (findBannerList : List<BannerData.Banner>,index : Int) -> Unit) : RecyclerView.Adapter<FindBannerVpAdapter.MyHolder>() {
     private var findBannerList : List<BannerData.Banner> = ArrayList()
 
     inner class MyHolder(val binding : FindVpBannerItemBinding) : RecyclerView.ViewHolder(binding.root){
         init {
             binding.findVpBannerImg.setOnClickListener {
-                onClick(findBannerList[(bindingAdapterPosition%(findBannerList.size))])
+                onClick(findBannerList,bindingAdapterPosition%(findBannerList.size))
             }
         }
     }

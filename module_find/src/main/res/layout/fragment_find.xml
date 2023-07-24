@@ -16,13 +16,25 @@
 <!--            android:layout_width="match_parent"-->
 <!--            android:layout_height="match_parent">-->
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/find_vp_banner"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp" />
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我是指示器"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"/>
+
+        </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/find_rv_banner_below"
