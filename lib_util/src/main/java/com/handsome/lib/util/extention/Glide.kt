@@ -1,6 +1,7 @@
 package com.handsome.lib.util.extention
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.widget.ImageView
 import androidx.annotation.DrawableRes
 import com.bumptech.glide.Glide
@@ -32,6 +33,19 @@ fun ImageView.setImageFromUrl(
 
 fun ImageView.setImageFromId(
     @DrawableRes id: Int,  //必须传入一个id
+    @DrawableRes placeholder: Int = R.drawable.config_ic_place_holder,
+    @DrawableRes error: Int = R.drawable.config_ic_place_holder,
+    func: (RequestBuilder<Drawable>.() -> Unit)? = null
+) {
+    Glide.with(this)
+        .load(id)
+        .apply(RequestOptions().placeholder(placeholder).error(error))
+        .apply { func?.invoke(this) }
+        .into(this)
+}
+
+fun ImageView.setImageFromLocalUri(
+    id: Uri,  //必须传入一个id
     @DrawableRes placeholder: Int = R.drawable.config_ic_place_holder,
     @DrawableRes error: Int = R.drawable.config_ic_place_holder,
     func: (RequestBuilder<Drawable>.() -> Unit)? = null

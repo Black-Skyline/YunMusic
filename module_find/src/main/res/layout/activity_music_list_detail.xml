@@ -29,14 +29,16 @@
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="5dp">
 
-                <ImageView
+                <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/music_list_collapsing_img"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_marginStart="16dp"
+                    app:shapeAppearance="@style/SmallCircle"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:transitionName="music_detail_list"/>
 
                 <TextView
                     android:id="@+id/music_list_collapsing_tv_column_name"

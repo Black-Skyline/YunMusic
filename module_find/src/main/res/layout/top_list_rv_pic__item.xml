@@ -13,7 +13,8 @@
             android:id="@+id/item_top_list_pic_img_background"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            app:shapeAppearance="@style/SmallCircle"/>
+            app:shapeAppearance="@style/SmallCircle"
+            android:transitionName="music_detail_list"/>
 
         <TextView
             android:id="@+id/item_top_list_pic_tv_name"

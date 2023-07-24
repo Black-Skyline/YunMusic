@@ -47,7 +47,7 @@ class InterestRadioRecommendAdapter(val contentClickEvent: (PersonalizeRecommend
             val callbackData = getItem(bindingAdapterPosition) as Data.TitleBean
             if (!callbackData.titleText.isNullOrBlank())
                 binding.podcastTvInterestRecommendTitle.text = callbackData.titleText
-            binding.podcastImgInterestRecommendRefresh.setOnSingleClickListener(500) {
+            binding.podcastImgRefresh.setOnSingleClickListener(500) {
                 callbackData.refreshCallback?.invoke()
             }
             binding.podcastTvInterestRecommendTitle.setOnSingleClickListener(500) {

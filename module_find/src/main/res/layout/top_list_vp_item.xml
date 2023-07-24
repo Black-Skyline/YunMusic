@@ -48,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textSize="15sp"
+            android:lines="1"
             app:layout_constraintStart_toEndOf="@+id/top_list_item_img"
             android:layout_marginStart="16dp"
             app:layout_constraintTop_toTopOf="parent" />
@@ -58,6 +59,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:layout_marginStart="16dp"
+            android:lines="1"
             app:layout_constraintBottom_toTopOf="@+id/top_list_item_tv_third_song"
             app:layout_constraintStart_toEndOf="@+id/top_list_item_img"
             app:layout_constraintTop_toBottomOf="@+id/top_list_item_tv_first_song" />
@@ -67,6 +69,7 @@
             android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:textSize="15sp"
+            android:lines="1"
             android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/top_list_item_img"
             app:layout_constraintStart_toEndOf="@+id/top_list_item_img" />

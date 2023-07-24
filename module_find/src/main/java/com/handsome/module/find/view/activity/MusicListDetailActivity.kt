@@ -1,13 +1,15 @@
 package com.handsome.module.find.view.activity
 
+import android.app.Activity
+import android.app.ActivityOptions
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.lifecycle.Lifecycle
@@ -17,24 +19,28 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.music.MusicPlayActivity
+import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
-import com.handsome.lib.util.extention.toast
 import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityMusicListDetailBinding
 import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
+import com.handsome.module.find.network.model.MusicListDetailData
 import com.handsome.module.find.view.adapter.MusicListDetailAdapter
 import com.handsome.module.find.view.viewmodel.MusicListDetailViewModel
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.lang.StringBuilder
 
 class MusicListDetailActivity : BaseActivity() {
     private val mBinding by lazy { ActivityMusicListDetailBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[MusicListDetailViewModel::class.java] }
-    private val mMusicListDetailAdapter = MusicListDetailAdapter()  //歌单详情也可以用
+    private val mMusicListDetailAdapter = MusicListDetailAdapter(::onClickMusicListDetail)  //歌单详情也可以用
+    private var isStartActivity = false   //是否第一次启动播放activity
+
 
     private lateinit var mImgPlay : ImageView
 
@@ -181,6 +187,17 @@ class MusicListDetailActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+
+    private fun onClickMusicListDetail(list: MutableList<WrapPlayInfo>, index: Int) {
+        if (isStartActivity){
+            mMusicService.setPlayInfoList(list,index)
+            //todo 需要增加
+        }else{
+            MusicPlayActivity.startWithPlayList(this, list, index)
+            isStartActivity = true
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.item_more, menu)
         return true
@@ -201,10 +218,11 @@ class MusicListDetailActivity : BaseActivity() {
     }
 
     companion object {
-        fun startAction(context: Context, id: Long) {
+        fun startAction(context: Activity, id: Long ,sharedView: View) {
+            val options = ActivityOptions.makeSceneTransitionAnimation(context, sharedView, "music_detail_list")
             val intent = Intent(context, MusicListDetailActivity::class.java)
             intent.putExtra("id", id)
-            context.startActivity(intent)
+            context.startActivity(intent,options.toBundle())
         }
     }
 }
