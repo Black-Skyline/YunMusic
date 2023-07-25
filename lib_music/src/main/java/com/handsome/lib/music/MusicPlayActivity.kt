@@ -6,22 +6,29 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.os.Message
+import android.util.Log
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.imageview.ShapeableImageView
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.music.utils.MillisToTimeFormat
 import com.handsome.lib.music.utils.PlayMode
-import com.handsome.lib.music.utils.ServiceHelper
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_ARTIST_NAME
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_DURATION
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_NAME
 import com.handsome.lib.music.viewmodel.MusicPlayViewModel
+import com.handsome.lib.util.base.BaseActivity
+import com.handsome.lib.util.extention.setImageFromUrl
 import java.io.Serializable
 
-class MusicPlayActivity : AppCompatActivity() {
+class MusicPlayActivity : BaseActivity() {
     private val model by viewModels<MusicPlayViewModel>()
     private lateinit var serviceOperator: MusicService
 
@@ -51,9 +58,9 @@ class MusicPlayActivity : AppCompatActivity() {
     private val connection = object : ServiceConnection {
         // 服务已创建完成，通信连接已建立完成，Service放入服务的具体操作者binder，然后回调该方法
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            Log.d("LogicTest", "连接建立")
             isBinding = true
             serviceOperator = (service as MusicService.MusicPlayBinder).service
-
 
             val dataList = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getSerializableExtra("play_list", WrapPlayInfo::class.java)
@@ -61,44 +68,45 @@ class MusicPlayActivity : AppCompatActivity() {
                 intent.getSerializableExtra("play_list")
             }
             val index = intent.getIntExtra("index", -1)
-            if (dataList != null)
-                serviceOperator.setPlayInfoList(dataList as MutableList<WrapPlayInfo>, index)
-            else
-                serviceOperator.updateCurSong(index)
-            /*  测试用，未加入picUrl
-            val tempData = mutableListOf<WrapPlayInfo>()
+            if (dataList != null) serviceOperator.setPlayInfoList(
+                dataList as MutableList<WrapPlayInfo>,
+                index
+            )
+            else if (index >= 0) serviceOperator.updateCurSong(index)
 
-            tempData.add(WrapPlayInfo("나 어떡해 ('77 제1회 MBC대학가요제 대상')", "V.A.", 2064562707))
-            tempData.add(WrapPlayInfo("画", "赵雷", 202369))
-            tempData.add(WrapPlayInfo("独一无二的美丽", "李萌", 2065902610))
-            tempData.add(WrapPlayInfo("逝年", "夏小虎", 32957955))
-
-            serviceOperator.setPlayInfoList(tempData, 0)
-            */
             syncData2ViewModel(serviceOperator)
-//            serviceOperator.updateCurSong(0)
-//            serviceOperator.setPlayMode(model.playMode.value!!)
+
+            if (MessageHandler == null) {
+                MessageHandler = object : Handler(Looper.getMainLooper()) {
+                    override fun handleMessage(msg: Message) {
+                        when (msg.what) {
+                            SENT_AUDIO_DURATION -> {
+                                model.setAudioDuration(msg.arg1)
+                            }
+
+                            SENT_AUDIO_NAME -> {
+                                model.setCurrentAudioName(msg.obj as String)
+                            }
+
+                            SENT_ARTIST_NAME -> {
+                                model.setCurrentArtistName(msg.obj as String)
+                            }
+                        }
+                    }
+                }
+            }
             /**
              * 不断的获取播放器的进度，将其同步到ViewModel中
              */
             model.setCurProgress { serviceOperator.getCurProgress() }
-            /**
-             * 添加回调任务：播放器准备完成后传递duration、audioName、artistName值给model
-             */
-            serviceOperator.addCallbackToTasks(ServiceHelper.duration) {
-                model.setSongDuration(it as Int)
-            }
-            serviceOperator.addCallbackToTasks(ServiceHelper.audioName) {
-                model.setCurrentAudioName(it as String)
-            }
-            serviceOperator.addCallbackToTasks(ServiceHelper.artistName) {
-                model.setCurrentArtistName(it as String)
-            }
         }
 
         // 通信连接断开，回调该方法
         override fun onServiceDisconnected(name: ComponentName?) {
+            Log.d("LogicTest", "连接断开")
             isBinding = false
+            model.cancelTimer()
+            MessageHandler = null
             model.removeTrackTask()
         }
     }
@@ -109,27 +117,31 @@ class MusicPlayActivity : AppCompatActivity() {
      */
     private fun syncData2ViewModel(service: MusicService) {
         model.setPlayMode(service.getPlayMode())
-        model.setPlayingState(service.isPrepared && service.isPlaying())
-        model.setCurrentAudioName(service.getCurSongName())
+        if (service.isPrepared) model.setPlayingState(service.isPlaying())
+        model.setCurrentAudioPicUrl(service.getCurAudioPicUrl())
+        model.setCurProgress(service.getCurProgress())
+        model.setAudioDuration(service.getCurDuration())
+        model.setCurrentAudioName(service.getCurAudioName())
         model.setCurrentArtistName(service.getCurArtistName())
-//        model.setCurrentAudioUrl()
     }
 
     companion object {
+
+        var MessageHandler: Handler? = null
+
         /**
-         * 携带播放列表启动
+         * 只携带携带播放列表启动
          * @param context    启动者的上下文
          * @param list       WrapPlayInfo对象的List，暂时用Serializable接口实现直接传递List
          * @param wantIndex  可选，第一个想要加载的音乐在list中的index
          */
         fun startWithPlayList(
-            context: Context,
-            list: MutableList<WrapPlayInfo>,
-            wantIndex: Int? = null
+            context: Context, list: MutableList<WrapPlayInfo>, wantIndex: Int? = null
         ) {
             val intent = Intent(context, MusicPlayActivity::class.java)
             intent.putExtra("play_list", list as Serializable)
             wantIndex?.let { intent.putExtra("index", wantIndex) }
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             context.startActivity(intent)
         }
 
@@ -141,9 +153,33 @@ class MusicPlayActivity : AppCompatActivity() {
         fun startWithSingleIndex(context: Context, wantIndex: Int) {
             val intent = Intent(context, MusicPlayActivity::class.java)
             intent.putExtra("index", wantIndex)
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
             context.startActivity(intent)
         }
 
+        fun sentDuration(duration: Int) {
+            val tempMessage = Message().also {
+                it.what = 1
+                it.arg1 = duration
+                MessageHandler?.sendMessage(it)
+            }
+        }
+
+        fun setAudioName(name: String) {
+            val tempMessage = Message().also {
+                it.what = 2
+                it.obj = name
+                MessageHandler?.sendMessage(it)
+            }
+        }
+
+        fun setArtistName(name: String) {
+            val tempMessage = Message().also {
+                it.what = 3
+                it.obj = name
+                MessageHandler?.sendMessage(it)
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -161,8 +197,10 @@ class MusicPlayActivity : AppCompatActivity() {
      * Activity与MusicService解绑
      */
     override fun onDestroy() {
+        Log.d("ProgressTest", "MusicActivity销毁了")
         super.onDestroy()
         unbindService(connection)
+        model.cancelTimer()
         isBinding = false
     }
 
@@ -173,26 +211,21 @@ class MusicPlayActivity : AppCompatActivity() {
         Intent(this, MusicService::class.java).also {
             bindService(it, connection, BIND_AUTO_CREATE)
         }
-
     }
 
     private fun initObserve() {
         model.isPlaying.observe(this) {
             btPlayState.apply {
-                if (it)
-                    setImageResource(R.drawable.ic_media_click_pause_60)
-                else
-                    setImageResource(R.drawable.ic_media_click_play_60)
+                if (it) setImageResource(R.drawable.ic_media_click_pause_60)
+                else setImageResource(R.drawable.ic_media_click_play_60)
             }
         }
         model.duration.observe(this) {
-            tvMaxAudioTime.text =
-                MillisToTimeFormat.toMinutesAndSeconds(it)
+            tvMaxAudioTime.text = MillisToTimeFormat.toMinutesAndSeconds(it)
             progressBar.max = it
         }
         model.curProgress.observe(this) {
-            tvCurrentProgress.text =
-                MillisToTimeFormat.toMinutesAndSeconds(it)
+            tvCurrentProgress.text = MillisToTimeFormat.toMinutesAndSeconds(it)
 
             progressBar.progress = it
         }
@@ -207,6 +240,9 @@ class MusicPlayActivity : AppCompatActivity() {
         model.curArtistName.observe(this) {
             tvArtistName.text = it
         }
+        model.curAudioPicUrl.observe(this) {
+            imgAudioPicture.setImageFromUrl(it, placeholder = R.drawable.ic_notification_default, error = R.drawable.ic_notification_default)
+        }
     }
 
     /**
@@ -218,21 +254,14 @@ class MusicPlayActivity : AppCompatActivity() {
         when (it) {
             PlayMode.PLAY_MODE_SINGLE_CYCLE -> {
                 ob.setImageResource(R.drawable.ic_media_playmode_single_cycle_35)
-//                Toast.makeText(
-//                    this@MusicPlayActivity,
-//                    PlayModeHelper.single_cycle,
-//                    Toast.LENGTH_LONG
-//                ).show()
             }
 
             PlayMode.PLAY_MODE_LIST_LOOP -> {
                 ob.setImageResource(R.drawable.ic_media_playmode_list_loop_35)
-
             }
 
             PlayMode.PLAY_MODE_RANDOM -> {
-                ob.setImageResource(R.drawable.ic_media_playmode_single_cycle_35)
-
+                ob.setImageResource(R.drawable.ic_media_playmode_random_35)
             }
         }
     }
@@ -243,19 +272,18 @@ class MusicPlayActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        btPlayState = findViewById<ImageView>(R.id.bt_play_select)
-        tvMaxAudioTime = findViewById<TextView>(R.id.tv_all_time)
-        progressBar = findViewById<SeekBar>(R.id.play_progress)
-        tvCurrentProgress = findViewById<TextView>(R.id.tv_cur_time)
-        btPlayMode = findViewById<ImageView>(R.id.bt_play_mode)
-        btPreviousAudio = findViewById<ImageView>(R.id.bt_previous_song)
-        btNextAudio = findViewById<ImageView>(R.id.bt_next_song)
-        btPlayList = findViewById<ImageView>(R.id.bt_playlist)
-        imgAudioPicture = findViewById<ShapeableImageView>(R.id.iv_music_pic)
-        tvAudioName = findViewById<TextView>(R.id.tv_audio_name)
-        tvArtistName = findViewById<TextView>(R.id.tv_artist_name)
-        btBackNavigation = findViewById<ImageView>(R.id.bt_leave_page)
-
+        btPlayState = findViewById(R.id.bt_play_select)
+        tvMaxAudioTime = findViewById(R.id.tv_all_time)
+        progressBar = findViewById(R.id.play_progress)
+        tvCurrentProgress = findViewById(R.id.tv_cur_time)
+        btPlayMode = findViewById(R.id.bt_play_mode)
+        btPreviousAudio = findViewById(R.id.bt_previous_song)
+        btNextAudio = findViewById(R.id.bt_next_song)
+        btPlayList = findViewById(R.id.bt_playlist)
+        imgAudioPicture = findViewById(R.id.iv_music_pic)
+        tvAudioName = findViewById(R.id.tv_audio_name)
+        tvArtistName = findViewById(R.id.tv_artist_name)
+        btBackNavigation = findViewById(R.id.bt_leave_page)
     }
 
     private fun initClick() {
@@ -269,8 +297,8 @@ class MusicPlayActivity : AppCompatActivity() {
         }
         // 上一首
         btPreviousAudio.setOnClickListener {
-            serviceOperator.previousSong()
-            serviceOperator.awaitResult(5, model.isPlaying.value!!)
+            serviceOperator.previousSong(model.isPlaying.value!!)
+            updateCurrentPlayInfo()
         }
         // 暂停或播放
         btPlayState.setOnClickListener {
@@ -292,8 +320,8 @@ class MusicPlayActivity : AppCompatActivity() {
         }
         // 下一首
         btNextAudio.setOnClickListener {
-            serviceOperator.nextSong()
-            serviceOperator.awaitResult(5, model.isPlaying.value!!)
+            serviceOperator.nextSong(model.isPlaying.value!!)
+            updateCurrentPlayInfo()
         }
         // 播放列表
         btPlayList
@@ -301,8 +329,7 @@ class MusicPlayActivity : AppCompatActivity() {
         imgAudioPicture
 
         // 监听进度条
-        progressBar.setOnSeekBarChangeListener(object :
-            SeekBar.OnSeekBarChangeListener {
+        progressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(it: SeekBar?, progress: Int, b: Boolean) {
                 // 用户拖动产生的进度更新，此时ViewModel里的进度数据还未更新
                 progressBar.progress = progress
@@ -329,6 +356,15 @@ class MusicPlayActivity : AppCompatActivity() {
         btBackNavigation.setOnClickListener {
             finish()
         }
+    }
+
+    private fun updateCurrentPlayInfo() {
+        model.setCurrentAudioName(serviceOperator.getCurAudioName())
+        model.setCurrentArtistName(serviceOperator.getCurArtistName())
+        model.setCurrentAudioPicUrl(serviceOperator.getCurAudioPicUrl())
+
+        model.setCurProgress(serviceOperator.getCurProgress())
+//        model
     }
 }
 
