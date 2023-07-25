@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
 import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.util.extention.toast
@@ -31,15 +32,14 @@ import com.handsome.module.find.view.activity.MusicListDetailActivity
 import com.handsome.module.find.view.activity.RecommendDetailActivity
 import com.handsome.module.find.view.activity.SpecialEditionActivity
 import com.handsome.module.find.view.activity.TopListActivity
-import com.handsome.module.find.view.viewmodel.FindFragmentViewModel
 import com.handsome.module.find.view.activity.WebViewActivity
 import com.handsome.module.find.view.adapter.FindBannerBelowRvAdapter
 import com.handsome.module.find.view.adapter.FindBannerVpAdapter
 import com.handsome.module.find.view.adapter.FindRecommendListVpAdapter
 import com.handsome.module.find.view.adapter.TopListVpAdapter
+import com.handsome.module.find.view.viewmodel.FindFragmentViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.lang.StringBuilder
 
 
 class FindFragment : Fragment() {
@@ -67,6 +67,20 @@ class FindFragment : Fragment() {
         initBannerAdapter()
         initBannerCollect()
         getBannerData()
+        initViewPagerListener()
+    }
+
+    private fun initViewPagerListener() {
+        mBinding.findVpBanner.registerOnPageChangeCallback(
+            object : OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    // 在滚动完成后执行的操作，此时可以获取当前页面的索引
+                    mBinding.findVpIndicator.apply {
+                        setCurrentDot(position%getAllDot())
+                    }
+                }
+            }
+        )
     }
 
     private fun initBannerBelow() {
@@ -268,6 +282,7 @@ class FindFragment : Fragment() {
         fun doAfterGet(value: BannerData) {
             stopAutoScroll()
             findBannerVpAdapter.submitList(value.banners)
+            mBinding.findVpIndicator.setAllDot(value.banners.size)  //设置指示器点的数量
             mBinding.findVpBanner.apply {
                 setCurrentItem(Int.MAX_VALUE / 2, false)
                 offscreenPageLimit = 3
