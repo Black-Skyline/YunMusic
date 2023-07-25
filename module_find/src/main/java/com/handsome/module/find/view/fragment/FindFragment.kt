@@ -329,7 +329,7 @@ class FindFragment : Fragment() {
                 val audioName = data.song.name
                 val artist: StringBuilder = StringBuilder()
                 for (i in data.song.ar) {
-                    artist.append(i.name).append(" & ")
+                    artist.append(i.name).append("  ")
                 }
                 val songId = data.song.id
                 val picUrl = data.song.al.picUrl

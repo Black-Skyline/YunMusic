@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -38,11 +39,11 @@ import java.lang.StringBuilder
 class MusicListDetailActivity : BaseActivity() {
     private val mBinding by lazy { ActivityMusicListDetailBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[MusicListDetailViewModel::class.java] }
-    private val mMusicListDetailAdapter = MusicListDetailAdapter(::onClickMusicListDetail)  //歌单详情也可以用
-    private var isStartActivity = false   //是否第一次启动播放activity
+    private val mMusicListDetailAdapter =
+        MusicListDetailAdapter(::onClickMusicListDetail)  //歌单详情也可以用
 
 
-    private lateinit var mImgPlay : ImageView
+    private lateinit var mImgPlay: ImageView
 
     // Service实例
     private lateinit var mMusicService: MusicService
@@ -56,9 +57,7 @@ class MusicListDetailActivity : BaseActivity() {
             val binder = service as MusicService.MusicPlayBinder
             mMusicService = binder.service
             mIsBound = true
-            if (mMusicService.isPlaying()) {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
-            }
+            getBottomInfo()   //得到底部播放栏信息得
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -80,12 +79,29 @@ class MusicListDetailActivity : BaseActivity() {
     //每次重新恢复页面的时候也要进行判断播放状态
     override fun onStart() {
         super.onStart()
-        if (mIsBound){
-            if (mMusicService.isPlaying()) {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
-            } else {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
-            }
+        if (mIsBound) {
+            getBottomInfo()
+        }
+    }
+
+    //加载底部信息
+    private fun getBottomInfo() {
+        //获取当前歌名字歌手名字
+        val songName = mMusicService.getCurAudioName()
+        val singerName = mMusicService.getCurArtistName()
+        val picUrl = mMusicService.getCurAudioPicUrl() //可能为找不到
+        findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_name).text = songName
+        findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_singer).text =
+            singerName
+        if (picUrl != "找不到") {
+            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).setImageFromUrl(
+                picUrl
+            )
+        }
+        if (mMusicService.isPlaying()) {
+            mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
+        } else {
+            mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
         }
     }
 
@@ -94,7 +110,7 @@ class MusicListDetailActivity : BaseActivity() {
         unbindService(connection)
     }
 
-    private fun initTop(id : Long) {
+    private fun initTop(id: Long) {
         initTopCollect()
         getTopInfo(id)
     }
@@ -124,13 +140,14 @@ class MusicListDetailActivity : BaseActivity() {
                 mMusicService.startPlay()
             }
         }
-        val viewGroup = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).parent as ViewGroup
+        val viewGroup =
+            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).parent as ViewGroup
         viewGroup.setOnClickListener {
             startActivity(Intent(this, MusicPlayActivity::class.java))
         }
     }
 
-    private fun getTopInfo(id : Long) {
+    private fun getTopInfo(id: Long) {
         mViewModel.getSingleMusicDetailData(id)
     }
 
@@ -189,13 +206,7 @@ class MusicListDetailActivity : BaseActivity() {
 
 
     private fun onClickMusicListDetail(list: MutableList<WrapPlayInfo>, index: Int) {
-        if (isStartActivity){
-            mMusicService.setPlayInfoList(list,index)
-            //todo 需要增加
-        }else{
-            MusicPlayActivity.startWithPlayList(this, list, index)
-            isStartActivity = true
-        }
+        MusicPlayActivity.startWithPlayList(this, list, index)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -218,11 +229,15 @@ class MusicListDetailActivity : BaseActivity() {
     }
 
     companion object {
-        fun startAction(context: Activity, id: Long ,sharedView: View) {
-            val options = ActivityOptions.makeSceneTransitionAnimation(context, sharedView, "music_detail_list")
+        fun startAction(context: Activity, id: Long, sharedView: View) {
+            val options = ActivityOptions.makeSceneTransitionAnimation(
+                context,
+                sharedView,
+                "music_detail_list"
+            )
             val intent = Intent(context, MusicListDetailActivity::class.java)
             intent.putExtra("id", id)
-            context.startActivity(intent,options.toBundle())
+            context.startActivity(intent, options.toBundle())
         }
     }
 }

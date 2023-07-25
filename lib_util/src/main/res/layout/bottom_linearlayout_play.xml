@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_linearLayout_music"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="60dp"
     android:layout_above="@+id/main_navi_bottom"
     android:background="@color/white"
     android:orientation="horizontal">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/main_bottom_music_image_image"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="5dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="16dp"
+        app:shapeAppearance="@style/Circle"
         android:src="@drawable/icon_bottom_music_record" />
 
     <LinearLayout
@@ -38,7 +41,7 @@
             android:layout_marginStart="10dp"
             android:lines="1"
             android:text=" - 最炫民族风"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
 
     </LinearLayout>
 
@@ -47,7 +50,7 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_gravity="center"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="8dp"
         android:background="@color/transparent"
         android:src="@drawable/icon_bottom_music_play" />
 

@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.GravityCompat
@@ -45,6 +46,7 @@ class MainActivity : YunMusicActivity() {
             val binder = service as MusicService.MusicPlayBinder
             mMusicService = binder.service
             mIsBound = true
+            getBottomInfo()
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -79,7 +81,7 @@ class MainActivity : YunMusicActivity() {
         }
     }
 
-    //播放逻辑
+    //播放逻辑，用findViewById的原因是include的布局不会自动生成，需要手动findViewById
     private fun initClickPlay() {
         mImgPlay = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_play)
         //播放的点击事件，dj！
@@ -198,12 +200,24 @@ class MainActivity : YunMusicActivity() {
     override fun onStart() {
         super.onStart()
         if (mIsBound){
-            //获取当前歌名字歌手名字
-            if (mMusicService.isPlaying()) {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
-            } else {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
-            }
+            getBottomInfo()
+        }
+    }
+
+    private fun getBottomInfo(){
+        //获取当前歌名字歌手名字
+        val songName =  mMusicService.getCurAudioName()
+        val singerName = mMusicService.getCurArtistName()
+        val picUrl = mMusicService.getCurAudioPicUrl() //可能为找不到
+        findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_name).text = songName
+        findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_singer).text = singerName
+        if (picUrl != "找不到"){
+            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).setImageFromUrl(picUrl)
+        }
+        if (mMusicService.isPlaying()) {
+            mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
+        } else {
+            mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
         }
     }
 

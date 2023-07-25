@@ -12,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +23,7 @@ import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
+import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.lib.util.util.gsonSaveToSp
 import com.handsome.lib.util.util.objectFromSp
 import com.handsome.lib.util.util.shareText
@@ -40,7 +42,6 @@ class RecommendDetailActivity : BaseActivity() {
     private val mViewModel by lazy { ViewModelProvider(this)[RecommendDetailViewModel::class.java] }
     private val mRecommendDetailRvAdapter = RecommendDetailRvAdapter(::recommendDetailOnClick)
     private lateinit var mImgPlay : ImageView
-    private var isStartActivity = false  //是否第一次启动播放activity
 
     // Service实例
     private lateinit var mMusicService: MusicService
@@ -54,9 +55,7 @@ class RecommendDetailActivity : BaseActivity() {
             val binder = service as MusicService.MusicPlayBinder
             mMusicService = binder.service
             mIsBound = true
-            if (mMusicService.isPlaying()) {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
-            }
+            getBottomInfo()   //连接成功加载底部信息
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -76,11 +75,24 @@ class RecommendDetailActivity : BaseActivity() {
     override fun onStart() {
         super.onStart()
         if (mIsBound){
-            if (mMusicService.isPlaying()) {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
-            } else {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
-            }
+            getBottomInfo()
+        }
+    }
+
+    private fun getBottomInfo(){
+        //获取当前歌名字歌手名字
+        val songName =  mMusicService.getCurAudioName()
+        val singerName = mMusicService.getCurArtistName()
+        val picUrl = mMusicService.getCurAudioPicUrl() //可能为找不到
+        findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_name).text = songName
+        findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_singer).text = singerName
+        if (picUrl != "找不到"){
+            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).setImageFromUrl(picUrl)
+        }
+        if (mMusicService.isPlaying()) {
+            mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
+        } else {
+            mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
         }
     }
 
@@ -131,13 +143,7 @@ class RecommendDetailActivity : BaseActivity() {
     }
 
     private fun recommendDetailOnClick(list: MutableList<WrapPlayInfo>, index: Int) {
-        if (isStartActivity){
-            mMusicService.setPlayInfoList(list,index)
-            //todo 需要增加
-        }else{
             MusicPlayActivity.startWithPlayList(this, list, index)
-            isStartActivity = true
-        }
     }
 
     private fun initMusicCollect() {

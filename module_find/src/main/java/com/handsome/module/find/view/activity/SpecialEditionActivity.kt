@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +22,6 @@ import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
-import com.handsome.lib.util.extention.toast
 import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivitySpecialEditionBinding
@@ -37,9 +37,8 @@ class SpecialEditionActivity : BaseActivity() {
     private val mBinding by lazy { ActivitySpecialEditionBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[SpecialEditionViewModel::class.java] }
     private val mAlbumSongsAdapter = AlbumSongsAdapter(::onClickAlbum)
-    private var isStartActivity = false  //是否第一次启动播放activity
 
-    private lateinit var mImgPlay : ImageView
+    private lateinit var mImgPlay: ImageView
 
     // Service实例
     private lateinit var mMusicService: MusicService
@@ -53,9 +52,7 @@ class SpecialEditionActivity : BaseActivity() {
             val binder = service as MusicService.MusicPlayBinder
             mMusicService = binder.service
             mIsBound = true
-            if (mMusicService.isPlaying()) {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
-            }
+            getBottomInfo()  //连接成功加载底部信息
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
@@ -66,14 +63,14 @@ class SpecialEditionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
-        val id = intent.getLongExtra("id",32311)  //网上随便找的专辑id
+        val id = intent.getLongExtra("id", 32311)  //网上随便找的专辑id
         initBar()
         initRv(id)
         initClickPlay()
         initService()
     }
 
-    private fun initRv(id : Long) {
+    private fun initRv(id: Long) {
         initMusicAdapter()
         initMusicCollect()
         getMusicData(id)
@@ -82,12 +79,28 @@ class SpecialEditionActivity : BaseActivity() {
     //每次重新恢复页面的时候也要进行判断播放状态
     override fun onStart() {
         super.onStart()
-        if (mIsBound){
-            if (mMusicService.isPlaying()) {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
-            } else {
-                mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
-            }
+        if (mIsBound) {
+            getBottomInfo()
+        }
+    }
+
+    private fun getBottomInfo() {
+        //获取当前歌名字歌手名字
+        val songName = mMusicService.getCurAudioName()
+        val singerName = mMusicService.getCurArtistName()
+        val picUrl = mMusicService.getCurAudioPicUrl() //可能为找不到
+        findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_name).text = songName
+        findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_singer).text =
+            singerName
+        if (picUrl != "找不到") {
+            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).setImageFromUrl(
+                picUrl
+            )
+        }
+        if (mMusicService.isPlaying()) {
+            mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
+        } else {
+            mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
         }
     }
 
@@ -121,7 +134,8 @@ class SpecialEditionActivity : BaseActivity() {
                 mMusicService.startPlay()
             }
         }
-        val viewGroup = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).parent as ViewGroup
+        val viewGroup =
+            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).parent as ViewGroup
         viewGroup.setOnClickListener {
             startActivity(Intent(this, MusicPlayActivity::class.java)) //todo
         }
@@ -129,7 +143,8 @@ class SpecialEditionActivity : BaseActivity() {
 
     private fun initMusicAdapter() {
         mBinding.specialEditionRvMusic.apply {
-            layoutManager = LinearLayoutManager(this@SpecialEditionActivity,RecyclerView.VERTICAL,false)
+            layoutManager =
+                LinearLayoutManager(this@SpecialEditionActivity, RecyclerView.VERTICAL, false)
             adapter = mAlbumSongsAdapter
         }
     }
@@ -140,16 +155,20 @@ class SpecialEditionActivity : BaseActivity() {
 
     private fun initMusicCollect() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED){
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.stateFlow.collectLatest {
-                    if (it != null){
+                    if (it != null) {
                         mAlbumSongsAdapter.submitList(it.songs)
                         mBinding.apply {
                             val album = it.album
                             val singer = "歌手:${album.artists[0].name} >"
-                            val publishTime = "发行时间 : ${SimpleDateFormat("yyyy.MM.dd").format(Date(album.publishTime))}"
-                            val playAll =  "播放全部(${it.songs.size})"
-                            specialEditionCollapsingImg.setImageFromUrl(album.blurPicUrl, placeholder = R.drawable.icon_picture)
+                            val publishTime =
+                                "发行时间 : ${SimpleDateFormat("yyyy.MM.dd").format(Date(album.publishTime))}"
+                            val playAll = "播放全部(${it.songs.size})"
+                            specialEditionCollapsingImg.setImageFromUrl(
+                                album.blurPicUrl,
+                                placeholder = R.drawable.icon_picture
+                            )
                             specialEditionCollapsingTvColumnName.text = album.name
                             specialEditionCollapsingTvColumnSinger.text = singer
                             specialEditionCollapsingTvColumnTime.text = publishTime
@@ -164,13 +183,7 @@ class SpecialEditionActivity : BaseActivity() {
 
     //初始化
     private fun onClickAlbum(list: MutableList<WrapPlayInfo>, index: Int) {
-        if (isStartActivity){
-            mMusicService.setPlayInfoList(list,index)
-            //todo 需要增加
-        }else{
-            MusicPlayActivity.startWithPlayList(this, list, index)
-            isStartActivity = true
-        }
+        MusicPlayActivity.startWithPlayList(this, list, index)
     }
 
 
@@ -180,15 +193,17 @@ class SpecialEditionActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.item_more,menu)
+        menuInflater.inflate(R.menu.item_more, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home -> { finish()
+            android.R.id.home -> {
+                finish()
                 return true
             }
+
             R.id.menu_item_music_more -> {
                 shareText("小帅哥快来玩啊: http://why.vin:2023/album?id=32311")
             }
@@ -196,10 +211,10 @@ class SpecialEditionActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    companion object{
-        fun startAction(context : Context, id : Long){
-            val intent = Intent(context,SpecialEditionActivity::class.java)
-            intent.putExtra("id",id)
+    companion object {
+        fun startAction(context: Context, id: Long) {
+            val intent = Intent(context, SpecialEditionActivity::class.java)
+            intent.putExtra("id", id)
             context.startActivity(intent)
         }
     }
