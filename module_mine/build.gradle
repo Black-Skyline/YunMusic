@@ -55,6 +55,9 @@ android {
             }
         }
     }
+    viewBinding{
+        enabled=true
+    }
 }
 kapt {
     arguments {
@@ -64,6 +67,12 @@ kapt {
 
 dependencies {
     implementation(project(":lib_util"))
-
+    implementation(project(":lib_music"))
+    implementation(Lifecycle.viewmodel_ktx)
+    implementation(Lifecycle.runtime_ktx)
+    implementation(Paging.paging_runtime)
     kapt ARouter.arouter_compiler
+    implementation ("androidx.room:room-common:2.5.1")
+    implementation 'androidx.room:room-ktx:2.5.1'
+    kapt "androidx.room:room-compiler:2.5.1"
 }
