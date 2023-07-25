@@ -12,9 +12,11 @@ import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.handsome.lib.search.databinding.ActivitySearchBinding
 import com.handsome.lib.search.network.model.SearchResultData
 import com.handsome.lib.search.network.model.SearchSuggestionData
+import com.handsome.lib.search.network.myCoroutineExceptionHandler
 import com.handsome.lib.search.view.fragment.SearchResultFragment
 import com.handsome.lib.search.view.fragment.SearchSuggestionFragment
 import com.handsome.lib.search.view.viewmodel.SearchActivityViewModel
@@ -24,6 +26,7 @@ import com.handsome.lib.util.extention.VISIBLE
 import com.handsome.lib.util.extention.toast
 import com.handsome.lib.util.util.gsonSaveToSp
 import com.handsome.lib.util.util.objectFromSp
+import kotlinx.coroutines.launch
 
 class SearchActivity : BaseActivity() {
     private val mBinding by lazy { ActivitySearchBinding.inflate(layoutInflater) }
@@ -143,12 +146,15 @@ class SearchActivity : BaseActivity() {
             mSearchResultFragment = SearchResultFragment(query, ::onClickSearchResult) //创建新的
             replaceFragment(mSearchResultFragment!!)  //将这个fragment放进去
             if (query !in list){
-                list.add(query)
-                addSearchHistoryView(query)  //查询之后将搜索历史添加进去
+                lifecycleScope.launch(myCoroutineExceptionHandler){
+                    list.add(query)
+                    addSearchHistoryView(query)  //查询之后将搜索历史添加进去
+                }
             }
             isBack = true
         }
         submitSingle = false
+        Log.d("lx", "doAfterSubmit: 111")
     }
 
     private fun doAfterChange(newText: String?) {
@@ -156,16 +162,19 @@ class SearchActivity : BaseActivity() {
         //搜索改变的时候的搜索提示
         if (newText != "") {
             mBinding.searchFragmentContainer.VISIBLE()  //设置可见
-            removeAllFragment()
             if (mSearchSuggestionFragment != null  && mSearchSuggestionFragment == mBinding.searchFragmentContainer.getFragment<Fragment>()){
                 //当前fragmentContainer是搜索建议fragment界面就只改变里面的数据
                 mSearchSuggestionFragment?.changeData(newText)
+                Log.d("lx", "doAfterChange: 222")
             }else{
+                removeAllFragment()  //创建之前移除之前的所有fragment，这里打日志会出现两次
                 mSearchSuggestionFragment = SearchSuggestionFragment(newText, ::onSearchSuggestionClick)
+                replaceFragment(mSearchSuggestionFragment!!)   //展示新的
+                Log.d("lx", "doAfterChange: 333")
             }
-            replaceFragment(mSearchSuggestionFragment!!)   //展示新的
             isBack = true
         } else {
+            Log.d("lx", "allfragments=${supportFragmentManager.fragments}: ")
             removeAllFragment()
             mBinding.searchFragmentContainer.GONE()  //当啥也没有的时候显示本来的面目
         }

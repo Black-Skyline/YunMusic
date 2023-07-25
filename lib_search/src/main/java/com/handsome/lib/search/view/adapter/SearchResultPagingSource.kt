@@ -15,7 +15,7 @@ class SearchResultPagingSource(private val key : String) : PagingSource<Int,Sear
             Log.d("lx", "page = ${page}: ")
             val pageSize = params.loadSize
             Log.d("lx", "pageSize = ${pageSize}: ")
-            val response = SearchResultApiService.INSTANCE.getSearchResult(key,pageSize,page*pageSize)
+            val response = SearchResultApiService.INSTANCE.getSearchResult(key,pageSize,(page-1)*pageSize)
             val repoItems = response.result.songs
             val prevKey = if(page > 1) page - 1 else null
             val nextKey = if(repoItems.isNotEmpty()) page + 1 else null
