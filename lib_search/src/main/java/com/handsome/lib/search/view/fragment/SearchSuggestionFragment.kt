@@ -70,7 +70,6 @@ class SearchSuggestionFragment(private val keywords : String, onSearchSuggestion
     }
 
     fun changeData(key : String){
-        Log.d("lx", "key: ")
         mViewModel.getSearchSuggestion(key)
     }
 

@@ -33,6 +33,7 @@ class SearchActivity : BaseActivity() {
     private var mSearchSuggestionFragment: SearchSuggestionFragment? = null
     private var mSearchResultFragment: SearchResultFragment? = null
     private var isBack = false
+    private var submitSingle = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,6 +133,8 @@ class SearchActivity : BaseActivity() {
 
     //当用户提交之后的操作
     private fun doAfterSubmit(query: String?) {
+        //由于这里每次提交的时候都会有三次提交，所以这里设置为一个状态位
+        if (!submitSingle) return  //如果不是第一次提交就返回
         //开启一个新的fragment并且在新的fragment中网络请求
         //每次保存下来搜索历史,将搜索历史在创建时传递给fragment
         if (query != null && query != "") {
@@ -143,9 +146,9 @@ class SearchActivity : BaseActivity() {
                 list.add(query)
                 addSearchHistoryView(query)  //查询之后将搜索历史添加进去
             }
-            Log.d("lx", "doAfterSubmit: 不知道会执行几次")
             isBack = true
         }
+        submitSingle = false
     }
 
     private fun doAfterChange(newText: String?) {
@@ -154,13 +157,19 @@ class SearchActivity : BaseActivity() {
         if (newText != "") {
             mBinding.searchFragmentContainer.VISIBLE()  //设置可见
             removeAllFragment()
-            mSearchSuggestionFragment = SearchSuggestionFragment(newText, ::onSearchSuggestionClick)
+            if (mSearchSuggestionFragment != null  && mSearchSuggestionFragment == mBinding.searchFragmentContainer.getFragment<Fragment>()){
+                //当前fragmentContainer是搜索建议fragment界面就只改变里面的数据
+                mSearchSuggestionFragment?.changeData(newText)
+            }else{
+                mSearchSuggestionFragment = SearchSuggestionFragment(newText, ::onSearchSuggestionClick)
+            }
             replaceFragment(mSearchSuggestionFragment!!)   //展示新的
             isBack = true
         } else {
             removeAllFragment()
             mBinding.searchFragmentContainer.GONE()  //当啥也没有的时候显示本来的面目
         }
+        submitSingle = true
     }
 
     override fun onDestroy() {
