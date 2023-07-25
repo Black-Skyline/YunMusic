@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
@@ -91,7 +92,8 @@ class SearchActivity : BaseActivity() {
         mTv = TextView(this)
         mTv?.let {
             it.background = resources.getDrawable(R.drawable.shape_backgroud, theme)
-            it.text = searchHistory
+            val text = "  ${searchHistory}  "
+            it.text = text
             mBinding.searchHistoryFlow.addView(mTv)
         }
     }
@@ -103,7 +105,7 @@ class SearchActivity : BaseActivity() {
             val child = mBinding.searchHistoryFlow.getChildAt(i)
             child.setOnClickListener {
                 if (child is TextView) {
-                    onSearchHistoryClick(child.text.toString())
+                    onSearchHistoryClick(child.text.toString().trim())
                 }
             }
         }
@@ -137,8 +139,11 @@ class SearchActivity : BaseActivity() {
             mBinding.searchFragmentContainer.VISIBLE()
             mSearchResultFragment = SearchResultFragment(query, ::onClickSearchResult) //创建新的
             replaceFragment(mSearchResultFragment!!)  //将这个fragment放进去
-            list.add(query)
-            gsonSaveToSp(list, "search_history")
+            if (query !in list){
+                list.add(query)
+                addSearchHistoryView(query)  //查询之后将搜索历史添加进去
+            }
+            Log.d("lx", "doAfterSubmit: 不知道会执行几次")
             isBack = true
         }
     }
@@ -156,6 +161,11 @@ class SearchActivity : BaseActivity() {
             removeAllFragment()
             mBinding.searchFragmentContainer.GONE()  //当啥也没有的时候显示本来的面目
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        gsonSaveToSp(list, "search_history")  //等到最后将搜索历史存进去
     }
 
     //点击搜索结果之后
