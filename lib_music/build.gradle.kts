@@ -43,7 +43,7 @@ dependAndroidCommonBase()
 dependAndroidKtx()
 dependTestBase()
 dependNetwork()
-
+dependRoom()
 dependencies {
     implementation(project(":lib_util"))
 
@@ -55,4 +55,5 @@ dependencies {
     implementation(Network.converter_gson)
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.10")
+    implementation ("androidx.room:room-common:2.5.1")
 }

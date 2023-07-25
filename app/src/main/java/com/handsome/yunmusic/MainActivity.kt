@@ -3,6 +3,7 @@ package com.handsome.yunmusic
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -21,7 +22,9 @@ import com.handsome.lib.util.adapter.FragmentVpAdapter
 import com.handsome.lib.util.extention.setImageFromLocalUri
 import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.lib.util.extention.toast
+import com.handsome.lib.util.util.getSharePreference
 import com.handsome.module.find.view.fragment.FindFragment
+import com.handsome.module.mine.MineFragment
 //import com.handsome.module.find.view.fragment.FindFragment
 import com.handsome.yunmusic.databinding.ActivityMainBinding
 import java.io.File
@@ -53,6 +56,9 @@ class MainActivity : YunMusicActivity() {
     val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
             findViewById<ImageView>(R.id.drawer_header_user_icon).setImageFromLocalUri(uri)
+            val edit = getSharePreference("user_img").edit()
+            edit.putString("user_img",uri.toString())
+            edit.apply()
         }
     }
 
@@ -114,7 +120,7 @@ class MainActivity : YunMusicActivity() {
     private fun initVpAdapter() {
         val fragmentVpAdapter = FragmentVpAdapter(this)
         //todo 等待加入的fragment
-        fragmentVpAdapter.add(FindFragment::class.java)
+        fragmentVpAdapter.add(FindFragment::class.java).add(MineFragment::class.java)
         mBinding.mainNaviVp.adapter = fragmentVpAdapter
         mBinding.mainNaviVp.isUserInputEnabled = false;  //禁止vp滑动的方法,会让banner不管用
     }
@@ -173,6 +179,8 @@ class MainActivity : YunMusicActivity() {
 
             override fun onDrawerOpened(drawerView: View) {
                 val imageUser = findViewById<ImageView>(R.id.drawer_header_user_icon)
+                val img = getSharePreference("user_img").getString("user_img",null)
+                if (img != null)  imageUser.setImageFromLocalUri(Uri.parse(img))
                 imageUser.setOnClickListener {
                     pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }
@@ -190,6 +198,7 @@ class MainActivity : YunMusicActivity() {
     override fun onStart() {
         super.onStart()
         if (mIsBound){
+            //获取当前歌名字歌手名字
             if (mMusicService.isPlaying()) {
                 mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
             } else {
