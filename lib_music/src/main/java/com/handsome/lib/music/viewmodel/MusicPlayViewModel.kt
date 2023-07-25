@@ -1,7 +1,6 @@
 package com.handsome.lib.music.viewmodel
 
 import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -22,6 +21,7 @@ import java.util.TimerTask
 class MusicPlayViewModel : ViewModel() {
 
     // 帮助后台线程获取数据后，完成setValue
+    private var timer: Timer? = null
     private var trackTaskHandler: Handler? = null
     private var trackSongProgress: Runnable? = null
 
@@ -54,11 +54,11 @@ class MusicPlayViewModel : ViewModel() {
     // 记录进度条是否被拖拽，辅助判断
     private var isSeekbarDragging = false
 
-    // 当前歌曲id列表
-    private val idList = mutableListOf<String>()
-//    // 播放界面的歌曲名称
-//    private val _songName = MutableLiveData<String>()
 
+    // 当前音频的图片的url列表
+    private val _curAudioPicUrl = MutableLiveData<String>()
+    val curAudioPicUrl: LiveData<String>
+        get() = _curAudioPicUrl
 
     // 当前音频名称
     private val _curAudioName = MutableLiveData<String>()
@@ -85,31 +85,46 @@ class MusicPlayViewModel : ViewModel() {
     }
 
     /**
-     * 传入当前播放进度数据
+     * 传入当前播放进度的获取方式
      * @param time
      * @receiver
      */
     fun setCurProgress(time: () -> Int) {
-        trackTaskHandler = Handler(Looper.getMainLooper())
-        trackSongProgress = object : Runnable {
-            override fun run() {
-                // 仅当 正在播放且进度条未被拖拽时
-                if (isPlaying.value!! && !isSeekbarDragging) {
-                    trackTaskHandler!!.post {
-                        _curProgress.value = time()
+        if (timer != null)
+            return
+        else {
+            timer = Timer()
+            timer!!.schedule(object : TimerTask() {
+                override fun run() {
+                    // 仅当 正在播放且进度条未被拖拽时
+                    if (isPlaying.value!! && !isSeekbarDragging) {
+                            _curProgress.postValue(time())
                     }
                 }
-                trackTaskHandler!!.postDelayed(this, 200)
-            }
+            }, 0, 500)
         }
-        trackTaskHandler!!.postDelayed(trackSongProgress!!, 200)
+    }
+    fun cancelTimer() {
+        timer?.cancel()
+        timer = null
     }
 
     /**
-     * 在服务与activity解除绑定之后移除监听任务
+     * 传入当前播放进度的具体值
+     * @param time
+     * @receiver
+     */
+    fun setCurProgress(time: Int) {
+        _curProgress.value = time
+    }
+
+    /**
+     * 在服务与activity解除绑定之后移除监听任务,并释放Runnable
      */
     fun removeTrackTask() {
         trackTaskHandler?.removeCallbacks(trackSongProgress!!)
+        trackSongProgress = null
+        trackTaskHandler = null
     }
 
     /**
@@ -117,7 +132,7 @@ class MusicPlayViewModel : ViewModel() {
      *
      * @param time
      */
-    fun setSongDuration(time: Int) {
+    fun setAudioDuration(time: Int) {
         _duration.value = time
     }
 
@@ -172,5 +187,9 @@ class MusicPlayViewModel : ViewModel() {
 
     fun setCurrentAudioUrl(audioUrl: String) {
         _curAudioUrl.value = audioUrl
+    }
+
+    fun setCurrentAudioPicUrl(picUrl: String) {
+        _curAudioPicUrl.value = picUrl
     }
 }
