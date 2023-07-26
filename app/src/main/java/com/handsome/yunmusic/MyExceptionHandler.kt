@@ -7,12 +7,14 @@ import android.content.Intent
 import com.handsome.lib.util.BaseApp
 import kotlin.system.exitProcess
 import android.os.Process
+import com.handsome.lib.util.util.getSharePreference
 
 class MyExceptionHandler : Thread.UncaughtExceptionHandler {
 
     override fun uncaughtException(t: Thread, e: Throwable) {
         e.printStackTrace()
         val intent = Intent()
+        intent.putExtra("restart",false)
         val context = BaseApp.mContext
         // 创建一个新的Intent，将要启动的活动设置为MainActivity
         intent.setClass(context, MainActivity::class.java)

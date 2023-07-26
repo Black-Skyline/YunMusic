@@ -6,13 +6,15 @@
     android:orientation="vertical"
     android:layout_height="match_parent">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/drawer_header_user_icon"
         android:layout_width="100dp"
-        android:layout_height="100sp"
-        android:layout_marginTop="20dp"
+        android:layout_height="100dp"
+        android:scaleType="fitXY"
+        android:layout_marginTop="30dp"
+        app:shapeAppearance="@style/Circle"
         android:layout_gravity="center"
-        android:src="@drawable/icon_bottom_music_list" />
+        android:src="@drawable/icon_user" />
 
     <TextView
         android:id="@+id/drawer_header_user_name"

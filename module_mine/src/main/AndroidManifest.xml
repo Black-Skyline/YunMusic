@@ -4,8 +4,8 @@
     <application>
         <activity
             android:name=".MineActivity"
-            android:exported="true">
-
+            android:exported="true"
+            android:theme="@style/Theme.YunMusic.Find">
         </activity>
     </application>
 

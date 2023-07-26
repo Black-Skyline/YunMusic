@@ -6,10 +6,12 @@
     <!--    android:roundIcon="@mipmap/ic_launcher_round"-->
     <!--    android:supportsRtl="true"-->
     <!--    android:theme="@style/Theme.YunMusic"-->
-    <application>
+    <application
+        android:name="com.handsome.lib.util.BaseApp">
         <activity
             android:name="mine.ui.DebugActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.YunMusic.Find">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +20,9 @@
         </activity>
         <activity
             android:name=".MineActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.YunMusic.Find"
+            >
         </activity>
     </application>
 

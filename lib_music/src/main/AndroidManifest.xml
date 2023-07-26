@@ -17,8 +17,8 @@
             android:exported="false" />
 
         <activity
-            android:name=".MusicPlayActivity"
-            android:exported="false" />
+            android:name=".page.view.MusicPlayActivity"
+            android:exported="true" />
     </application>
 
 </manifest>

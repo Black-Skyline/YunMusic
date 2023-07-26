@@ -13,10 +13,13 @@
         android:name="com.handsome.lib.util.BaseApp"
         android:networkSecurityConfig="@xml/net_permission">
         <activity
+            android:name=".view.activity.MusicListDetailActivity"
+            android:exported="true"
+            android:theme="@style/Theme.YunMusic.Find" />
+        <activity
             android:name=".view.activity.TopListActivity"
             android:exported="true"
-            android:theme="@style/Theme.YunMusic.Find"
-            />
+            android:theme="@style/Theme.YunMusic.Find" />
         <activity
             android:name=".view.activity.RecommendDetailActivity"
             android:exported="true"

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notification_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <!--专辑封面图-->
+    <ImageView
+        android:id="@+id/iv_album_cover"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/album_picture_default" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="6dp">
+
+        <!--歌曲信息-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/notification_tv_audio_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="0dp"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:lines="1"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:singleLine="true"
+                    android:text="歌曲名"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/notification_tv_artist_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:lines="1"
+                    android:singleLine="true"
+                    android:text="歌手名"
+                    android:textSize="10sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/notification_tv_audio_name" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--歌曲控制部分-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/notification_btn_previous"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="38dp"
+                android:layout_marginEnd="33dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/notification_icon_previous"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/notification_btn_play"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/notification_btn_play"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="34dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/notification_icon_click_play"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/notification_btn_next"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/notification_btn_previous"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/black" />
+
+            <ImageView
+                android:id="@+id/notification_btn_next"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="34dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/notification_icon_next"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_notification_close"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/notification_btn_play"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/btn_notification_close"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="60dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/notification_icon_close"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/notification_btn_next"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

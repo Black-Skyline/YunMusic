@@ -3,6 +3,7 @@ package com.handsome.module.find.view.activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.toast
+import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.databinding.ActivityTopListBinding
 import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.TopListData
@@ -37,7 +39,9 @@ class TopListActivity : BaseActivity() {
     private fun initBarClick() {
         mBinding.apply {
             topListBarBack.setOnClickListener { finish() }
-            topListBarShare.setOnClickListener { "前面的道路，以后再来探索吧！".toast() }
+            topListBarShare.setOnClickListener {
+                shareText("小帅哥快来玩啊: http://why.vin:2023/toplist/detail")
+            }
         }
     }
 
@@ -87,15 +91,13 @@ class TopListActivity : BaseActivity() {
     }
 
 
-    private fun onTopListClick(data: TopListData.Data) {
-        //todo 等待点击事件
-        data.name.toast()
+    private fun onTopListClick(data: TopListData.Data,sharedView : View) {
+        MusicListDetailActivity.startAction(this,data.id,sharedView)
     }
 
 
-    private fun onTopPictureListClick(data: TopListData.Data) {
-        //todo 等待点击事件
-        data.name.toast()
+    private fun onTopPictureListClick(data: TopListData.Data,sharedView: View) {
+        MusicListDetailActivity.startAction(this,data.id,sharedView)
     }
 
     companion object{

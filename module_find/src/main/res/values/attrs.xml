@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="MyVpIndicatorView">
+        <attr name="android:id" format="reference"/>
+        <attr name="active_color" format="color|reference"/>
+        <attr name="inactive_color" format="reference|color"/>
+    </declare-styleable>
+
+</resources>

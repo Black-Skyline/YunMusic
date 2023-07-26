@@ -37,7 +37,19 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    viewBinding{
+        enable=true
+    }
 }
 
 dependAndroidCommonBase()
 dependTestBase()
+dependNetwork()
+dependencies {
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.5.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation(project(":lib_util"))
+    implementation(Paging.paging_runtime)
+    implementation(Lifecycle.runtime_ktx)
+}
