@@ -37,15 +37,15 @@
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/mv_img_user_icon"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:scaleType="fitXY"
                         android:layout_marginStart="16dp"
                         app:shapeAppearance="@style/Circle"/>
 
                     <TextView
                         android:id="@+id/mv_tv_song_name"
-                        android:textSize="20sp"
+                        android:textSize="15sp"
                         android:text="未知歌曲"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
 
                     <TextView
                         android:id="@+id/mv_tv_singer_name"
-                        android:textSize="15sp"
+                        android:textSize="11sp"
                         android:text="网络歌手"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
