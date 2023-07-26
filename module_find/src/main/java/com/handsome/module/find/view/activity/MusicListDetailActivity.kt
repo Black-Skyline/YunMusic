@@ -24,6 +24,7 @@ import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
+import com.handsome.lib.util.util.MyRotationAnimate
 import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityMusicListDetailBinding
@@ -45,6 +46,8 @@ class MusicListDetailActivity : BaseActivity() {
 
 
     private lateinit var mImgPlay: ImageView
+    private lateinit var mImgAlbum : ImageView   //下面的唱片view
+    private lateinit var mAnimator : MyRotationAnimate  //下面的唱片的旋转动画
 
     // Service实例
     private lateinit var mMusicService: MusicService
@@ -70,12 +73,19 @@ class MusicListDetailActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
         val id = intent.getLongExtra("id", 24381616)  //网上随便找的歌单id
+        initView()
         initBar()
         initRv(id)
         initTop(id)
         initClickPlay()  //和播放相关的两个方法
         initService()
         initClickPlayAll()   //播放全部的点击事件,后面一次会覆盖前面一次
+    }
+
+    private fun initView() {
+        mImgPlay = findViewById(com.handsome.lib.util.R.id.main_bottom_music_image_play)
+        mImgAlbum = findViewById(com.handsome.lib.util.R.id.main_bottom_music_image_image)
+        mAnimator = MyRotationAnimate(mImgAlbum)
     }
 
     //每次重新恢复页面的时候也要进行判断播放状态
@@ -102,8 +112,10 @@ class MusicListDetailActivity : BaseActivity() {
         }
         if (mMusicService.isPlaying()) {
             mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
+            mAnimator.startAnimate()
         } else {
             mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
+            mAnimator.stopAnimate()
         }
     }
 
@@ -125,7 +137,6 @@ class MusicListDetailActivity : BaseActivity() {
 
     //播放逻辑
     private fun initClickPlay() {
-        mImgPlay = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_play)
         //播放的点击事件，dj！
         mImgPlay.setOnClickListener {
             if (!mIsBound) {  //还未绑定service直接返回
@@ -137,13 +148,14 @@ class MusicListDetailActivity : BaseActivity() {
             if (mMusicService.isPlaying()) {
                 mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
                 mMusicService.pausePlay()
+                mAnimator.stopAnimate()
             } else {
                 mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
                 mMusicService.startPlay()
+                mAnimator.startAnimate()
             }
         }
-        val viewGroup =
-            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).parent as ViewGroup
+        val viewGroup = mImgAlbum.parent as ViewGroup
         viewGroup.setOnClickListener {
             startActivity(Intent(this, MusicPlayActivity::class.java))
         }
@@ -151,6 +163,11 @@ class MusicListDetailActivity : BaseActivity() {
 
     private fun getTopInfo(id: Long) {
         mViewModel.getSingleMusicDetailData(id)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mAnimator.stopAnimate()
     }
 
     private fun initTopCollect() {

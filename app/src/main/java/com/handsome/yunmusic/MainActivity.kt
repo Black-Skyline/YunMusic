@@ -18,21 +18,21 @@ import androidx.drawerlayout.widget.DrawerLayout
 import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.search.SearchActivity
-//import com.handsome.lib.search.SearchActivity
 import com.handsome.lib.util.adapter.FragmentVpAdapter
 import com.handsome.lib.util.extention.setImageFromLocalUri
 import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.lib.util.extention.toast
+import com.handsome.lib.util.util.MyRotationAnimate
 import com.handsome.lib.util.util.getSharePreference
 import com.handsome.module.find.view.fragment.FindFragment
 import com.handsome.module.mine.MineFragment
-//import com.handsome.module.find.view.fragment.FindFragment
 import com.handsome.yunmusic.databinding.ActivityMainBinding
-import java.io.File
 
 class MainActivity : YunMusicActivity() {
     private val mBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private lateinit var mImgPlay : ImageView
+    private lateinit var mImgPlay : ImageView   //播放按键view
+    private lateinit var mImgAlbum : ImageView   //下面的唱片view
+    private lateinit var mAnimator : MyRotationAnimate  //下面的唱片的旋转动画
 
     // Service实例
     private lateinit var mMusicService: MusicService
@@ -67,12 +67,19 @@ class MainActivity : YunMusicActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+        initView()
         initBar()
         initVpAdapter()
         initNaviBottomClick()
         initDrawerNavi()
         initClickPlay()
         initService()
+    }
+
+    private fun initView() {
+        mImgPlay = findViewById(com.handsome.lib.util.R.id.main_bottom_music_image_play)
+        mImgAlbum = findViewById(com.handsome.lib.util.R.id.main_bottom_music_image_image)
+        mAnimator = MyRotationAnimate(mImgAlbum)
     }
 
     private fun initService() {
@@ -83,7 +90,6 @@ class MainActivity : YunMusicActivity() {
 
     //播放逻辑，用findViewById的原因是include的布局不会自动生成，需要手动findViewById
     private fun initClickPlay() {
-        mImgPlay = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_play)
         //播放的点击事件，dj！
         mImgPlay.setOnClickListener {
             if (!mIsBound) {  //还未绑定service直接返回
@@ -92,12 +98,14 @@ class MainActivity : YunMusicActivity() {
             if (!mMusicService.isPrepared) {
                 return@setOnClickListener
             }
-            if (mMusicService.isPlaying()) {
+            if (mMusicService.isPlaying()) {  //如果正在演奏就暂停，如果暂停就演奏
                 mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
                 mMusicService.pausePlay()
+                mAnimator.stopAnimate()
             } else {
                 mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
                 mMusicService.startPlay()
+                mAnimator.startAnimate()
             }
         }
         val viewGroup = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).parent as ViewGroup
@@ -174,7 +182,7 @@ class MainActivity : YunMusicActivity() {
                 return@setNavigationItemSelectedListener true
             }
         }
-        //增加侧滑监听，drawerlayout只有在显示的时候才会创建。
+        //增加侧滑监听，drawerLayout只有在显示的时候才会创建。
         mBinding.mainDrawer.addDrawerListener(object : DrawerLayout.DrawerListener{
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
             }
@@ -212,17 +220,25 @@ class MainActivity : YunMusicActivity() {
         findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_name).text = songName
         findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_singer).text = singerName
         if (picUrl != "找不到"){
-            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).setImageFromUrl(picUrl)
+            mImgAlbum.setImageFromUrl(picUrl)
         }
         if (mMusicService.isPlaying()) {
             mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
+            mAnimator.startAnimate()
         } else {
             mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
+            mAnimator.stopAnimate()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         unbindService(connection)
+    }
+
+    //页面不见的时候停止动画
+    override fun onStop() {
+        super.onStop()
+        mAnimator.stopAnimate()  //停止动画
     }
 }

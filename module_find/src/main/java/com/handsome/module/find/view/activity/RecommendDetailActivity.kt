@@ -24,6 +24,7 @@ import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
+import com.handsome.lib.util.util.MyRotationAnimate
 import com.handsome.lib.util.util.gsonSaveToSp
 import com.handsome.lib.util.util.objectFromSp
 import com.handsome.lib.util.util.shareText
@@ -41,7 +42,9 @@ class RecommendDetailActivity : BaseActivity() {
     private val mBinding by lazy { ActivityRecommendDetailBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[RecommendDetailViewModel::class.java] }
     private val mRecommendDetailRvAdapter = RecommendDetailRvAdapter(::recommendDetailOnClick)
-    private lateinit var mImgPlay : ImageView
+    private lateinit var mImgPlay : ImageView   //播放按键view
+    private lateinit var mImgAlbum : ImageView   //下面的唱片view
+    private lateinit var mAnimator : MyRotationAnimate  //下面的唱片的旋转动画
 
     // Service实例
     private lateinit var mMusicService: MusicService
@@ -66,11 +69,18 @@ class RecommendDetailActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+        initView()
         initBar()
         initMusic()
         initClickPlay()
         initService()
         initClickPlayAll()
+    }
+
+    private fun initView() {
+        mImgPlay = findViewById(com.handsome.lib.util.R.id.main_bottom_music_image_play)
+        mImgAlbum = findViewById(com.handsome.lib.util.R.id.main_bottom_music_image_image)
+        mAnimator = MyRotationAnimate(mImgAlbum)
     }
 
     override fun onStart() {
@@ -88,12 +98,14 @@ class RecommendDetailActivity : BaseActivity() {
         findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_name).text = songName
         findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_singer).text = singerName
         if (picUrl != "找不到"){
-            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).setImageFromUrl(picUrl)
+            mImgAlbum.setImageFromUrl(picUrl)
         }
         if (mMusicService.isPlaying()) {
             mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
+            mAnimator.startAnimate()
         } else {
             mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
+            mAnimator.stopAnimate()
         }
     }
 
@@ -124,7 +136,6 @@ class RecommendDetailActivity : BaseActivity() {
 
     //播放逻辑
     private fun initClickPlay() {
-        mImgPlay = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_play)
         //播放的点击事件，dj！
         mImgPlay.setOnClickListener {
             if (!mIsBound) {  //还未绑定service直接返回
@@ -136,12 +147,14 @@ class RecommendDetailActivity : BaseActivity() {
             if (mMusicService.isPlaying()) {
                 mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
                 mMusicService.pausePlay()
+                mAnimator.stopAnimate()
             } else {
                 mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
                 mMusicService.startPlay()
+                mAnimator.startAnimate()
             }
         }
-        val viewGroup = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).parent as ViewGroup
+        val viewGroup = mImgAlbum.parent as ViewGroup
         viewGroup.setOnClickListener {
             startActivity(Intent(this, MusicPlayActivity::class.java)) //todo
         }
@@ -217,6 +230,11 @@ class RecommendDetailActivity : BaseActivity() {
     private fun initBar() {
         setSupportActionBar(mBinding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mAnimator.stopAnimate()
     }
 
     companion object {
