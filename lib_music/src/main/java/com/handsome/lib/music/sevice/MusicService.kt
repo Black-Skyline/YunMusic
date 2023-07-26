@@ -10,7 +10,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
 import android.media.MediaPlayer
 import android.os.Binder
 import android.os.Build
@@ -22,7 +22,11 @@ import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import com.handsome.lib.music.MusicPlayActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
+import com.handsome.lib.music.page.view.MusicPlayActivity
 import com.handsome.lib.music.R
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.network.api.AudioUrlApiService
@@ -34,6 +38,11 @@ import com.handsome.lib.music.utils.ServiceHelper.Companion.CLOSE
 import com.handsome.lib.music.utils.ServiceHelper.Companion.NEXT
 import com.handsome.lib.music.utils.ServiceHelper.Companion.PLAY
 import com.handsome.lib.music.utils.ServiceHelper.Companion.PREV
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_ARTIST_NAME
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_CHANGE_NEXT
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_CHANGE_PREVIOUS
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_NAME
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_PIC_URL
 import com.handsome.lib.music.utils.ServiceHelper.Companion.channelID
 import com.handsome.lib.util.extention.toast
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -52,10 +61,6 @@ class MusicService : Service() {
     //    private val allSongName = listOf("Komorebi.mp3", "岁月成碑.mp3")
     private var playInfoList = mutableListOf<WrapPlayInfo>()
     private var curPlayInfo: WrapPlayInfo? = null
-
-    //    private var curAudioName: String? = null
-//    private var curArtistName: String? = null
-//    private var curAudioId: Long? = null
     private var curIndex = 0
     private var curAudioUrlList = mutableListOf<String>()
 
@@ -101,35 +106,34 @@ class MusicService : Service() {
             private set
     }
 
-    private var handler: Handler? = object : Handler(Looper.getMainLooper()) {
+    private var networkHandler: Handler? = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(msg: Message) {
             when (msg.what) {
-                1 -> Toast.makeText(
-                    this@MusicService, "该歌曲文件读取失败，请更换歌曲", Toast.LENGTH_SHORT
-                ).show()
+                1 -> { // 加载网络图片到通知栏
+                    notificationView?.setImageViewBitmap(R.id.iv_album_cover, msg.obj as Bitmap)
+                }
             }
         }
     }
 
     override fun onCreate() {
         super.onCreate()
-        MusicService.INSTANCE = this
+        INSTANCE = this
         recorder = AppDatabase.getDataBase().wrapPlayInfoDao()
         initNotification()
 
         player.setOnPreparedListener {
             isPrepared = true
             MusicPlayActivity.sentDuration(getCurDuration())
-            MusicPlayActivity.setAudioName(getCurAudioName())
-            MusicPlayActivity.setArtistName(getCurArtistName())
-            if (isForeground) showNotification()
+
             if (isAutoPlay) startPlay()
+            Log.d("ProgressTest", "OnPrepared回调了")
         }
 
         player.setOnCompletionListener {
             if (!player.isLooping) {
                 nextSong()
-//                awaitResult(5, true)
+                Log.d("ProgressTest", "OnCompletion回调了")
             }
         }
     }
@@ -144,8 +148,14 @@ class MusicService : Service() {
         manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel =
-                NotificationChannel(channelID, "音乐通知", NotificationManager.IMPORTANCE_DEFAULT)
-            manager!!.createNotificationChannel(channel)
+                NotificationChannel(channelID, "音乐通知", NotificationManager.IMPORTANCE_LOW)
+            channel.apply {
+                enableVibration(false)
+                setSound(null, null)
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+                manager!!.createNotificationChannel(this)
+            }
+
         }
         // 构建一个目标为MusicPlayActivity的延迟Intent
         val targetIntent = Intent(
@@ -156,62 +166,51 @@ class MusicService : Service() {
                 this,
                 0,
                 targetIntent,
-                PendingIntent.FLAG_IMMUTABLE
+                FLAG_IMMUTABLE
             )
             else PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         // 创建通知
         notification = NotificationCompat.Builder(this, channelID).setContentTitle("通知标题")
-            .setSound(null)                    // 通知不发出响声
+            .setSound(null)                        // 通知不发出响声
             .setSmallIcon(R.drawable.ic_notifications_active_24)
-            .setCustomContentView(notificationView).setAutoCancel(false)
+            .setCustomBigContentView(notificationView).setAutoCancel(false)
 //                .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.oh_good))
             .setContentIntent(pendingToActivity)   // 点击跳转
             .build()
         notificationView?.setOnClickPendingIntent(R.id.notification_layout, pendingToActivity)
-//        startForeground(1, notification)            // 通知id为1
         registerNotificationReceiver()
     }
 
     private fun showNotification() {
         if (isPlaying()) {
             notificationView?.setImageViewResource(
-                R.id.notification_btn_play, R.drawable.ic_media_click_pause_60
+                R.id.notification_btn_play, R.drawable.notification_icon_click_pause
             )
         } else {
             notificationView?.setImageViewResource(
-                R.id.notification_btn_play, R.drawable.ic_media_click_play_60
+                R.id.notification_btn_play, R.drawable.notification_icon_click_play
             )
         }
-        //封面专辑
-//        notificationView.setImageViewBitmap(R.id.iv_album_cover,);
+        //加载封面专辑
+//        Glide.with(this).asBitmap().load(curPlayInfo!!.picUrl).apply(RequestOptions())
+//            .into(object : SimpleTarget<Bitmap>() {
+//                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+//                    resource.apply {
+//                        networkHandler?.sendMessage(Message().also {
+//                            it.what= 1
+//                            it.obj = this
+//                        })
+//                    }
+//                }
+//            })
+//        notificationView.setImageViewBitmap(R.id.iv_album_cover, curPlayInfo!!.picUrl)
         //歌曲名
-        notificationView?.setTextViewText(R.id.notification_tv_audio_name, curPlayInfo!!.audioName);
+        notificationView?.setTextViewText(R.id.notification_tv_audio_name, curPlayInfo!!.audioName)
         //歌手名
         notificationView?.setTextViewText(
             R.id.notification_tv_artist_name, curPlayInfo!!.artistName
         )
-    }
-
-    private fun setNotification() {
-        initNotificationUI()
-        // 创建通知渠道
-        val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel =
-                NotificationChannel(channelID, "音乐通知", NotificationManager.IMPORTANCE_DEFAULT)
-            manager.createNotificationChannel(channel)
-        }
-        // 创建通知
-        val notification = NotificationCompat.Builder(this, channelID).setContentTitle("通知标题")
-            .setSound(null)  // 通知不发出响声
-            .setContentText("通知内容").setSmallIcon(R.drawable.ic_notifications_active_24)
-            .setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.oh_good))
-//            .setContentIntent(intent) // 点击跳转
-            .build()
-        startForeground(1, notification) // 通知id为1
-
-        registerNotificationReceiver()
     }
 
 
@@ -239,7 +238,7 @@ class MusicService : Service() {
                 this,
                 0,
                 Intent(PREV),
-                PendingIntent.FLAG_IMMUTABLE
+                FLAG_IMMUTABLE
             )
             else PendingIntent.getBroadcast(
                 this,
@@ -257,7 +256,7 @@ class MusicService : Service() {
                 this,
                 0,
                 Intent(PLAY),
-                PendingIntent.FLAG_IMMUTABLE
+                FLAG_IMMUTABLE
             )
             else PendingIntent.getBroadcast(
                 this,
@@ -273,7 +272,7 @@ class MusicService : Service() {
                 this,
                 0,
                 Intent(NEXT),
-                PendingIntent.FLAG_IMMUTABLE
+                FLAG_IMMUTABLE
             )
             else PendingIntent.getBroadcast(
                 this,
@@ -289,7 +288,7 @@ class MusicService : Service() {
                 this,
                 0,
                 Intent(CLOSE),
-                PendingIntent.FLAG_IMMUTABLE
+                FLAG_IMMUTABLE
             )
             else PendingIntent.getBroadcast(
                 this,
@@ -321,7 +320,7 @@ class MusicService : Service() {
             stop()
             release()
         }
-        handler = null
+        networkHandler = null
         if (notificationActionReceiver != null) {
             // 解除动态注册的广播接收器
             unregisterReceiver(notificationActionReceiver)
@@ -361,7 +360,8 @@ class MusicService : Service() {
     private fun notificationActionCommand(action: String) {
         when (action) {
             PLAY -> {
-                startPlay()
+                if (player.isPlaying) pausePlay()
+                else startPlay()
             }
 
             PREV -> {
@@ -386,17 +386,21 @@ class MusicService : Service() {
      */
     fun startPlay() {
         if (player.isPlaying) return
-        player.start()
+        MusicPlayActivity.sentAudioPlayState(true)
         if (isForeground) showNotification()
         else {
             startForeground(1, notification)
             showNotification()
         }
+        player.start()
         curPlayInfo?.let { addPlaybackHistory(it) }
     }
 
     fun pausePlay() {
-        if (player.isPlaying) player.pause()
+        if (player.isPlaying) {
+            player.pause()
+            MusicPlayActivity.sentAudioPlayState(false)
+        }
         showNotification()
     }
 
@@ -415,7 +419,7 @@ class MusicService : Service() {
             if (tempIndex > playInfoList.size - 1) tempIndex = 0
         }
         isAutoPlay = auto
-        resetPlayer()
+        MusicPlayActivity.sentAudioNextOrPrevious(SENT_AUDIO_CHANGE_NEXT)
         updateCurSong(tempIndex)
     }
 
@@ -434,7 +438,7 @@ class MusicService : Service() {
             if (tempIndex < 0) tempIndex = playInfoList.size - 1
         }
         isAutoPlay = auto
-        resetPlayer()
+        MusicPlayActivity.sentAudioNextOrPrevious(SENT_AUDIO_CHANGE_PREVIOUS)
         updateCurSong(tempIndex)
     }
 
@@ -479,9 +483,6 @@ class MusicService : Service() {
 
     private fun setCurrentPlayInfo(info: WrapPlayInfo) {
         curPlayInfo = info
-//        curAudioName = info.audioName
-//        curArtistName = info.artistName
-//        curAudioId = info.audioId
     }
 
 
@@ -491,6 +492,7 @@ class MusicService : Service() {
      * @param index 当前想播放的音频在播放列表里index（位置）
      */
     fun updateCurSong(index: Int) {
+        resetPlayer()
         // url数据准备完成校验
         if (!isUrlPrepared) return
         // index有效性校验
@@ -500,45 +502,17 @@ class MusicService : Service() {
         }
         // 调用（该方法）行为有效性校验
         if (!canExecFunPrepare || isPrepared) {
+            Log.d("LogicTest", "isPrepared ${isPrepared}, canExecFunPrepare ${canExecFunPrepare}")
             Toast.makeText(this, "目前还不能prepare()", Toast.LENGTH_SHORT).show()
             return
         }
         curIndex = index
         setCurrentPlayInfo(playInfoList[index])
+        showNotification()
+        MusicPlayActivity.sentAudioOrArtistName(getCurAudioName(), SENT_AUDIO_NAME)
+        MusicPlayActivity.sentAudioOrArtistName(getCurArtistName(), SENT_ARTIST_NAME)
+        MusicPlayActivity.sentAudioOrPicUrl(getCurAudioPicUrl(), SENT_AUDIO_PIC_URL)
         preparePlayer(curIndex)
-    }
-
-
-//    /**
-//     * 等待nextSong()和 previousSong()的player.prepareAsync()结果
-//     *
-//     * @param maxTime 最大等待时间 秒
-//     * @param state  当前播放状态
-//     */
-    fun awaitResult(maxTime: Int, state: Boolean) {
-//        if (!isUrlPrepared)   // 异常情况（比如没网、数据加载失败）处理
-//            return
-//        thread {
-//            var times = 0
-//            while (times < maxTime) {
-//                if (isPrepared) {
-//                    if (state) startPlay()
-//                    break
-//                } else {
-//                    if (canExecFunPrepare) {
-//                        Thread.sleep(1000)
-//                        preparePlayer(curIndex)
-//                        times++
-//                    }
-//                }
-//            }
-//            if (times >= maxTime) {
-//                Message().also {
-//                    it.what = 1
-//                    handler?.sendMessage(it)
-//                }
-//            }
-//        }
     }
 
 
@@ -662,4 +636,14 @@ class MusicService : Service() {
         return if (isPrepared) player.duration
         else 0
     }
+
+    /**
+     * 获取当前音频的播放信息
+     */
+    fun getCurPlayInfo() = curPlayInfo
+
+    /**
+     * 获取当前的音频播放列表
+     */
+    fun getPlayInfoList() = playInfoList
 }

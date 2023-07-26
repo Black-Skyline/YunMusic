@@ -53,6 +53,9 @@ dependencies {
     implementation(Lifecycle.viewmodel_ktx)
     implementation(Lifecycle.runtime_ktx)
     implementation(Network.converter_gson)
+    implementation(Android.recyclerview)
+    implementation(Glide.glide)
+    kapt(Glide.glide_compiler)
 
     debugImplementation("com.squareup.leakcanary:leakcanary-android:2.10")
     implementation ("androidx.room:room-common:2.5.1")

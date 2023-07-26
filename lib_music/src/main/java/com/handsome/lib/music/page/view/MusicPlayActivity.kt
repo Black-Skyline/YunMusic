@@ -1,5 +1,7 @@
-package com.handsome.lib.music
+package com.handsome.lib.music.page.view
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -11,11 +13,13 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.Message
 import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.viewModels
 import com.google.android.material.imageview.ShapeableImageView
+import com.handsome.lib.music.R
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.music.utils.MillisToTimeFormat
@@ -23,14 +27,20 @@ import com.handsome.lib.music.utils.PlayMode
 import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_ARTIST_NAME
 import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_DURATION
 import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_NAME
-import com.handsome.lib.music.viewmodel.MusicPlayViewModel
+import com.handsome.lib.music.page.viewmodel.MusicPlayViewModel
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_CHANGE_NEXT
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_CHANGE_PREVIOUS
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_PIC_URL
+import com.handsome.lib.music.utils.ServiceHelper.Companion.SENT_AUDIO_PLAY_STATE
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
+import com.handsome.lib.util.extention.toast
+import com.handsome.lib.util.util.MyRotationAnimate
 import java.io.Serializable
 
 class MusicPlayActivity : BaseActivity() {
     private val model by viewModels<MusicPlayViewModel>()
-    private lateinit var serviceOperator: MusicService
+    lateinit var serviceOperator: MusicService
 
     // service是否已绑定的标志位
     private var isBinding: Boolean = false
@@ -51,6 +61,24 @@ class MusicPlayActivity : BaseActivity() {
     private lateinit var tvAudioName: TextView
     private lateinit var tvArtistName: TextView
     private lateinit var btBackNavigation: ImageView
+
+    // 动画
+    private val imgRotationAnimate by lazy { MyRotationAnimate(imgAudioPicture) }
+    private val imgPreviousTranslationAnimate: AnimatorSet by lazy {
+        MyTranslationAnimate(
+            imgAudioPicture,
+            "translationX",
+            1000f
+        )
+    }
+    private val imgNextTranslationAnimate: AnimatorSet by lazy {
+        MyTranslationAnimate(
+            imgAudioPicture,
+            "translationX",
+            -1000f
+        )
+    }
+
 
     /**
      * 连接器Connection，负责Activity与Service的通信
@@ -75,8 +103,10 @@ class MusicPlayActivity : BaseActivity() {
             else if (index >= 0) serviceOperator.updateCurSong(index)
 
             syncData2ViewModel(serviceOperator)
-
+            Log.d("ProgressTest", "开始判断")
+            if (MessageHandler != null) Log.d("LogicTest", "handle不是空的")
             if (MessageHandler == null) {
+                Log.d("LogicTest", "handle是空的")
                 MessageHandler = object : Handler(Looper.getMainLooper()) {
                     override fun handleMessage(msg: Message) {
                         when (msg.what) {
@@ -90,6 +120,35 @@ class MusicPlayActivity : BaseActivity() {
 
                             SENT_ARTIST_NAME -> {
                                 model.setCurrentArtistName(msg.obj as String)
+                            }
+
+                            SENT_AUDIO_PIC_URL -> {
+                                model.setCurrentAudioPicUrl(msg.obj as String)
+                            }
+
+                            SENT_AUDIO_CHANGE_PREVIOUS -> {
+                                imgPreviousTranslationAnimate.start()
+                                imgRotationAnimate.view.apply {
+                                    rotation = 0f
+                                    requestLayout()
+                                }
+                            }
+                            SENT_AUDIO_CHANGE_NEXT -> {
+                                imgNextTranslationAnimate.start()
+                                imgRotationAnimate.view.apply {
+                                    rotation = 0f
+                                    requestLayout()
+                                }
+                            }
+
+                            SENT_AUDIO_PLAY_STATE -> {
+                                if (msg.obj as Boolean) {
+                                    imgRotationAnimate.startAnimate()
+                                    model.setPlayingState(true)
+                                } else {
+                                    imgRotationAnimate.stopAnimate()
+                                    model.setPlayingState(false)
+                                }
                             }
                         }
                     }
@@ -106,6 +165,7 @@ class MusicPlayActivity : BaseActivity() {
             Log.d("LogicTest", "连接断开")
             isBinding = false
             model.cancelTimer()
+            MessageHandler?.removeCallbacksAndMessages(null)
             MessageHandler = null
             model.removeTrackTask()
         }
@@ -126,7 +186,6 @@ class MusicPlayActivity : BaseActivity() {
     }
 
     companion object {
-
         var MessageHandler: Handler? = null
 
         /**
@@ -157,26 +216,41 @@ class MusicPlayActivity : BaseActivity() {
             context.startActivity(intent)
         }
 
-        fun sentDuration(duration: Int) {
+        fun sentDuration(duration: Int, type: Int = SENT_AUDIO_DURATION) {
             val tempMessage = Message().also {
-                it.what = 1
+                it.what = type
                 it.arg1 = duration
                 MessageHandler?.sendMessage(it)
             }
         }
 
-        fun setAudioName(name: String) {
+        fun sentAudioOrArtistName(name: String, type: Int) {
             val tempMessage = Message().also {
-                it.what = 2
+                it.what = type
                 it.obj = name
                 MessageHandler?.sendMessage(it)
             }
         }
 
-        fun setArtistName(name: String) {
+        fun sentAudioOrPicUrl(url: String, type: Int) {
             val tempMessage = Message().also {
-                it.what = 3
-                it.obj = name
+                it.what = type
+                it.obj = url
+                MessageHandler?.sendMessage(it)
+            }
+        }
+
+        fun sentAudioNextOrPrevious(type: Int) {
+            val tempMessage = Message().also {
+                it.what = type
+                MessageHandler?.sendMessage(it)
+            }
+        }
+
+        fun sentAudioPlayState(isPlaying: Boolean) {
+            val tempMessage = Message().also {
+                it.what = SENT_AUDIO_PLAY_STATE
+                it.obj = isPlaying
                 MessageHandler?.sendMessage(it)
             }
         }
@@ -201,6 +275,8 @@ class MusicPlayActivity : BaseActivity() {
         super.onDestroy()
         unbindService(connection)
         model.cancelTimer()
+        MessageHandler?.removeCallbacksAndMessages(null)
+        MessageHandler = null
         isBinding = false
     }
 
@@ -216,13 +292,18 @@ class MusicPlayActivity : BaseActivity() {
     private fun initObserve() {
         model.isPlaying.observe(this) {
             btPlayState.apply {
-                if (it) setImageResource(R.drawable.ic_media_click_pause_60)
-                else setImageResource(R.drawable.ic_media_click_play_60)
+                if (it) {
+                    setImageResource(R.drawable.ic_media_click_pause_60)
+                    imgRotationAnimate.startAnimate()
+                } else {
+                    setImageResource(R.drawable.ic_media_click_play_60)
+                    imgRotationAnimate.stopAnimate()
+                }
             }
         }
         model.duration.observe(this) {
             tvMaxAudioTime.text = MillisToTimeFormat.toMinutesAndSeconds(it)
-            progressBar.max = it
+            progressBar.max = it + 1
         }
         model.curProgress.observe(this) {
             tvCurrentProgress.text = MillisToTimeFormat.toMinutesAndSeconds(it)
@@ -241,7 +322,11 @@ class MusicPlayActivity : BaseActivity() {
             tvArtistName.text = it
         }
         model.curAudioPicUrl.observe(this) {
-            imgAudioPicture.setImageFromUrl(it, placeholder = R.drawable.ic_notification_default, error = R.drawable.ic_notification_default)
+            imgAudioPicture.setImageFromUrl(
+                it,
+                placeholder = R.drawable.album_picture_default,
+                error = R.drawable.album_picture_default
+            )
         }
     }
 
@@ -284,6 +369,8 @@ class MusicPlayActivity : BaseActivity() {
         tvAudioName = findViewById(R.id.tv_audio_name)
         tvArtistName = findViewById(R.id.tv_artist_name)
         btBackNavigation = findViewById(R.id.bt_leave_page)
+        // 动画参数设置
+        imgRotationAnimate.setDuration(30000)
     }
 
     private fun initClick() {
@@ -298,7 +385,7 @@ class MusicPlayActivity : BaseActivity() {
         // 上一首
         btPreviousAudio.setOnClickListener {
             serviceOperator.previousSong(model.isPlaying.value!!)
-            updateCurrentPlayInfo()
+//            updateCurrentPlayInfo()
         }
         // 暂停或播放
         btPlayState.setOnClickListener {
@@ -315,16 +402,22 @@ class MusicPlayActivity : BaseActivity() {
                 }
             } else {
                 // MediaPlay还未准备好
-                serviceOperator.updateCurSong(0)
+                toast("音频还没准备还好，先等一下吧")
             }
         }
         // 下一首
         btNextAudio.setOnClickListener {
             serviceOperator.nextSong(model.isPlaying.value!!)
-            updateCurrentPlayInfo()
+//            updateCurrentPlayInfo()
         }
         // 播放列表
-        btPlayList
+        btPlayList.setOnClickListener {
+            PlayListDialog(
+                this,
+                serviceOperator.getPlayInfoList(),
+                R.style.baseBottomSheetDialog
+            ).show()
+        }
         // 音频图片
         imgAudioPicture
 
@@ -358,13 +451,42 @@ class MusicPlayActivity : BaseActivity() {
         }
     }
 
+
+    /**
+     * 手动更新当前的播放信息
+     */
     private fun updateCurrentPlayInfo() {
         model.setCurrentAudioName(serviceOperator.getCurAudioName())
         model.setCurrentArtistName(serviceOperator.getCurArtistName())
         model.setCurrentAudioPicUrl(serviceOperator.getCurAudioPicUrl())
-
         model.setCurProgress(serviceOperator.getCurProgress())
-//        model
+    }
+
+    /**
+     * 自己定义的胶片切换动画
+     * @param target
+     * @param name
+     * @param offsetOut
+     * @param duration
+     * @return
+     */
+    private fun MyTranslationAnimate(
+        target: View,
+        name: String,
+        offsetOut: Float,
+        duration: Long = 200
+    ): AnimatorSet {
+        val animator1 = ObjectAnimator.ofFloat(target, name, target.translationX, offsetOut)
+        val animator2 = ObjectAnimator.ofFloat(
+            target,
+            name,
+            target.translationX - offsetOut,
+            target.translationX
+        )
+        val set = AnimatorSet()
+        set.playSequentially(animator1, animator2)
+        set.duration = duration
+        return set
     }
 }
 

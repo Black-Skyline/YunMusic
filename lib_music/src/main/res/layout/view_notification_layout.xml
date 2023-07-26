@@ -9,9 +9,9 @@
     <!--专辑封面图-->
     <ImageView
         android:id="@+id/iv_album_cover"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_notification_default" />
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:src="@drawable/album_picture_default" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,23 +63,12 @@
                     android:lines="1"
                     android:singleLine="true"
                     android:text="歌手名"
-                    android:textSize="12sp"
+                    android:textSize="10sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/notification_tv_audio_name" />
 
             </LinearLayout>
 
-            <ImageButton
-                android:id="@+id/btn_notification_close"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="start|top"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
-                android:background="@color/transparent"
-                android:src="@drawable/ic_meida_close_24"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
 
         <!--歌曲控制部分-->
@@ -87,34 +76,62 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:gravity="center">
-            <!--上一曲控件-->
+            android:gravity="center"
+            android:orientation="horizontal">
+
             <ImageView
                 android:id="@+id/notification_btn_previous"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@null"
+                android:layout_marginStart="38dp"
+                android:layout_marginEnd="33dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_media_skip_previous_35" />
-            <!--播放/暂停控件-->
+                android:src="@drawable/notification_icon_previous"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/notification_btn_play"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <ImageView
                 android:id="@+id/notification_btn_play"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="30dp"
-                android:layout_marginEnd="30dp"
-                android:background="@null"
+                android:layout_marginEnd="34dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_media_click_play_60" />
-            <!--下一曲控件-->
+                android:src="@drawable/notification_icon_click_play"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/notification_btn_next"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/notification_btn_previous"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/black" />
+
             <ImageView
                 android:id="@+id/notification_btn_next"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@null"
+                android:layout_marginEnd="34dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_media_skip_next_35" />
+                android:src="@drawable/notification_icon_next"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_notification_close"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/notification_btn_play"
+                app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/btn_notification_close"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="60dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/notification_icon_close"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/notification_btn_next"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
     </LinearLayout>

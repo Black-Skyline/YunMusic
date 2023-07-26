@@ -19,7 +19,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.handsome.lib.music.MusicPlayActivity
+import com.handsome.lib.music.page.view.MusicPlayActivity
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
