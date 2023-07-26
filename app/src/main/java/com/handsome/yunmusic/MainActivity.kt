@@ -27,6 +27,7 @@ import com.handsome.lib.util.util.MyRotationAnimate
 import com.handsome.lib.util.util.getSharePreference
 import com.handsome.module.find.view.fragment.FindFragment
 import com.handsome.module.mine.MineFragment
+import com.handsome.module.podcast.page.view.fragment.PodcastFragment
 import com.handsome.yunmusic.databinding.ActivityMainBinding
 
 class MainActivity : YunMusicActivity() {
@@ -131,7 +132,10 @@ class MainActivity : YunMusicActivity() {
     private fun initVpAdapter() {
         val fragmentVpAdapter = FragmentVpAdapter(this)
         //todo 等待加入的fragment
-        fragmentVpAdapter.add(FindFragment::class.java).add(MineFragment::class.java)
+        fragmentVpAdapter
+            .add(FindFragment::class.java)
+            .add(PodcastFragment::class.java)
+            .add(MineFragment::class.java)
         mBinding.mainNaviVp.adapter = fragmentVpAdapter
         mBinding.mainNaviVp.isUserInputEnabled = false;  //禁止vp滑动的方法,会让banner不管用
     }
@@ -169,15 +173,12 @@ class MainActivity : YunMusicActivity() {
                 //todo 等待设置点击事件
                 when (it.itemId) {
                     R.id.item_drawer_setting -> {
-                        MvActivity.startAction(this@MainActivity,10895410,"","","")
                     }
 
                     R.id.item_drawer_about -> {
-                        Log.d("TAG", "initDrawerNavi: 2")
                     }
 
                     R.id.item_drawer_exit -> {
-                        Log.d("TAG", "initDrawerNavi: 3")
                     }
                 }
                 return@setNavigationItemSelectedListener true

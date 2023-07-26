@@ -8,12 +8,12 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.util.util.MyDIffUtil
-import com.handsome.module.mine.databinding.ItemMusicBinding
+import com.handsome.module.mine.databinding.ItemMusic1Binding
 
 class LatestMusicAdapter(private val onClick: (list: MutableList<WrapPlayInfo>, index: Int) -> Unit) :
     PagingDataAdapter<WrapPlayInfo, LatestMusicAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
 
-    inner class MyHolder(val binding: ItemMusicBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class MyHolder(val binding: ItemMusic1Binding) : RecyclerView.ViewHolder(binding.root) {
         init {
             //获取父布局，然后给父布局也就是整个item设置点击事件
             val viewGroup = binding.itemMusicNumber.parent as ViewGroup
@@ -38,7 +38,7 @@ class LatestMusicAdapter(private val onClick: (list: MutableList<WrapPlayInfo>, 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         return MyHolder(
-            ItemMusicBinding.inflate(
+            ItemMusic1Binding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
