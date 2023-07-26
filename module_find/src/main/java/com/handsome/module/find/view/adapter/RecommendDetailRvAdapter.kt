@@ -46,5 +46,4 @@ class RecommendDetailRvAdapter(val onClick: (RecommendDetailData.Data.DailySong)
             }
         }
     }
-
 }

@@ -46,7 +46,7 @@
             android:background="@android:color/transparent"
             android:hint="网易邮箱"
             android:lines="1"
-            android:maxLength="40"
+            android:maxLength="30"
             android:maxLines="1"
             android:paddingVertical="15dp"
             android:paddingStart="18dp"

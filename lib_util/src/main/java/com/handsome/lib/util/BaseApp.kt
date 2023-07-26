@@ -1,6 +1,7 @@
 package com.handsome.lib.util
 
 import android.app.Application
+import com.alibaba.android.arouter.launcher.ARouter
 
 /**
  * ...
@@ -14,8 +15,14 @@ open class BaseApp : Application() {
         lateinit var mContext: BaseApp
             private set
     }
+
     override fun onCreate() {
         super.onCreate()
         mContext = this
+        if (true) {
+            ARouter.openLog()
+            ARouter.openDebug()
+        }
+        ARouter.init(this)
     }
 }

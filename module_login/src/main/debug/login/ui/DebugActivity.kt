@@ -15,5 +15,4 @@ class DebugActivity: AppCompatActivity() {
         Log.d("DebugActivity:","${baseContext.toString()}")
         startActivity(Intent(this, LoginActivity::class.java))
     }
-
 }

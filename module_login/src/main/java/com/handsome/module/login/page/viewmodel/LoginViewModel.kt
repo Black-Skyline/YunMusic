@@ -207,14 +207,9 @@ class LoginViewModel : ViewModel() {
      */
     fun dealAnonymousLoginResponse(response: AnonymousData?, action: (() -> Unit)? = null) {
         if (response != null && response.code == 200) {
-            toast("游客${response.userId} 登录成功")
-            // 下面处理cookie和useId
-            Log.d(
-                "dealAnonymousLoginResponse",
-                "id is ${response.userId},cookies is ${response.cookie}"
-            )
-            action?.invoke()
             cookies.value = response.cookie
+            action?.invoke()
+
         } else toast("匿名登录失败")
     }
 
@@ -227,11 +222,12 @@ class LoginViewModel : ViewModel() {
 
 
     fun dealCaptchaLoginResponse(response: PhoneCaptchaData?, action: (() -> Unit)? = null) {
-        if (response != null && response.code == 200) {
-            Log.d("dealCaptchaLoginResponse", "code is ${response.code}")
-            toast("验证码 登录成功")
+//        if (response != null && response.code == 200) {
+//            Log.d("dealCaptchaLoginResponse", "code is ${response.code}")
+//            toast("验证码 登录成功")
+        Log.d("tag","get there")
             action?.invoke()
-        } else toast("验证码登录失败")
+//        } else toast("验证码登录失败")
     }
 
     fun dealEmailLoginResponse(response: EmailData?, action: (() -> Unit)? = null) {
