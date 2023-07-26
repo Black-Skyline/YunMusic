@@ -1,4 +1,4 @@
-package com.handsome.lib.music.viewmodel
+package com.handsome.lib.music.page.viewmodel
 
 import android.os.Handler
 import androidx.lifecycle.LiveData
@@ -26,7 +26,7 @@ class MusicPlayViewModel : ViewModel() {
     private var trackSongProgress: Runnable? = null
 
     // 控制播放界面的 音乐的播放状态
-    private val _isPlaying = MutableLiveData<Boolean>(false)
+    private val _isPlaying = MutableLiveData<Boolean>(true)
     val isPlaying: LiveData<Boolean>
         get() = _isPlaying
 
@@ -101,7 +101,7 @@ class MusicPlayViewModel : ViewModel() {
                             _curProgress.postValue(time())
                     }
                 }
-            }, 0, 500)
+            }, 0, 200)
         }
     }
     fun cancelTimer() {

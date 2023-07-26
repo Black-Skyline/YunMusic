@@ -7,7 +7,6 @@ import android.content.ServiceConnection
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -19,7 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.handsome.lib.music.MusicPlayActivity
+import com.handsome.lib.music.page.view.MusicPlayActivity
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity

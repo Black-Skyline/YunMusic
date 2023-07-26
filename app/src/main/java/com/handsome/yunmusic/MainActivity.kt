@@ -15,7 +15,7 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.handsome.lib.music.MusicPlayActivity
+import com.handsome.lib.music.page.view.MusicPlayActivity
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.mv.view.MvActivity
 import com.handsome.lib.search.SearchActivity
