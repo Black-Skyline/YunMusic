@@ -131,7 +131,6 @@ class MainActivity : YunMusicActivity() {
 
     private fun initVpAdapter() {
         val fragmentVpAdapter = FragmentVpAdapter(this)
-        //todo 等待加入的fragment
         fragmentVpAdapter
             .add(FindFragment::class.java)
             .add(PodcastFragment::class.java)
@@ -147,17 +146,14 @@ class MainActivity : YunMusicActivity() {
                 R.id.menu_navi_bottom_find -> {
                     //第二个参数是设置是否过度动画
                     mBinding.mainNaviVp.setCurrentItem(0, false)
-                    "第一个".toast()
                 }
 
                 R.id.menu_navi_bottom_radio -> {
                     mBinding.mainNaviVp.setCurrentItem(1, false)
-                    "第er个".toast()
                 }
 
                 R.id.menu_navi_bottom_music -> {
                     mBinding.mainNaviVp.setCurrentItem(2, false)
-                    "第三三三个".toast()
                 }
             }
             return@setOnItemSelectedListener true
