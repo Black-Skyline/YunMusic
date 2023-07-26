@@ -17,6 +17,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.music.sevice.MusicService
+import com.handsome.lib.mv.view.MvActivity
 import com.handsome.lib.search.SearchActivity
 import com.handsome.lib.util.adapter.FragmentVpAdapter
 import com.handsome.lib.util.extention.setImageFromLocalUri
@@ -168,7 +169,7 @@ class MainActivity : YunMusicActivity() {
                 //todo 等待设置点击事件
                 when (it.itemId) {
                     R.id.item_drawer_setting -> {
-                        Log.d("TAG", "initDrawerNavi: 1")
+                        MvActivity.startAction(this@MainActivity,10895410,"","","")
                     }
 
                     R.id.item_drawer_about -> {

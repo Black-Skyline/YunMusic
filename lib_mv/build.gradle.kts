@@ -37,6 +37,19 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+    viewBinding {
+        enable=true
+    }
 }
 dependAndroidCommonBase()
 dependTestBase()
+dependNetwork()
+dependRxjava()
+dependencies {
+    implementation(project(":lib_util"))
+    implementation ("xyz.doikki.android.dkplayer:dkplayer-java:3.3.7")
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.material:material:1.5.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation ("xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7")
+}
