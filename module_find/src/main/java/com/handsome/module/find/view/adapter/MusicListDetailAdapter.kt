@@ -5,16 +5,21 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.music.model.WrapPlayInfo
+import com.handsome.lib.util.extention.GONE
 import com.handsome.lib.util.util.MyDIffUtil
 import com.handsome.module.find.databinding.ItemMusicBinding
 import com.handsome.module.find.network.model.MusicListDetailData
 import java.lang.StringBuilder
 
-class MusicListDetailAdapter(private val onClick: (list: MutableList<WrapPlayInfo>, index: Int) -> Unit) :
+class MusicListDetailAdapter(private val startMvActivity : (data :MusicListDetailData.Song) -> Unit,private val onClick: (list: MutableList<WrapPlayInfo>, index: Int) -> Unit) :
     PagingDataAdapter<MusicListDetailData.Song, MusicListDetailAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
 
     inner class MyHolder(val binding: ItemMusicBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
+            //给mv注册事件
+            binding.itemPictureMusicVideo.setOnClickListener {
+                getItem(bindingAdapterPosition)?.let { it1 -> startMvActivity(it1) }
+            }
             //获取父布局，然后给父布局也就是整个item设置点击事件
             val viewGroup = binding.itemMusicNumber.parent as ViewGroup
             viewGroup.setOnClickListener {
@@ -62,6 +67,7 @@ class MusicListDetailAdapter(private val onClick: (list: MutableList<WrapPlayInf
                 itemMusicNumber.text = number
                 itemMusicName.text = item.name
                 itemMusicSinger.text = item.ar[0].name
+                if (item.mv == 0L) itemPictureMusicVideo.GONE()
             }
         }
     }

@@ -16,7 +16,7 @@ data class SingleMusicListDetailData(
     data class Playlist(
         val adType: Int,
         val algTags: Any,
-        val backgroundCoverId: Int,
+        val backgroundCoverId: Long,
         val backgroundCoverUrl: Any,
         val bannedTrackIds: Any,
         val cloudTrackCount: Int,
