@@ -234,7 +234,9 @@ class MusicListDetailActivity : BaseActivity() {
 
 
     private fun onClickMv(data :MusicListDetailData.Song) {
-        mMusicService.pausePlay()
+        if (mIsBound){
+            mMusicService.pausePlay()
+        }
         MvActivity.startAction(this,data.mv,data.name,data.al.name,data.al.picUrl)
     }
     private fun onClickMusicListDetail(list: MutableList<WrapPlayInfo>, index: Int) {

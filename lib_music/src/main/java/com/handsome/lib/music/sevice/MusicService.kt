@@ -206,10 +206,10 @@ class MusicService : Service() {
 //            })
 //        notificationView.setImageViewBitmap(R.id.iv_album_cover, curPlayInfo!!.picUrl)
         //歌曲名
-        notificationView?.setTextViewText(R.id.notification_tv_audio_name, curPlayInfo!!.audioName)
+        notificationView?.setTextViewText(R.id.notification_tv_audio_name, curPlayInfo?.audioName)
         //歌手名
         notificationView?.setTextViewText(
-            R.id.notification_tv_artist_name, curPlayInfo!!.artistName
+            R.id.notification_tv_artist_name, curPlayInfo?.artistName
         )
     }
 
