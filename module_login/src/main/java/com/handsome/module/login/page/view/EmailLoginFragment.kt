@@ -81,7 +81,7 @@ class EmailLoginFragment : Fragment() {
     }
 
     private fun initObserve() {
-        model.isClickableLoginByPassword.observe(viewLifecycleOwner) {
+        model.isClickableLoginByEmail.observe(viewLifecycleOwner) {
             binding.btnLoginByEmail.isEnabled = it
         }
     }

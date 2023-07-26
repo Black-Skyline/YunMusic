@@ -69,5 +69,4 @@ class RecommendDetailRvAdapter(private val onClick: (list: MutableList<WrapPlayI
             }
         }
     }
-
 }
