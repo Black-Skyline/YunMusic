@@ -68,6 +68,7 @@ class SpecialEditionActivity : BaseActivity() {
         initRv(id)
         initClickPlay()
         initService()
+        initClickPlayAll()
     }
 
     private fun initRv(id: Long) {
@@ -81,6 +82,14 @@ class SpecialEditionActivity : BaseActivity() {
         super.onStart()
         if (mIsBound) {
             getBottomInfo()
+        }
+    }
+
+    private fun initClickPlayAll() {
+        mBinding.specialEditionRvMusic.setOnClickListener {
+            //代码模拟点击第一条数据
+            val firstView = mBinding.specialEditionRvMusic.layoutManager?.findViewByPosition(0)
+            firstView?.performClick()
         }
     }
 

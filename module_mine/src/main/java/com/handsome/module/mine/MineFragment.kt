@@ -45,7 +45,7 @@ class MineFragment : BaseFragment() {
         fromLocalReadImg()
         initTopClick()
         initAdapter()
-//        getLatestData()
+        getLatestData()
     }
 
     private fun getLatestData() {

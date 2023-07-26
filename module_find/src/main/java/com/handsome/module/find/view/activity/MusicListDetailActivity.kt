@@ -29,6 +29,7 @@ import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityMusicListDetailBinding
 import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.MusicListDetailData
+import com.handsome.module.find.network.model.SingleMusicListDetailData
 import com.handsome.module.find.view.adapter.MusicListDetailAdapter
 import com.handsome.module.find.view.viewmodel.MusicListDetailViewModel
 import kotlinx.coroutines.flow.catch
@@ -74,6 +75,7 @@ class MusicListDetailActivity : BaseActivity() {
         initTop(id)
         initClickPlay()  //和播放相关的两个方法
         initService()
+        initClickPlayAll()   //播放全部的点击事件,后面一次会覆盖前面一次
     }
 
     //每次重新恢复页面的时候也要进行判断播放状态
@@ -169,6 +171,16 @@ class MusicListDetailActivity : BaseActivity() {
                     }
                 }
             }
+        }
+    }
+
+
+    //播放全部的点击事件
+    private fun initClickPlayAll() {
+        mBinding.musicListTvPlayAll.setOnClickListener {
+            //点击第一条数据
+            val firstView = mBinding.musicListRvMusic.layoutManager?.findViewByPosition(0)
+            firstView?.performClick()
         }
     }
 

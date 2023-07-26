@@ -70,6 +70,7 @@ class RecommendDetailActivity : BaseActivity() {
         initMusic()
         initClickPlay()
         initService()
+        initClickPlayAll()
     }
 
     override fun onStart() {
@@ -110,6 +111,14 @@ class RecommendDetailActivity : BaseActivity() {
     private fun initService() {
         Intent(this, MusicService::class.java).also { intent ->
             bindService(intent, connection, BIND_AUTO_CREATE)
+        }
+    }
+
+    private fun initClickPlayAll() {
+        mBinding.recommendDetailRvMusic.setOnClickListener {
+            //代码模拟点击第一条数据
+            val firstView = mBinding.recommendDetailRvMusic.layoutManager?.findViewByPosition(0)
+            firstView?.performClick()
         }
     }
 

@@ -29,9 +29,9 @@
 
             <com.handsome.module.find.view.MyVpIndicatorView
                 android:id="@+id/find_vp_indicator"
-                android:layout_width="80dp"
+                android:layout_width="90dp"
                 android:layout_height="30dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginStart="3dp"
                 app:active_color="@color/white"
                 app:inactive_color="@color/black"
                 android:layout_alignParentBottom="true"
