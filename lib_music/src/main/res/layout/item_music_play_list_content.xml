@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/music_tv_playlist_content_audio_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingVertical="8dp"
+            android:lines="1"
+            android:maxLength="20"
+            android:layout_marginStart="8dp"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/music_tv_playlist_content_artist_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:lines="1"
+            android:maxLength="20"
+            android:text="·"
+            android:paddingVertical="8dp"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/music_btn_playlist_content_audio_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/notification_icon_close"
+        app:tint="#B59F9F" />
+
+</LinearLayout>

@@ -21,6 +21,10 @@ class ServiceHelper {
         const val SENT_AUDIO_DURATION = 1
         const val SENT_AUDIO_NAME = 2
         const val SENT_ARTIST_NAME = 3
+        const val SENT_AUDIO_PIC_URL = 4
+        const val SENT_AUDIO_CHANGE_PREVIOUS = 5
+        const val SENT_AUDIO_CHANGE_NEXT = 6
+        const val SENT_AUDIO_PLAY_STATE = 7
 
 
         // 通知栏操作行为常量
