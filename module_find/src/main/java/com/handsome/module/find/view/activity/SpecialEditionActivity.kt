@@ -20,12 +20,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.music.MusicPlayActivity
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
+import com.handsome.lib.mv.view.MvActivity
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.lib.util.util.MyRotationAnimate
 import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivitySpecialEditionBinding
+import com.handsome.module.find.network.model.AlbumData
 import com.handsome.module.find.view.adapter.AlbumSongsAdapter
 import com.handsome.module.find.view.viewmodel.SpecialEditionViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -37,7 +39,7 @@ import java.util.*
 class SpecialEditionActivity : BaseActivity() {
     private val mBinding by lazy { ActivitySpecialEditionBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[SpecialEditionViewModel::class.java] }
-    private val mAlbumSongsAdapter = AlbumSongsAdapter(::onClickAlbum)
+    private val mAlbumSongsAdapter = AlbumSongsAdapter(::onClickMv,::onClickAlbum)
 
     private lateinit var mImgPlay : ImageView   //播放按键view
     private lateinit var mImgAlbum : ImageView   //下面的唱片view
@@ -207,6 +209,11 @@ class SpecialEditionActivity : BaseActivity() {
     //初始化
     private fun onClickAlbum(list: MutableList<WrapPlayInfo>, index: Int) {
         MusicPlayActivity.startWithPlayList(this, list, index)
+    }
+
+    private fun onClickMv(data : AlbumData.Song) {
+        mMusicService.pausePlay()
+        MvActivity.startAction(this,data.mv,data.name,data.al.name,data.al.picUrl)
     }
 
 

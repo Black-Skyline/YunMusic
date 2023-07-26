@@ -70,7 +70,7 @@ data class MusicListDetailData(
         val m: M,
         val mark: Long,
         val mst: Int,
-        val mv: Int,
+        val mv: Long,
         val name: String,
         val no: Int,
         val noCopyrightRcmd: Any,

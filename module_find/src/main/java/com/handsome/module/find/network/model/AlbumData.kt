@@ -112,7 +112,7 @@ data class AlbumData(
         val l: L,
         val m: M,
         val mst: Int,
-        val mv: Int,
+        val mv: Long,
         val name: String,
         val no: Int,
         val noCopyrightRcmd: Any,
