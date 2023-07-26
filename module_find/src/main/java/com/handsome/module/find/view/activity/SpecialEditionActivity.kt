@@ -22,6 +22,7 @@ import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
+import com.handsome.lib.util.util.MyRotationAnimate
 import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivitySpecialEditionBinding
@@ -38,7 +39,9 @@ class SpecialEditionActivity : BaseActivity() {
     private val mViewModel by lazy { ViewModelProvider(this)[SpecialEditionViewModel::class.java] }
     private val mAlbumSongsAdapter = AlbumSongsAdapter(::onClickAlbum)
 
-    private lateinit var mImgPlay: ImageView
+    private lateinit var mImgPlay : ImageView   //播放按键view
+    private lateinit var mImgAlbum : ImageView   //下面的唱片view
+    private lateinit var mAnimator : MyRotationAnimate  //下面的唱片的旋转动画
 
     // Service实例
     private lateinit var mMusicService: MusicService
@@ -63,12 +66,19 @@ class SpecialEditionActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(mBinding.root)
+        initView()
         val id = intent.getLongExtra("id", 32311)  //网上随便找的专辑id
         initBar()
         initRv(id)
         initClickPlay()
         initService()
         initClickPlayAll()
+    }
+
+    private fun initView() {
+        mImgPlay = findViewById(com.handsome.lib.util.R.id.main_bottom_music_image_play)
+        mImgAlbum = findViewById(com.handsome.lib.util.R.id.main_bottom_music_image_image)
+        mAnimator = MyRotationAnimate(mImgAlbum)
     }
 
     private fun initRv(id: Long) {
@@ -99,23 +109,27 @@ class SpecialEditionActivity : BaseActivity() {
         val singerName = mMusicService.getCurArtistName()
         val picUrl = mMusicService.getCurAudioPicUrl() //可能为找不到
         findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_name).text = songName
-        findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_singer).text =
-            singerName
+        findViewById<TextView>(com.handsome.lib.util.R.id.main_bottom_music_tv_singer).text = singerName
         if (picUrl != "找不到") {
-            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).setImageFromUrl(
-                picUrl
-            )
+            mImgAlbum.setImageFromUrl(picUrl)
         }
         if (mMusicService.isPlaying()) {
             mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
+            mAnimator.startAnimate()
         } else {
             mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
+            mAnimator.stopAnimate()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         unbindService(connection)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mAnimator.stopAnimate()
     }
 
     private fun initService() {
@@ -126,7 +140,6 @@ class SpecialEditionActivity : BaseActivity() {
 
     //播放逻辑
     private fun initClickPlay() {
-        mImgPlay = findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_play)
         //播放的点击事件，dj！
         mImgPlay.setOnClickListener {
             if (!mIsBound) {  //还未绑定service直接返回
@@ -138,13 +151,14 @@ class SpecialEditionActivity : BaseActivity() {
             if (mMusicService.isPlaying()) {
                 mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_play)
                 mMusicService.pausePlay()
+                mAnimator.stopAnimate()
             } else {
                 mImgPlay.setImageResource(com.handsome.lib.util.R.drawable.icon_bottom_music_stop)
                 mMusicService.startPlay()
+                mAnimator.startAnimate()
             }
         }
-        val viewGroup =
-            findViewById<ImageView>(com.handsome.lib.util.R.id.main_bottom_music_image_image).parent as ViewGroup
+        val viewGroup = mImgPlay.parent as ViewGroup
         viewGroup.setOnClickListener {
             startActivity(Intent(this, MusicPlayActivity::class.java)) //todo
         }
