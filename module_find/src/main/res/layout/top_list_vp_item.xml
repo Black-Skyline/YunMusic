@@ -10,13 +10,14 @@
     android:layout_marginBottom="5dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    app:cardElevation="0dp"
     android:elevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp">
+        android:background="@drawable/rounded_border_gray"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/top_list_item_tv_name"
@@ -26,7 +27,6 @@
             android:textSize="15sp"
             android:textStyle="bold"
             android:gravity="center"
-            android:layout_marginTop="5dp"
             android:layout_marginStart="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -46,7 +46,6 @@
             android:id="@+id/top_list_item_tv_first_song"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:textSize="15sp"
             android:lines="1"
             app:layout_constraintStart_toEndOf="@+id/top_list_item_img"
