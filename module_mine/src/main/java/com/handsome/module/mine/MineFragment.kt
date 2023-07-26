@@ -18,6 +18,7 @@ import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.util.base.BaseFragment
 import com.handsome.lib.util.extention.setImageFromLocalUri
 import com.handsome.lib.util.util.getSharePreference
+import com.handsome.lib.util.util.shareText
 import com.handsome.module.mine.databinding.FragmentMineBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -25,7 +26,7 @@ import kotlinx.coroutines.launch
 
 class MineFragment : BaseFragment() {
     private val mBinding by lazy { FragmentMineBinding.inflate(layoutInflater) }
-    private val mLatestMusicAdapter by lazy { LatestMusicAdapter(::onClickMusic) }
+    private val mLatestMusicAdapter by lazy { LatestMusicAdapter(::onClickMore,::onClickMusic) }
     private val mViewModel by lazy { ViewModelProvider(this)[MineFragmentViewModel::class.java] }
     private val isStartActivity = false
 
@@ -46,6 +47,19 @@ class MineFragment : BaseFragment() {
         initTopClick()
         initAdapter()
         getLatestData()
+        initClickPlayAll()
+    }
+
+    private fun onClickMore(wrapPlayInfo: WrapPlayInfo) {
+        val shareText = "${wrapPlayInfo.artistName.trim()}的${wrapPlayInfo.audioName.trim()}特别好听，你也来听听吧！"
+        requireContext().shareText(shareText)
+    }
+
+    private fun initClickPlayAll() {
+        mBinding.musicListTvPlayAll.setOnClickListener {
+            val firstView = mBinding.musicListRvMusic.layoutManager?.findViewByPosition(0)
+            firstView?.performClick()
+        }
     }
 
     private fun getLatestData() {
