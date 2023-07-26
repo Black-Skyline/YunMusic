@@ -488,6 +488,11 @@ class MusicPlayActivity : BaseActivity() {
         set.duration = duration
         return set
     }
+
+    override fun onStop() {
+        super.onStop()
+        imgRotationAnimate.stopAnimate()
+    }
 }
 
 
