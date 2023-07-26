@@ -149,7 +149,7 @@ data class SingleMusicListDetailData(
             val sc: Any,
             val sr: Any,
             val t: Int,
-            val uid: Int,
+            val uid: Long,
             val v: Int
         )
 

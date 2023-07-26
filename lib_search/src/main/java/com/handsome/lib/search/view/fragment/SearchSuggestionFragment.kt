@@ -30,6 +30,7 @@ class SearchSuggestionFragment(private val keywords : String, onSearchSuggestion
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initSearchSuggestion()
+        Log.d("lx", "我被创建了: ")
     }
 
     private fun initSearchSuggestion() {
@@ -70,7 +71,6 @@ class SearchSuggestionFragment(private val keywords : String, onSearchSuggestion
     }
 
     fun changeData(key : String){
-        Log.d("lx", "key: ")
         mViewModel.getSearchSuggestion(key)
     }
 
