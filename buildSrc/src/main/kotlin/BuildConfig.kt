@@ -7,7 +7,7 @@ import org.gradle.api.Project
  * @date 2023/7/15
  */
 object BuildConfig {
-    const val isRelease = false  // false意味着可以单模块调试,true表示打包成app
+    const val isRelease = true  // false意味着可以单模块调试,true表示打包成app
     const val testInstrumentationRunner="androidx.test.runner.AndroidJUnitRunner"
 
     const val minSdk = 24
