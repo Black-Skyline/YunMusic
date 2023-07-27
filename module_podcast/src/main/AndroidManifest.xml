@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".PodcastActivity"
+            android:name=".page.view.activity.PodcastActivity"
             android:exported="true">
         </activity>
     </application>

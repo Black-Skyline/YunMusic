@@ -16,11 +16,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.launcher.ARouter
 import com.handsome.lib.util.extention.toast
 import com.handsome.module.login.R
 import com.handsome.module.login.databinding.FragmentPhoneCaptchaLoginBinding
 import com.handsome.module.login.page.viewmodel.LoginViewModel
+import com.handsome.module.login.router.LOGIN_CAPTCHA_ENTER
 import com.handsome.module.login.utils.BaseTextWatcher
 import com.handsome.module.login.utils.topfuncation.EmailLogin
 import com.handsome.module.login.utils.topfuncation.PasswordLogin
@@ -38,6 +40,7 @@ import kotlinx.coroutines.launch
  * @Description:
  *
  */
+@Route(path = LOGIN_CAPTCHA_ENTER)
 class PhoneCaptchaLoginFragment : Fragment() {
     private var _binding: FragmentPhoneCaptchaLoginBinding? = null
     private val binding: FragmentPhoneCaptchaLoginBinding
@@ -74,9 +77,12 @@ class PhoneCaptchaLoginFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.anonymousLoginResponseFlow.collectLatest {
                     if (it != null)
-                        model.dealAnonymousLoginResponse(it) {
-                            ARouter.getInstance().build("目的地")
-                                .withString("cookies", getCookies()).navigation()
+                        model.dealAnonymousLoginResponse(it) { state ->
+                            LoginActivity.resultCallback?.invoke(state,
+                                getCookies() ?: "cookies is null")
+                            if (state) requireActivity().finish()
+//                            ARouter.getInstance().build("目的地")
+//                                .withString("cookies", getCookies()).navigation()
                         }
                 }
             }

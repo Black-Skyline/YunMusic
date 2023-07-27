@@ -1,6 +1,7 @@
 package com.handsome.module.podcast.network.api
 
 import com.handsome.lib.util.network.ApiGenerator
+import com.handsome.module.podcast.model.FMProgramsData
 import com.handsome.module.podcast.model.RadioProgramsData
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -20,6 +21,21 @@ interface RadioProgramsApiService {
         @Query("rid") rid: Long,
         @Query("limit") limit: Int = 30
     ): RadioProgramsData
+
+    /**
+     * 直接获取十个不会更新的节目
+     * @return
+     */
+//    @GET("program/recommend")
+//    suspend fun getRecommendProgramResponse() :
+
+    /**
+     * 直接获取十个不会更新的节目
+     * @return
+     */
+    @GET("program/recommend")
+    suspend fun getFMProgramsResponse() : FMProgramsData
+//    suspend fun getRecommendProgramResponse() :
 
     companion object {
         val InSTANCE by lazy {
