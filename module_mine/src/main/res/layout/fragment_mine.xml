@@ -55,7 +55,7 @@
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:lines="1"
-                    android:text="hello"
+                    android:text="游客(点击登录)"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:gravity="center"
