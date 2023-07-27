@@ -156,8 +156,8 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/login_btn_sina"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="28dp"
+        android:layout_height="35dp"
         android:background="@drawable/login_ic_xina"
 
         app:layout_constraintBottom_toBottomOf="@+id/login_btn_qq"

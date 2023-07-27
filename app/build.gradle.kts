@@ -7,7 +7,8 @@ plugins {
 android {
     namespace = "com.handsome.yunmusic"
     compileSdk = BuildConfig.compileSdk
-
+    aaptOptions.cruncherEnabled = false
+    aaptOptions.useNewCruncher = false
     defaultConfig {
         applicationId = "com.handsome.yunmusic"
         minSdk = BuildConfig.minSdk
