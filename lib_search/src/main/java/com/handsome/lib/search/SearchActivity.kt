@@ -3,11 +3,9 @@ package com.handsome.lib.search
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -96,7 +94,7 @@ class SearchActivity : BaseActivity() {
         mTv = TextView(this)
         mTv?.let {
             it.background = resources.getDrawable(R.drawable.shape_backgroud, theme)
-            val text = "  ${searchHistory}  "
+            val text = "  $searchHistory  "
             it.text = text
             mBinding.searchHistoryFlow.addView(mTv)
         }
@@ -162,7 +160,7 @@ class SearchActivity : BaseActivity() {
         //搜索改变的时候的搜索提示
         if (newText != "") {
             mBinding.searchFragmentContainer.VISIBLE()  //设置可见
-            if (mSearchSuggestionFragment != null  && mSearchSuggestionFragment == mBinding.searchFragmentContainer.getFragment<Fragment>()){
+            if (mSearchSuggestionFragment != null  && mSearchSuggestionFragment == supportFragmentManager.findFragmentById(R.id.search_fragment_container)){
                 //当前fragmentContainer是搜索建议fragment界面就只改变里面的数据
                 mSearchSuggestionFragment?.changeData(newText)
                 Log.d("lx", "doAfterChange: 222")
@@ -174,7 +172,7 @@ class SearchActivity : BaseActivity() {
             }
             isBack = true
         } else {
-            Log.d("lx", "allfragments=${supportFragmentManager.fragments}: ")
+            Log.d("lx", "fragments=${supportFragmentManager.fragments}: ")
             removeAllFragment()
             mBinding.searchFragmentContainer.GONE()  //当啥也没有的时候显示本来的面目
         }

@@ -17,7 +17,7 @@
 
         <item
             android:id="@+id/item_drawer_exit"
-            android:title="退出登录"
+            android:title="体验登录"
             android:icon="@drawable/icon_exit"
             />
 
