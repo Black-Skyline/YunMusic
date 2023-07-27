@@ -12,14 +12,14 @@
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/mv_rv_item_recommend_img"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:shapeAppearance="@style/CircleStyle"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="200dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginStart="16dp"
@@ -28,18 +28,18 @@
 
         <TextView
             android:id="@+id/mv_rv_item_recommend_tv_song_name"
-            android:layout_width="200dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:textSize="16dp"
+            android:textSize="15sp"
             android:lines="2" />
 
         <TextView
             android:id="@+id/mv_rv_item_recommend_tv_singer_name"
-            android:layout_width="150dp"
+            android:layout_width="170dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textSize="13sp"
+            android:layout_marginTop="25dp"
+            android:textSize="12sp"
             android:lines="1" />
     </LinearLayout>
 

@@ -9,7 +9,7 @@ import retrofit2.http.Query
 interface MvRecommendApiService {
 
     @GET("mv/all")
-    fun getRecommendData() : Single<MvRecommendData>
+    suspend fun getRecommendData(@Query("limit") limit : Int,@Query("offset") offset : Int) : MvRecommendData
 
     companion object{
         val INSTANCE by lazy {

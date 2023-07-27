@@ -218,7 +218,7 @@ class SpecialEditionActivity : BaseActivity() {
 
     private fun onClickMv(data : AlbumData.Song) {
         mMusicService.pausePlay()
-        MvActivity.startAction(this,data.mv,data.name,data.al.name,data.al.picUrl)
+        MvActivity.startAction(this,data.mv,data.name,data.ar[0].name,data.al.picUrl)
     }
 
 

@@ -30,7 +30,7 @@ import com.handsome.lib.util.util.objectFromSp
 import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityRecommendDetailBinding
-import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
+import com.handsome.lib.mv.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.RecommendDetailData
 import com.handsome.module.find.view.adapter.RecommendDetailRvAdapter
 import com.handsome.module.find.view.viewmodel.RecommendDetailViewModel
@@ -175,7 +175,7 @@ class RecommendDetailActivity : BaseActivity() {
 
     private fun onClickMv(data : RecommendDetailData.Data.DailySong) {
         mMusicService.pausePlay()
-        MvActivity.startAction(this,data.mv,data.name,data.al.name,data.al.picUrl)
+        MvActivity.startAction(this,data.mv,data.name,data.ar[0].name,data.al.picUrl)
     }
 
     private fun initMusicCollect() {

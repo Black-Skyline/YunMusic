@@ -2,6 +2,7 @@ package com.handsome.lib.mv.view.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.mv.databinding.MvRvItemRecommendBinding
@@ -9,13 +10,13 @@ import com.handsome.lib.mv.network.model.MvRecommendData
 import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.lib.util.util.MyDIffUtil
 
-class RecommendMvRvAdapter(val onRecommendClick : (MvRecommendData.Data) -> Unit) : ListAdapter<MvRecommendData.Data,RecommendMvRvAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
+class RecommendMvRvAdapter(val onRecommendClick : (MvRecommendData.Data) -> Unit) : PagingDataAdapter<MvRecommendData.Data,RecommendMvRvAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
 
     inner class MyHolder(val binding : MvRvItemRecommendBinding) : RecyclerView.ViewHolder(binding.root){
         init {
             val viewGroup = binding.mvRvItemRecommendImg.parent as ViewGroup
             viewGroup.setOnClickListener {
-                onRecommendClick(getItem(adapterPosition))
+                getItem(bindingAdapterPosition)?.let { it1 -> onRecommendClick(it1) }
             }
         }
     }

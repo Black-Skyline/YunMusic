@@ -29,7 +29,7 @@ import com.handsome.lib.util.util.MyRotationAnimate
 import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityMusicListDetailBinding
-import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
+import com.handsome.lib.mv.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.MusicListDetailData
 import com.handsome.module.find.view.adapter.MusicListDetailAdapter
 import com.handsome.module.find.view.viewmodel.MusicListDetailViewModel
@@ -240,7 +240,7 @@ class MusicListDetailActivity : BaseActivity() {
         if (mIsBound){
             mMusicService.pausePlay()
         }
-        MvActivity.startAction(this,data.mv,data.name,data.al.name,data.al.picUrl)
+        MvActivity.startAction(this,data.mv,data.name,data.ar[0].name,data.al.picUrl)
     }
     private fun onClickMusicListDetail(list: MutableList<WrapPlayInfo>, index: Int) {
         MusicPlayActivity.startWithPlayList(this, list, index)
