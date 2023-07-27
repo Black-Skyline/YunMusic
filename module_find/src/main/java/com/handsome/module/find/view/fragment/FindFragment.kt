@@ -37,6 +37,7 @@ import com.handsome.module.find.view.adapter.FindBannerBelowRvAdapter
 import com.handsome.module.find.view.adapter.FindBannerVpAdapter
 import com.handsome.module.find.view.adapter.FindRecommendListVpAdapter
 import com.handsome.module.find.view.adapter.TopListVpAdapter
+import com.handsome.module.find.view.selfview.MyVpPageTransformer
 import com.handsome.module.find.view.viewmodel.FindFragmentViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -271,7 +272,10 @@ class FindFragment : Fragment() {
     }
 
     private fun initBannerAdapter() {
-        mBinding.findVpBanner.adapter = findBannerVpAdapter
+        mBinding.findVpBanner.apply {
+            adapter = findBannerVpAdapter
+            setPageTransformer(MyVpPageTransformer())
+        }
     }
 
     private fun getBannerData() {

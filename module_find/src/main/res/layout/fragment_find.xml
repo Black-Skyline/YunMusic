@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <com.handsome.module.find.view.MyVpIndicatorView
+            <com.handsome.module.find.view.selfview.MyVpIndicatorView
                 android:id="@+id/find_vp_indicator"
                 android:layout_width="90dp"
                 android:layout_height="30dp"
