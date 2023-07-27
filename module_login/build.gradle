@@ -32,7 +32,6 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-
         }
     }
     compileOptions {
@@ -41,7 +40,7 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = '17'
     }
     sourceSets {
         main {
@@ -75,7 +74,7 @@ dependencies {
     implementation(project(":lib_util"))
     implementation(project(":lib_music"))
 
-    kapt ARouter.arouter_compiler
+    kapt(ARouter.arouter_compiler)
     implementation(Network.retrofit)
     implementation(Rxjava.rxjava3_android)
     implementation(Rxjava.rxjava3_kotlin)

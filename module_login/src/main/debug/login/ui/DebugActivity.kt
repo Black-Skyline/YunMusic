@@ -23,5 +23,4 @@ class DebugActivity: AppCompatActivity() {
         startActivity(Intent(this, MusicPlayActivity::class.java))
 //        MusicPlayActivity.startWithPlayList(this, tempData, 0)
     }
-
 }

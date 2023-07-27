@@ -13,6 +13,8 @@
         android:layout_marginTop="25dp"
         android:text="服务协议和隐私政策等指引"
         android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/textColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,6 +27,7 @@
         android:layout_marginStart="40dp"
         android:layout_marginEnd="40dp"
         android:text="内容"
+        android:textColor="@color/textColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,8 +37,10 @@
         android:id="@+id/disagree"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="52dp"
+        android:layout_marginStart="56dp"
         android:text="不同意"
+        android:textStyle="bold"
+        android:textColor="@color/textColor"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_content" />
 
@@ -45,6 +50,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="56dp"
         android:text="同意继续"
+        android:textStyle="bold"
+        android:textColor="@color/textColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dialog_content" />
 </androidx.constraintlayout.widget.ConstraintLayout>

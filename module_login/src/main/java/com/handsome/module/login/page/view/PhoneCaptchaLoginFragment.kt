@@ -16,6 +16,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.alibaba.android.arouter.launcher.ARouter
 import com.handsome.lib.util.extention.toast
 import com.handsome.module.login.R
 import com.handsome.module.login.databinding.FragmentPhoneCaptchaLoginBinding
@@ -73,7 +74,10 @@ class PhoneCaptchaLoginFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.anonymousLoginResponseFlow.collectLatest {
                     if (it != null)
-                        model.dealAnonymousLoginResponse(it)
+                        model.dealAnonymousLoginResponse(it) {
+                            ARouter.getInstance().build("目的地")
+                                .withString("cookies", getCookies()).navigation()
+                        }
                 }
             }
         }
@@ -127,8 +131,8 @@ class PhoneCaptchaLoginFragment : Fragment() {
                 } else if (!ValidityCheckUtil.isValidCaptcha(captcha)) toast("非法验证码")
                 else {
                     // 设定此处为成功发出登录请求的情况
-
-                    model.captchaLogin(phoneNumber!!.toLong(), captcha!!.toInt())
+                    model.anonymousLogin()
+//                    model.captchaLogin(phoneNumber!!.toLong(), captcha!!.toInt())
                 }
             }
         }
@@ -168,7 +172,7 @@ class PhoneCaptchaLoginFragment : Fragment() {
             if (!model.isConsentClause.value!!) {
                 dialog.show()
             } else {
-                toast("点击了游客登录")
+                toast("游客登录")
                 model.anonymousLogin()
             }
         }
@@ -184,13 +188,13 @@ class PhoneCaptchaLoginFragment : Fragment() {
         }
         // 底部的摆设按钮
         binding.loginBtnQq.setOnClickListener {
-            toast("摆设作用，大概要用到ContentProvide，不会写")
+            toast("未检测到QQ账号")
         }
         binding.loginBtnWechat.setOnClickListener {
-            toast("摆设作用，大概要用到ContentProvide，不会写")
+            toast("未检测到微信账号")
         }
         binding.loginBtnSina.setOnClickListener {
-            toast("摆设作用，大概要用到ContentProvide，不会写")
+            toast("未检测到新浪账号")
         }
     }
 
