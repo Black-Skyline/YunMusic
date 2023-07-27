@@ -6,7 +6,6 @@ import android.content.ServiceConnection
 import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -17,7 +16,6 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.handsome.lib.music.page.view.MusicPlayActivity
 import com.handsome.lib.music.sevice.MusicService
-import com.handsome.lib.mv.view.MvActivity
 import com.handsome.lib.search.SearchActivity
 import com.handsome.lib.util.adapter.FragmentVpAdapter
 import com.handsome.lib.util.extention.setImageFromLocalUri
@@ -26,6 +24,7 @@ import com.handsome.lib.util.extention.toast
 import com.handsome.lib.util.util.MyRotationAnimate
 import com.handsome.lib.util.util.getSharePreference
 import com.handsome.module.find.view.fragment.FindFragment
+import com.handsome.module.login.page.view.LoginActivity
 import com.handsome.module.mine.MineFragment
 import com.handsome.module.podcast.page.view.fragment.PodcastFragment
 import com.handsome.yunmusic.databinding.ActivityMainBinding
@@ -142,7 +141,6 @@ class MainActivity : YunMusicActivity() {
     private fun initNaviBottomClick() {
         mBinding.mainNaviBottom.setOnItemSelectedListener {
             when (it.itemId) {
-                //todo 等待加入fragment之后增添索引！
                 R.id.menu_navi_bottom_find -> {
                     //第二个参数是设置是否过度动画
                     mBinding.mainNaviVp.setCurrentItem(0, false)
@@ -169,12 +167,15 @@ class MainActivity : YunMusicActivity() {
                 //todo 等待设置点击事件
                 when (it.itemId) {
                     R.id.item_drawer_setting -> {
+                        "之后的道路，以后再来探索吧!".toast()
                     }
 
                     R.id.item_drawer_about -> {
+                        "之后的道路，以后再来探索吧!".toast()
                     }
 
                     R.id.item_drawer_exit -> {
+                        startActivity(Intent(this@MainActivity,LoginActivity::class.java))
                     }
                 }
                 return@setNavigationItemSelectedListener true

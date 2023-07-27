@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.launcher.ARouter
 import com.handsome.lib.music.page.view.MusicPlayActivity
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.util.base.BaseFragment
@@ -28,7 +29,6 @@ class MineFragment : BaseFragment() {
     private val mBinding by lazy { FragmentMineBinding.inflate(layoutInflater) }
     private val mLatestMusicAdapter by lazy { LatestMusicAdapter(::onClickMore,::onClickMusic) }
     private val mViewModel by lazy { ViewModelProvider(this)[MineFragmentViewModel::class.java] }
-    private val isStartActivity = false
 
     //从相册中拿结果
     private val pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
@@ -48,6 +48,15 @@ class MineFragment : BaseFragment() {
         initAdapter()
         getLatestData()
         initClickPlayAll()
+        initClickLogin()
+    }
+
+    //登录操作
+    private fun initClickLogin() {
+        mBinding.musicListCollapsingTvUserName.setOnClickListener {
+            //模块之间通信
+            ARouter.getInstance().build("/login/gate").navigation()
+        }
     }
 
     private fun onClickMore(wrapPlayInfo: WrapPlayInfo) {
