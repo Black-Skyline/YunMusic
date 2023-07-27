@@ -11,7 +11,11 @@ import com.handsome.module.find.databinding.ItemMusicBinding
 import com.handsome.module.find.network.model.MusicListDetailData
 import java.lang.StringBuilder
 
-class MusicListDetailAdapter(private val startMvActivity : (data :MusicListDetailData.Song) -> Unit,private val onClick: (list: MutableList<WrapPlayInfo>, index: Int) -> Unit) :
+class MusicListDetailAdapter(
+    private val startMvActivity: (data: MusicListDetailData.Song) -> Unit,
+    private val onClickMore : (data : MusicListDetailData.Song) -> Unit,
+    private val onClick: (list: MutableList<WrapPlayInfo>, index: Int) -> Unit
+) :
     PagingDataAdapter<MusicListDetailData.Song, MusicListDetailAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
 
     inner class MyHolder(val binding: ItemMusicBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -19,6 +23,10 @@ class MusicListDetailAdapter(private val startMvActivity : (data :MusicListDetai
             //给mv注册事件
             binding.itemPictureMusicVideo.setOnClickListener {
                 getItem(bindingAdapterPosition)?.let { it1 -> startMvActivity(it1) }
+            }
+            //给more注册点击事件
+            binding.itemMusicMore.setOnClickListener {
+                getItem(bindingAdapterPosition)?.let { it1 -> onClickMore(it1) }
             }
             //获取父布局，然后给父布局也就是整个item设置点击事件
             val viewGroup = binding.itemMusicNumber.parent as ViewGroup
@@ -32,7 +40,7 @@ class MusicListDetailAdapter(private val startMvActivity : (data :MusicListDetai
                     if (bindingAdapterPosition + 10 <= itemCount) bindingAdapterPosition + 10 else itemCount
                 for (i in beforeIndex until afterIndex) {
                     val song = getItem(i)
-                    if (song!=null){
+                    if (song != null) {
                         val audioName = song.name
                         val artist = StringBuilder()
                         for (j in song.ar) {

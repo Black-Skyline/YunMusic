@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -41,7 +40,7 @@ import kotlinx.coroutines.launch
 class MusicListDetailActivity : BaseActivity() {
     private val mBinding by lazy { ActivityMusicListDetailBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[MusicListDetailViewModel::class.java] }
-    private val mMusicListDetailAdapter = MusicListDetailAdapter(::onClickMv,::onClickMusicListDetail)  //歌单详情也可以用
+    private val mMusicListDetailAdapter = MusicListDetailAdapter(::onClickMv,::onClickMore,::onClickMusicListDetail)  //歌单详情也可以用
 
 
     private lateinit var mImgPlay: ImageView
@@ -232,6 +231,10 @@ class MusicListDetailActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    private fun onClickMore(song: MusicListDetailData.Song) {
+        val shareText = "${song.al.name.trim()}的${song.name.trim()}特别好听，你也来听听吧！"
+        shareText(shareText)
+    }
 
     private fun onClickMv(data :MusicListDetailData.Song) {
         if (mIsBound){
