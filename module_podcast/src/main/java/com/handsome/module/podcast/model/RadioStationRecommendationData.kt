@@ -21,7 +21,7 @@ data class PersonalizeRecommendationData(
         val finished: Boolean,
         val hightQuality: Boolean,
         val icon: Any,
-        val id: Int,
+        val id: Long,
         val intervenePicId: Long,
         val intervenePicUrl: String,
         val lastProgramCreateTime: Long,

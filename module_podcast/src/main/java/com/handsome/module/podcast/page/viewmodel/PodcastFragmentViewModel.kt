@@ -2,8 +2,11 @@ package com.handsome.module.podcast.page.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.handsome.module.podcast.model.FMProgramsData
 import com.handsome.module.podcast.model.NormalRecommendationData
 import com.handsome.module.podcast.model.PersonalizeRecommendationData
+import com.handsome.module.podcast.model.RadioProgramsData
+import com.handsome.module.podcast.network.api.RadioProgramsApiService
 import com.handsome.module.podcast.network.api.RadioStationRecommendationApiService
 import com.handsome.module.podcast.utils.exceptionPrinter
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +37,17 @@ class PodcastFragmentViewModel : ViewModel() {
     private var _normalRecommendResponseFlow = MutableStateFlow<NormalRecommendationData?>(null)
     val normalRecommendResponseFlow: StateFlow<NormalRecommendationData?> get() = _normalRecommendResponseFlow.asStateFlow()
 
+    /**
+     * 获取FMPrograms流的容器
+     */
+    private var _fmProgramsResponseFlow = MutableStateFlow<FMProgramsData?>(null)
+    val fmProgramsResponseFlow: StateFlow<FMProgramsData?> get() = _fmProgramsResponseFlow.asStateFlow()
+
+    /**
+     * 获取FMPrograms流的容器
+     */
+    private var _ProgramsResponseFlow = MutableStateFlow<RadioProgramsData?>(null)
+    val ProgramsResponseFlow: StateFlow<RadioProgramsData?> get() = _ProgramsResponseFlow.asStateFlow()
 
     /**
      * 向网络获取个性化推荐数据
@@ -57,4 +71,19 @@ class PodcastFragmentViewModel : ViewModel() {
         }
     }
 
+    fun getFMPrograms() {
+        viewModelScope.launch(exceptionPrinter + Dispatchers.IO) {
+            _fmProgramsResponseFlow.emit(
+                RadioProgramsApiService.InSTANCE.getFMProgramsResponse()
+            )
+        }
+    }
+
+    fun getPrograms() {
+        viewModelScope.launch(exceptionPrinter + Dispatchers.IO) {
+            _fmProgramsResponseFlow.emit(
+                RadioProgramsApiService.InSTANCE.getFMProgramsResponse()
+            )
+        }
+    }
 }

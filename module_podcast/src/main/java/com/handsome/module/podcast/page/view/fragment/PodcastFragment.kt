@@ -16,12 +16,15 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.extention.toast
 import com.handsome.module.podcast.databinding.FragmentPodcastBinding
+import com.handsome.module.podcast.model.FMProgramsData
 import com.handsome.module.podcast.model.NormalRecommendationData
 import com.handsome.module.podcast.model.PersonalizeRecommendationData
 import com.handsome.module.podcast.network.api.RadioStationRecommendationApiService
+import com.handsome.module.podcast.page.adapter.FMVpAdapter
 import com.handsome.module.podcast.page.adapter.NormalRecommendAdapter
 import com.handsome.module.podcast.page.adapter.PersonalizeRadioRecommendAdapter
 import com.handsome.module.podcast.page.adapter.RecommendTitleAdapter
+import com.handsome.module.podcast.page.view.activity.ProgramsDisplay
 import com.handsome.module.podcast.page.viewmodel.PodcastFragmentViewModel
 import com.handsome.module.podcast.utils.DataConstructionUtil
 import com.handsome.module.podcast.utils.exceptionPrinter
@@ -46,6 +49,10 @@ class PodcastFragment : Fragment() {
 
     private val podcastPersonalizeRecommendAdapter by lazy { PersonalizeRadioRecommendAdapter(::enterRadioStation1) }
     private val podcastNormalRecommendAdapter by lazy { NormalRecommendAdapter(::enterRadioStation2) }
+
+    private val FMVpadapter by lazy { FMVpAdapter(::onclick) }
+
+
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        _binding = FragmentPodcastBinding.inflate(layoutInflater)
@@ -106,10 +113,35 @@ class PodcastFragment : Fragment() {
             }
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    model.fmProgramsResponseFlow.collectLatest {
+                        if (it != null && it.code == 200) { // 有网络且请求成功
+                            // 处理并向adapter提交数据
+//                            Log.d("ProgressTest", "得到了数据 code is ${it.code}")
+//                            FMVpadapter.submitList(it.programs)
+//                            podcastNormalRecommendAdapter.submitList(it.djRadios)
+                        } else {  // 无网络或请求失败
+                            if (it != null) {
+//                                Log.d("ProgressTest", "code is ${it?.code}")
+                                toast("没有请求到fmProgramsResponse数据")
+                            }
+
+                        }
+                    }
                 }
             }
             lifecycleScope.launch {
                 repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    model.ProgramsResponseFlow.collectLatest {
+                        if (it != null && it.code == 200) { // 有网络且请求成功
+                            // 处理并向adapter提交数据
+//                            Log.d("ProgressTest", "得到了数据 code is ${it.code}")
+                        } else {  // 无网络或请求失败
+                            if (it != null) {
+                                toast("没有请求到ProgramsResponse数据")
+                            }
+
+                        }
+                    }
                 }
             }
         }
@@ -136,7 +168,18 @@ class PodcastFragment : Fragment() {
 
 
     private fun initPartFM() {
+        getFMData()
+        initFMVpAdapter()
+    }
 
+    private fun initFMVpAdapter() {
+//        binding.viewPager2.apply {
+//            adapter = FMVpadapter
+//        }
+    }
+
+    private fun getFMData() {
+        model.getFMPrograms()
     }
 
     private fun initTopFunction() {
@@ -184,10 +227,17 @@ class PodcastFragment : Fragment() {
      */
     private fun enterRadioStation1(response: PersonalizeRecommendationData.Data) {
         // 进入电台具体页面……
+        ProgramsDisplay.startAction(requireActivity(), response.id)
     }
 
     private fun enterRadioStation2(response: NormalRecommendationData.DjRadio) {
         // 进入电台具体页面……
+        ProgramsDisplay.startAction(requireActivity(), response.id)
+    }
+
+    private fun onclick(programs: List<FMProgramsData.Program>, i: Int) {
+        // 播放节目
+
     }
 
 
