@@ -23,7 +23,7 @@ import com.handsome.lib.util.util.gsonSaveToSp
 import com.handsome.lib.util.util.objectFromSp
 import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.databinding.FragmentFindBinding
-import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
+import com.handsome.lib.mv.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.BannerBelowData
 import com.handsome.module.find.network.model.BannerData
 import com.handsome.module.find.network.model.RecommendMusicListData
@@ -37,6 +37,8 @@ import com.handsome.module.find.view.adapter.FindBannerBelowRvAdapter
 import com.handsome.module.find.view.adapter.FindBannerVpAdapter
 import com.handsome.module.find.view.adapter.FindRecommendListVpAdapter
 import com.handsome.module.find.view.adapter.TopListVpAdapter
+import com.handsome.module.find.view.selfview.MyTopListVpPageTransformer
+import com.handsome.module.find.view.selfview.MyVpPageTransformer
 import com.handsome.module.find.view.viewmodel.FindFragmentViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -58,6 +60,17 @@ class FindFragment : Fragment() {
         initBannerBelow()  //banner下面的图标,想不到起什么名字，就叫做bannerBelow了，下面同理
         initRecommendList()
         initTopList()
+        initRefresh()
+    }
+
+    private fun initRefresh() {
+        mBinding.findFragmentSwipeRefresh.setOnRefreshListener {
+            getBannerData()
+            getBannerBelowData()
+            getRecommendListData(10)
+            getTopListData()
+            mBinding.findFragmentSwipeRefresh.isRefreshing = false  //关闭正在刷新
+        }
     }
 
     /**
@@ -271,7 +284,10 @@ class FindFragment : Fragment() {
     }
 
     private fun initBannerAdapter() {
-        mBinding.findVpBanner.adapter = findBannerVpAdapter
+        mBinding.findVpBanner.apply {
+            adapter = findBannerVpAdapter
+            setPageTransformer(MyVpPageTransformer())
+        }
     }
 
     private fun getBannerData() {
@@ -387,7 +403,10 @@ class FindFragment : Fragment() {
     }
 
     private fun initTopListAdapter() {
-        mBinding.findVpTopList.adapter = findTopListVpAdapter
+        mBinding.findVpTopList.apply {
+            adapter = findTopListVpAdapter
+            setPageTransformer(MyTopListVpPageTransformer())
+        }
         //取消边部阴影
         val childView = mBinding.findVpTopList.getChildAt(0)
         if (childView is RecyclerView) {

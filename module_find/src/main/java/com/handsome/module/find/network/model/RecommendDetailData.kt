@@ -33,7 +33,7 @@ data class RecommendDetailData(
             val m: M,
             val mark: Int,
             val mst: Int,
-            val mv: Int,
+            val mv: Long,
             val name: String,
             val no: Int,
             val noCopyrightRcmd: Any,

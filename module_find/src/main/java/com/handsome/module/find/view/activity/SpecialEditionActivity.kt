@@ -39,7 +39,7 @@ import java.util.*
 class SpecialEditionActivity : BaseActivity() {
     private val mBinding by lazy { ActivitySpecialEditionBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[SpecialEditionViewModel::class.java] }
-    private val mAlbumSongsAdapter = AlbumSongsAdapter(::onClickMv,::onClickAlbum)
+    private val mAlbumSongsAdapter = AlbumSongsAdapter(::onClickMv,::onClickMore,::onClickAlbum)
 
     private lateinit var mImgPlay : ImageView   //播放按键view
     private lateinit var mImgAlbum : ImageView   //下面的唱片view
@@ -211,9 +211,14 @@ class SpecialEditionActivity : BaseActivity() {
         MusicPlayActivity.startWithPlayList(this, list, index)
     }
 
+    private fun onClickMore(song: AlbumData.Song) {
+        val shareText = "${song.al.name.trim()}的${song.name.trim()}特别好听，你也来听听吧！"
+        shareText(shareText)
+    }
+
     private fun onClickMv(data : AlbumData.Song) {
         mMusicService.pausePlay()
-        MvActivity.startAction(this,data.mv,data.name,data.al.name,data.al.picUrl)
+        MvActivity.startAction(this,data.mv,data.name,data.ar[0].name,data.al.picUrl)
     }
 
 

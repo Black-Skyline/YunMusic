@@ -11,13 +11,21 @@ import com.handsome.module.find.databinding.ItemMusicBinding
 import com.handsome.module.find.network.model.AlbumData
 import java.lang.StringBuilder
 
-class AlbumSongsAdapter(private val startMvActivity : (data : AlbumData.Song) -> Unit, private val onClick: (list: MutableList<WrapPlayInfo>, index: Int) -> Unit) : ListAdapter<AlbumData.Song, AlbumSongsAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
+class AlbumSongsAdapter(
+    private val startMvActivity: (data: AlbumData.Song) -> Unit,
+    private val onClickMore : (data: AlbumData.Song) -> Unit,
+    private val onClick: (list: MutableList<WrapPlayInfo>, index: Int) -> Unit
+) : ListAdapter<AlbumData.Song, AlbumSongsAdapter.MyHolder>(MyDIffUtil.getNewDiff()) {
 
-    inner class MyHolder(val binding : ItemMusicBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class MyHolder(val binding: ItemMusicBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             //给mv注册事件
             binding.itemPictureMusicVideo.setOnClickListener {
                 getItem(bindingAdapterPosition)?.let { it1 -> startMvActivity(it1) }
+            }
+            //更多是分享操作
+            binding.itemMusicMore.setOnClickListener {
+                getItem(bindingAdapterPosition)?.let { it1 -> onClickMore(it1) }
             }
             val viewGroup = binding.itemMusicNumber.parent as ViewGroup
             viewGroup.setOnClickListener {
@@ -30,7 +38,7 @@ class AlbumSongsAdapter(private val startMvActivity : (data : AlbumData.Song) ->
                     if (bindingAdapterPosition + 10 <= itemCount) bindingAdapterPosition + 10 else itemCount
                 for (i in beforeIndex until afterIndex) {
                     val song = getItem(i)
-                    if (song!=null){
+                    if (song != null) {
                         val audioName = song.name
                         val artist = StringBuilder()
                         for (j in song.ar) {
@@ -48,12 +56,18 @@ class AlbumSongsAdapter(private val startMvActivity : (data : AlbumData.Song) ->
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-        return MyHolder(ItemMusicBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+        return MyHolder(
+            ItemMusicBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         val item = getItem(position)
-        val number =  (position+1).toString()
+        val number = (position + 1).toString()
         holder.binding.apply {
             itemMusicNumber.text = number
             itemMusicName.text = item.name

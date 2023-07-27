@@ -45,6 +45,7 @@ dependAndroidCommonBase()
 dependTestBase()
 dependNetwork()
 dependRxjava()
+dependPaging()
 dependencies {
     implementation(project(":lib_util"))
     implementation ("xyz.doikki.android.dkplayer:dkplayer-java:3.3.7")

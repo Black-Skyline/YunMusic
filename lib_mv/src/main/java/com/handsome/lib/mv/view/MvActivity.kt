@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.mv.databinding.ActivityMvBinding
@@ -12,7 +13,9 @@ import com.handsome.lib.mv.view.adapter.RecommendMvRvAdapter
 import com.handsome.lib.mv.view.viewmodel.MvViewModel
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
-import com.handsome.lib.util.extention.toast
+import com.handsome.lib.mv.network.exception.myCoroutineExceptionHandler
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import xyz.doikki.videocontroller.StandardVideoController
 
 class MvActivity : BaseActivity() {
@@ -36,13 +39,12 @@ class MvActivity : BaseActivity() {
 
     private fun initRecommend() {
         initRecommendAdapter()
-        initRecommendCollect()
         getRecommendData()
     }
 
 
     private fun onClickRecommend(data: MvRecommendData.Data) {
-        MvActivity.startAction(
+        startAction(
             this@MvActivity,
             data.id,
             data.name,
@@ -53,18 +55,10 @@ class MvActivity : BaseActivity() {
 
     //由于mv相似接口太烂了，所以这里请求的是上升最快mv
     private fun getRecommendData() {
-        mViewModel.getRecommendMvData()
-    }
-
-    private fun initRecommendCollect() {
-        mViewModel.mvRecommendLiveData.observe(this) {
-            if (it.code != 200) {
-                toast("网络异常，请重试")
+        lifecycleScope.launch(myCoroutineExceptionHandler){
+            mViewModel.getRecommendMvData().collectLatest {
+                mRecommendMvRvAdapter.submitData(it)
             }
-            if (it.data.isEmpty()) {
-                "暂无相关推荐".toast()
-            }
-            mRecommendMvRvAdapter.submitList(it.data)
         }
     }
 

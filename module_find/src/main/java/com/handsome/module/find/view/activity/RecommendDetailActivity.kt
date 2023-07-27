@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.music.page.view.MusicPlayActivity
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.sevice.MusicService
+import com.handsome.lib.mv.view.MvActivity
 import com.handsome.lib.util.base.BaseActivity
 import com.handsome.lib.util.extention.setImageFromUrl
 import com.handsome.lib.util.util.MyRotationAnimate
@@ -29,7 +30,7 @@ import com.handsome.lib.util.util.objectFromSp
 import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityRecommendDetailBinding
-import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
+import com.handsome.lib.mv.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.RecommendDetailData
 import com.handsome.module.find.view.adapter.RecommendDetailRvAdapter
 import com.handsome.module.find.view.viewmodel.RecommendDetailViewModel
@@ -40,7 +41,7 @@ import java.time.LocalDate
 class RecommendDetailActivity : BaseActivity() {
     private val mBinding by lazy { ActivityRecommendDetailBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[RecommendDetailViewModel::class.java] }
-    private val mRecommendDetailRvAdapter = RecommendDetailRvAdapter(::recommendDetailOnClick)
+    private val mRecommendDetailRvAdapter = RecommendDetailRvAdapter(::onClickMore,::onClickMv,::recommendDetailOnClick)
     private lateinit var mImgPlay : ImageView   //播放按键view
     private lateinit var mImgAlbum : ImageView   //下面的唱片view
     private lateinit var mAnimator : MyRotationAnimate  //下面的唱片的旋转动画
@@ -108,6 +109,11 @@ class RecommendDetailActivity : BaseActivity() {
         }
     }
 
+    private fun onClickMore(data : RecommendDetailData.Data.DailySong) {
+        val shareText = "${data.al.name.trim()}的${data.name.trim()}特别好听，你也来听听吧！"
+        shareText(shareText)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         unbindService(connection)
@@ -165,6 +171,11 @@ class RecommendDetailActivity : BaseActivity() {
 
     private fun recommendDetailOnClick(list: MutableList<WrapPlayInfo>, index: Int) {
             MusicPlayActivity.startWithPlayList(this, list, index)
+    }
+
+    private fun onClickMv(data : RecommendDetailData.Data.DailySong) {
+        mMusicService.pausePlay()
+        MvActivity.startAction(this,data.mv,data.name,data.ar[0].name,data.al.picUrl)
     }
 
     private fun initMusicCollect() {

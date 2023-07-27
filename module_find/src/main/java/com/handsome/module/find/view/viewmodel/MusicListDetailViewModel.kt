@@ -6,7 +6,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.handsome.module.find.network.api.SingleMusicListDetailApiService
-import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
+import com.handsome.lib.mv.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.MusicListDetailData
 import com.handsome.module.find.network.model.SingleMusicListDetailData
 import com.handsome.module.find.view.adapter.MusicListDetailPagingSource

@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -30,7 +29,7 @@ import com.handsome.lib.util.util.MyRotationAnimate
 import com.handsome.lib.util.util.shareText
 import com.handsome.module.find.R
 import com.handsome.module.find.databinding.ActivityMusicListDetailBinding
-import com.handsome.module.find.network.exception.myCoroutineExceptionHandler
+import com.handsome.lib.mv.network.exception.myCoroutineExceptionHandler
 import com.handsome.module.find.network.model.MusicListDetailData
 import com.handsome.module.find.view.adapter.MusicListDetailAdapter
 import com.handsome.module.find.view.viewmodel.MusicListDetailViewModel
@@ -41,7 +40,7 @@ import kotlinx.coroutines.launch
 class MusicListDetailActivity : BaseActivity() {
     private val mBinding by lazy { ActivityMusicListDetailBinding.inflate(layoutInflater) }
     private val mViewModel by lazy { ViewModelProvider(this)[MusicListDetailViewModel::class.java] }
-    private val mMusicListDetailAdapter = MusicListDetailAdapter(::onClickMv,::onClickMusicListDetail)  //歌单详情也可以用
+    private val mMusicListDetailAdapter = MusicListDetailAdapter(::onClickMv,::onClickMore,::onClickMusicListDetail)  //歌单详情也可以用
 
 
     private lateinit var mImgPlay: ImageView
@@ -232,12 +231,16 @@ class MusicListDetailActivity : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    private fun onClickMore(song: MusicListDetailData.Song) {
+        val shareText = "${song.al.name.trim()}的${song.name.trim()}特别好听，你也来听听吧！"
+        shareText(shareText)
+    }
 
     private fun onClickMv(data :MusicListDetailData.Song) {
         if (mIsBound){
             mMusicService.pausePlay()
         }
-        MvActivity.startAction(this,data.mv,data.name,data.al.name,data.al.picUrl)
+        MvActivity.startAction(this,data.mv,data.name,data.ar[0].name,data.al.picUrl)
     }
     private fun onClickMusicListDetail(list: MutableList<WrapPlayInfo>, index: Int) {
         MusicPlayActivity.startWithPlayList(this, list, index)

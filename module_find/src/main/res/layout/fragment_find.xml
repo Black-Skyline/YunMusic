@@ -7,37 +7,38 @@
     android:orientation="vertical"
     tools:context=".view.fragment.FindFragment">
 
-<!--    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
-<!--        android:id="@+id/home_fragment_swipe_refresh"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/find_fragment_swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-<!--        <androidx.core.widget.NestedScrollView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/find_vp_banner"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="150dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp">
 
-            <com.handsome.module.find.view.MyVpIndicatorView
-                android:id="@+id/find_vp_indicator"
-                android:layout_width="90dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="3dp"
-                app:active_color="@color/white"
-                app:inactive_color="@color/black"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"/>
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/find_vp_banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
-        </RelativeLayout>
+                <com.handsome.module.find.view.selfview.MyVpIndicatorView
+                    android:id="@+id/find_vp_indicator"
+                    android:layout_width="90dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="3dp"
+                    app:active_color="@color/white"
+                    app:inactive_color="@color/black"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"/>
+
+            </RelativeLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/find_rv_banner_below"
@@ -99,49 +100,47 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="16dp">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp">
 
-        <TextView
-            android:id="@+id/find_tv_top_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" 排行榜 >"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:layout_marginStart="16dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                <TextView
+                    android:id="@+id/find_tv_top_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" 排行榜 >"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/find_img_top_list_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/icon_more_black"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/find_img_top_list_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/icon_more_black"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/find_vp_top_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:overScrollMode="never"
-            app:layout_constraintEnd_toEndOf="@+id/find_img_top_list_more"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/find_tv_top_list" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/find_vp_top_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:overScrollMode="never"
+                    app:layout_constraintEnd_toEndOf="@+id/find_img_top_list_more"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/find_tv_top_list" />
 
 
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--        </androidx.core.widget.NestedScrollView>-->
+        </LinearLayout>
 
 
-<!--    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

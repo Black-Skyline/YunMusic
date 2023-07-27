@@ -1,4 +1,4 @@
-package com.handsome.module.find.view
+package com.handsome.module.find.view.selfview
 
 import android.content.Context
 import android.util.AttributeSet
