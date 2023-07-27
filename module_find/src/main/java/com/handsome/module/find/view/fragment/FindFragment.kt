@@ -37,6 +37,7 @@ import com.handsome.module.find.view.adapter.FindBannerBelowRvAdapter
 import com.handsome.module.find.view.adapter.FindBannerVpAdapter
 import com.handsome.module.find.view.adapter.FindRecommendListVpAdapter
 import com.handsome.module.find.view.adapter.TopListVpAdapter
+import com.handsome.module.find.view.selfview.MyTopListVpPageTransformer
 import com.handsome.module.find.view.selfview.MyVpPageTransformer
 import com.handsome.module.find.view.viewmodel.FindFragmentViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -391,7 +392,10 @@ class FindFragment : Fragment() {
     }
 
     private fun initTopListAdapter() {
-        mBinding.findVpTopList.adapter = findTopListVpAdapter
+        mBinding.findVpTopList.apply {
+            adapter = findTopListVpAdapter
+            setPageTransformer(MyTopListVpPageTransformer())
+        }
         //取消边部阴影
         val childView = mBinding.findVpTopList.getChildAt(0)
         if (childView is RecyclerView) {
