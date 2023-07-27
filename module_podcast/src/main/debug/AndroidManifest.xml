@@ -6,20 +6,24 @@
     <!--    android:roundIcon="@mipmap/ic_launcher_round"-->
     <!--    android:supportsRtl="true"-->
     <!--    android:theme="@style/Theme.YunMusic"-->
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
+        android:name="com.handsome.lib.util.BaseApp"
+        android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar.Bridge"
+        android:networkSecurityConfig="@xml/net_permission">
+<!--        <activity-->
+<!--            android:name="podcast.ui.DebugActivity"-->
+<!--            android:exported="true">-->
+<!--            -->
+<!--        </activity>-->
         <activity
-            android:name="podcast.ui.DebugActivity"
+            android:name=".page.view.activity.PodcastActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".PodcastActivity"
-            android:exported="true">
         </activity>
     </application>
 

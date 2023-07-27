@@ -21,6 +21,13 @@ interface RadioProgramsApiService {
         @Query("limit") limit: Int = 30
     ): RadioProgramsData
 
+    /**
+     * 直接获取十个不会更新的节目
+     * @return
+     */
+//    @GET("program/recommend")
+//    suspend fun getRecommendProgramResponse() :
+
     companion object {
         val InSTANCE by lazy {
             ApiGenerator.getApiService(RadioProgramsApiService::class)

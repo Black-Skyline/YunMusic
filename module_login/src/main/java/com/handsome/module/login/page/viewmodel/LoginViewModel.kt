@@ -205,12 +205,18 @@ class LoginViewModel : ViewModel() {
      * 处理匿名登录（游客模式）收到的response
      * @param response
      */
-    fun dealAnonymousLoginResponse(response: AnonymousData?, action: (() -> Unit)? = null) {
+    fun dealAnonymousLoginResponse(
+        response: AnonymousData?,
+        action: ((state: Boolean) -> Unit)? = null
+    ) {
         if (response != null && response.code == 200) {
             cookies.value = response.cookie
-            action?.invoke()
+            action?.invoke(true)
 
-        } else toast("匿名登录失败")
+        } else {
+            toast("匿名登录失败")
+            action?.invoke(false)
+        }
     }
 
     fun dealPasswordLoginResponse(response: PhonePasswordData?, action: (() -> Unit)? = null) {
@@ -225,8 +231,8 @@ class LoginViewModel : ViewModel() {
 //        if (response != null && response.code == 200) {
 //            Log.d("dealCaptchaLoginResponse", "code is ${response.code}")
 //            toast("验证码 登录成功")
-        Log.d("tag","get there")
-            action?.invoke()
+        Log.d("tag", "get there")
+        action?.invoke()
 //        } else toast("验证码登录失败")
     }
 

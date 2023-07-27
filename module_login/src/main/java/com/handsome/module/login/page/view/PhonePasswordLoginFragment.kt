@@ -12,10 +12,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.handsome.lib.util.extention.toast
 import com.handsome.module.login.R
 import com.handsome.module.login.databinding.FragmentPhonePasswordLoginBinding
 import com.handsome.module.login.page.viewmodel.LoginViewModel
+import com.handsome.module.login.router.LOGIN_PASSWORD_ENTER
 import com.handsome.module.login.utils.BaseTextWatcher
 import com.handsome.module.login.utils.URLUtil
 import com.handsome.module.login.utils.topfuncation.CaptchaLogin
@@ -33,6 +35,7 @@ import kotlinx.coroutines.launch
  * @Description:
  *
  */
+@Route(path = LOGIN_PASSWORD_ENTER)
 class PhonePasswordLoginFragment : Fragment() {
     private var _binding: FragmentPhonePasswordLoginBinding? = null
     private val binding: FragmentPhonePasswordLoginBinding

@@ -1,5 +1,6 @@
 package com.handsome.module.podcast.page.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,8 +22,8 @@ import com.handsome.module.podcast.utils.setOnSingleClickListener
  * @Description:
  *
  */
-class InterestRadioRecommendAdapter(val contentClickEvent: (PersonalizeRecommendationData.Data) -> Unit) :
-    ListAdapter<InterestRadioRecommendAdapter.Data, InterestRadioRecommendAdapter.Holder>(MyDIffUtil.getNewDiff()) {
+class PersonalizeRadioRecommendAdapter(val contentClickEvent: (PersonalizeRecommendationData.Data) -> Unit) :
+    ListAdapter<PersonalizeRadioRecommendAdapter.Data, PersonalizeRadioRecommendAdapter.Holder>(MyDIffUtil.getNewDiff()) {
 
     companion object {
         const val TYPE_TITLE = 0
@@ -44,7 +45,7 @@ class InterestRadioRecommendAdapter(val contentClickEvent: (PersonalizeRecommend
     inner class TitleHolder(binding: ItemPodcastInterestRecommendTitleBinding) :
         Holder(binding.root) {
         init {
-            val callbackData = getItem(bindingAdapterPosition) as Data.TitleBean
+            val callbackData = getItem(0) as Data.TitleBean
             if (!callbackData.titleText.isNullOrBlank())
                 binding.podcastTvInterestRecommendTitle.text = callbackData.titleText
             binding.podcastImgRefresh.setOnSingleClickListener(500) {
@@ -108,6 +109,7 @@ class InterestRadioRecommendAdapter(val contentClickEvent: (PersonalizeRecommend
             is ContentHolder -> {  //position != 0
                 // getItem()类型InterestRadioRecommendAdapter.Data
                 val item = (getItem(position) as Data.ContentBean).need
+                Log.d("datatest", "onBindViewHolder: ${item.playCount}")
                 holder.apply {
                     binding.podcastImgInterestRecommendItemBackground.setImageFromUrl(
                         item.picUrl, placeholder = R.drawable.ic_image_not_supported_100
