@@ -22,8 +22,10 @@ import com.handsome.module.podcast.utils.setOnSingleClickListener
  * @Description:
  *
  */
-class PersonalizeRadioRecommendAdapter(val contentClickEvent: (PersonalizeRecommendationData.Data) -> Unit) :
-    ListAdapter<PersonalizeRadioRecommendAdapter.Data, PersonalizeRadioRecommendAdapter.Holder>(MyDIffUtil.getNewDiff()) {
+class PersonalizeRadioRecommendAdapter(val contentClickEvent: (PersonalizeRecommendationData.Data, sharedView: View) -> Unit) :
+    ListAdapter<PersonalizeRadioRecommendAdapter.Data, PersonalizeRadioRecommendAdapter.Holder>(
+        MyDIffUtil.getNewDiff()
+    ) {
 
     companion object {
         const val TYPE_TITLE = 0
@@ -65,11 +67,17 @@ class PersonalizeRadioRecommendAdapter(val contentClickEvent: (PersonalizeRecomm
         init {
             binding.podcastImgInterestRecommendItemBackground.setOnClickListener {
                 // 拿到请求到的位于当前位置的response数据,传入PersonalizeRecommendationData.Data
-                contentClickEvent((getItem(bindingAdapterPosition) as Data.ContentBean).need)
+                contentClickEvent(
+                    (getItem(bindingAdapterPosition) as Data.ContentBean).need,
+                    binding.podcastImgInterestRecommendItemBackground
+                )
             }
             binding.podcastTvInterestRecommendItemDescription.setOnClickListener {
                 // 拿到请求到的位于当前位置的response数据,传入PersonalizeRecommendationData.Data
-                contentClickEvent((getItem(bindingAdapterPosition) as Data.ContentBean).need)
+                contentClickEvent(
+                    (getItem(bindingAdapterPosition) as Data.ContentBean).need,
+                    binding.podcastImgInterestRecommendItemBackground
+                )
             }
         }
     }

@@ -16,7 +16,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="0dp"
-            app:shapeAppearance="@style/normalRoundCorner" />
+            app:shapeAppearance="@style/normalRoundCorner"
+            android:transitionName="RadioStationPicture"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -36,7 +37,7 @@
                 android:id="@+id/podcast_tv_normal_recommend_item_play_number"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="end"
+                android:layout_gravity="bottom|end"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:lines="1"

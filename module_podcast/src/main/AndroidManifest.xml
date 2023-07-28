@@ -4,8 +4,10 @@
     <application>
         <activity
             android:name=".page.view.activity.PodcastActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
+        <activity
+            android:name=".page.view.activity.ProgramsDisplay"
+            android:exported="true" />
     </application>
 
 </manifest>
