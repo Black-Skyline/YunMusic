@@ -19,7 +19,7 @@
             android:layout_height="180dp" />
 
 
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -41,12 +41,14 @@
                         android:layout_height="40dp"
                         android:scaleType="fitXY"
                         android:layout_marginStart="16dp"
-                        app:shapeAppearance="@style/Circle"/>
+                        app:shapeAppearance="@style/Circle"
+                        android:layout_gravity="center"/>
 
                     <TextView
                         android:id="@+id/mv_tv_song_name"
                         android:textSize="15sp"
                         android:text="未知歌曲"
+                        android:lines="1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -56,7 +58,8 @@
                         android:id="@+id/mv_tv_singer_name"
                         android:textSize="11sp"
                         android:text="网络歌手"
-                        android:layout_width="wrap_content"
+                        android:layout_width="150dp"
+                        android:lines="1"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_gravity="center_vertical"/>
@@ -73,7 +76,7 @@
             </LinearLayout>
 
 
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
 
     </LinearLayout>
 
