@@ -25,6 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".page.view.activity.ProgramsDisplay"
+            android:exported="true" />
     </application>
 
 </manifest>
