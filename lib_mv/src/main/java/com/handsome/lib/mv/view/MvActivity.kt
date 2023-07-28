@@ -123,7 +123,7 @@ class MvActivity : BaseActivity() {
             id: Long,
             songName: String,
             singerName: String,
-            picUrl: String
+            picUrl: String?
         ) {
             val intent = Intent(context, MvActivity::class.java)
             intent.putExtra("id", id)
