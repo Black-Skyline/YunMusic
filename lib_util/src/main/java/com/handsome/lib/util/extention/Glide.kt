@@ -23,12 +23,16 @@ fun ImageView.setImageFromUrl(
     @DrawableRes error: Int = R.drawable.config_ic_place_holder, //2
     func: (RequestBuilder<Drawable>.() -> Unit)? = null  //3
 ) {
-    val realUrl = if (url.startsWith("http")) url else getBaseUrl() + url //4
-    Glide.with(this)
-        .load(realUrl)
-        .apply(RequestOptions().placeholder(placeholder).error(error))
-        .apply { func?.invoke(this) }  //5
-        .into(this)
+    try {
+        val realUrl = if (url.startsWith("http")) url else getBaseUrl() + url //4
+        Glide.with(this)
+            .load(realUrl)
+            .apply(RequestOptions().placeholder(placeholder).error(error))
+            .apply { func?.invoke(this) }  //5
+            .into(this)
+    }catch (e : Exception){
+        "加载图片失败".toast()
+    }
 }
 
 fun ImageView.setImageFromId(

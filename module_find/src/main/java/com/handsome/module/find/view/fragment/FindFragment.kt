@@ -60,18 +60,18 @@ class FindFragment : Fragment() {
         initBannerBelow()  //banner下面的图标,想不到起什么名字，就叫做bannerBelow了，下面同理
         initRecommendList()
         initTopList()
-        initRefresh()
+//        initRefresh()
     }
 
-    private fun initRefresh() {
-        mBinding.findFragmentSwipeRefresh.setOnRefreshListener {
-            getBannerData()
-            getBannerBelowData()
-            getRecommendListData(10)
-            getTopListData()
-            mBinding.findFragmentSwipeRefresh.isRefreshing = false  //关闭正在刷新
-        }
-    }
+//    private fun initRefresh() {
+//        mBinding.findFragmentSwipeRefresh.setOnRefreshListener {
+//            getBannerData()
+//            getBannerBelowData()
+//            getRecommendListData(10)
+//            getTopListData()
+//            mBinding.findFragmentSwipeRefresh.isRefreshing = false  //关闭正在刷新
+//        }
+//    }
 
     /**
      * 初始化轮播图的方法
