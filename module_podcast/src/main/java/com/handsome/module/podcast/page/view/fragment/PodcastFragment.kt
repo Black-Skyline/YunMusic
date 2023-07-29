@@ -112,6 +112,7 @@ class PodcastFragment : Fragment() {
                 }
             }
         }
+        // 通用推荐数据
         lifecycleScope.launch(exceptionPrinter) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.normalRecommendResponseFlow.collectLatest {
@@ -253,23 +254,27 @@ class PodcastFragment : Fragment() {
     private fun onClickFM(programs: List<FMProgramsData.Program>, index: Int) {
         // 播放FM的节目
         programs as ArrayList
+
         val list = ArrayList<WrapPlayInfo>()
-        for (i in programs) {
-            val audioName = i.description
-            val artist = i.name
-            val audioId = i.mainSong.id
-            val picUrl = i.coverUrl
-            val playInfo = WrapPlayInfo(audioName, artist, audioId, picUrl)
-            list.add(playInfo)
-            Log.d("test","循环了一次")
-        }
-        playService.setPlayInfoList(list, index)
-        model.getProgramAudio(programs[index].mainSong.id)
+//        /**
+//         * 下方是电台VP的FM节目播放代码
+//         */
+//        for (i in programs) {
+//            val audioName = i.description
+//            val artist = i.name
+//            val audioId = i.mainSong.id
+//            val picUrl = i.coverUrl
+//            val playInfo = WrapPlayInfo(audioName, artist, audioId, picUrl)
+//            list.add(playInfo)
+//        }
+//        playService.setPlayInfoList(list, index)
+//        model.getProgramAudio(programs[index].mainSong.id)
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
+        activity?.unbindService(connection)
         _binding = null
     }
 
