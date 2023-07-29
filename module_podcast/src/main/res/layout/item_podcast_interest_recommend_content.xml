@@ -24,19 +24,21 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginEnd="5dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="15dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_gravity="bottom|end"
                 android:src="@drawable/ic_play_white_24" />
 
             <TextView
                 android:id="@+id/podcast_tv_interest_recommend_item_play_number"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
+                android:layout_gravity="bottom|end"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:lines="1"
                 android:textColor="@color/white"
