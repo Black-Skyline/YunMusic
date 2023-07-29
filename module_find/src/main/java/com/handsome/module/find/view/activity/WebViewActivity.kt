@@ -23,13 +23,17 @@ class WebViewActivity : BaseActivity() {
         initWebView(url)
         initTitle(title)
         initBack()
-        initShare()
+        initShare(url)
     }
 
-    private fun initShare() {
+    private fun initShare(url : String?) {
         //从底部弹窗
         mBinding.webBarShare.setOnClickListener {
-            MyBSDialogFragment().show(supportFragmentManager,"MyBSDialogFragment")
+            if (url != null){
+                MyBSDialogFragment(url).show(supportFragmentManager,"MyBSDialogFragment")
+            }else{
+                "访问的网址为空".toast()
+            }
         }
     }
 
