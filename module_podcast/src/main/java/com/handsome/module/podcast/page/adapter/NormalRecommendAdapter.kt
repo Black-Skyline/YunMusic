@@ -2,6 +2,7 @@ package com.handsome.module.podcast.page.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -19,18 +20,18 @@ import com.handsome.module.podcast.model.NormalRecommendationData.DjRadio
  * @Description:
  *
  */
-class NormalRecommendAdapter(val contentClickEvent: (DjRadio) -> Unit) :
+class NormalRecommendAdapter(val contentClickEvent: (DjRadio, sharedView : View) -> Unit) :
     ListAdapter<DjRadio, NormalRecommendAdapter.Holder>(MyDIffUtil.getNewDiff()) {
     inner class Holder(val binding: ItemPodcastNormalRecommendContentBinding) :
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.podcastImgNormalRecommendItemBackground.setOnClickListener {
                 // 拿到请求到的位于当前位置的response数据,传入NormalRecommendationData.DjRadio
-                contentClickEvent(getItem(bindingAdapterPosition))
+                contentClickEvent(getItem(bindingAdapterPosition), binding.podcastImgNormalRecommendItemBackground)
             }
             binding.podcastTvNormalRecommendItemDescription.setOnClickListener {
                 // 拿到请求到的位于当前位置的response数据,传入NormalRecommendationData.DjRadio
-                contentClickEvent(getItem(bindingAdapterPosition))
+                contentClickEvent(getItem(bindingAdapterPosition), binding.podcastImgNormalRecommendItemBackground)
             }
         }
     }
@@ -57,7 +58,7 @@ class NormalRecommendAdapter(val contentClickEvent: (DjRadio) -> Unit) :
                 else if (item.playCount / 100000 > 0) "${item.playCount / 100000}万"
                 else "${item.playCount}"
             binding.podcastTvNormalRecommendItemPlayNumber.text = playNumber
-            binding.podcastTvNormalRecommendItemDescription.text = item.rcmdtext
+            binding.podcastTvNormalRecommendItemDescription.text = item.copywriter
         }
     }
 }

@@ -1,10 +1,15 @@
 package com.handsome.module.podcast.page.view.fragment
 
+import android.content.ComponentName
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -14,12 +19,13 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import androidx.recyclerview.widget.RecyclerView
+import com.handsome.lib.music.model.WrapPlayInfo
+import com.handsome.lib.music.sevice.MusicService
 import com.handsome.lib.util.extention.toast
 import com.handsome.module.podcast.databinding.FragmentPodcastBinding
 import com.handsome.module.podcast.model.FMProgramsData
 import com.handsome.module.podcast.model.NormalRecommendationData
 import com.handsome.module.podcast.model.PersonalizeRecommendationData
-import com.handsome.module.podcast.network.api.RadioStationRecommendationApiService
 import com.handsome.module.podcast.page.adapter.FMVpAdapter
 import com.handsome.module.podcast.page.adapter.NormalRecommendAdapter
 import com.handsome.module.podcast.page.adapter.PersonalizeRadioRecommendAdapter
@@ -27,9 +33,8 @@ import com.handsome.module.podcast.page.adapter.RecommendTitleAdapter
 import com.handsome.module.podcast.page.view.activity.ProgramsDisplay
 import com.handsome.module.podcast.page.viewmodel.PodcastFragmentViewModel
 import com.handsome.module.podcast.utils.DataConstructionUtil
+import com.handsome.module.podcast.utils.MultiplePagesTransformer
 import com.handsome.module.podcast.utils.exceptionPrinter
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -50,13 +55,27 @@ class PodcastFragment : Fragment() {
     private val podcastPersonalizeRecommendAdapter by lazy { PersonalizeRadioRecommendAdapter(::enterRadioStation1) }
     private val podcastNormalRecommendAdapter by lazy { NormalRecommendAdapter(::enterRadioStation2) }
 
-    private val FMVpadapter by lazy { FMVpAdapter(::onclick) }
+    private val FMVpadapter by lazy { FMVpAdapter(::onClickFM) }
 
+    // Service实例
+    private lateinit var playService: MusicService  // 可播放具体节目
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        _binding = FragmentPodcastBinding.inflate(layoutInflater)
-//    }
+    // Service是否已绑定
+    private var isServiceBinding: Boolean = false
+
+    // Service的连接器
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            playService = (service as MusicService.MusicPlayBinder).service
+            isServiceBinding = true
+
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isServiceBinding = false
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,8 +90,10 @@ class PodcastFragment : Fragment() {
         initView()
         initClick()
         initEvent()
+        bindPlayService()
         return binding.root
     }
+
 
     private fun initSubscribe() {
         // 个性化（兴趣）推荐数据
@@ -81,71 +102,64 @@ class PodcastFragment : Fragment() {
                 model.personalizeRecommendResponseFlow.collectLatest {
                     if (it != null && it.code == 200) { // 有网络且请求成功
                         // 处理并向adapter提交数据
-                        Log.d("ProgressTest", "得到了数据 code is ${it.code}")
-                        for (i in it.data) {
-                            Log.d("datatest", "datalook: ${i.playCount}")
-                        }
                         dealPersonalizeRecommendData(it.data)
                     } else {  // 无网络或请求失败
                         if (it != null) {
-                            Log.d("ProgressTest", "code is ${it?.code}")
+                            Log.d("ProgressTest", "code is ${it.code}")
                             toast("没有请求到personalizeRecommend数据")
                         }
                     }
                 }
             }
         }
+        // 通用推荐数据
         lifecycleScope.launch(exceptionPrinter) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 model.normalRecommendResponseFlow.collectLatest {
                     if (it != null && it.code == 200) { // 有网络且请求成功
                         // 处理并向adapter提交数据
-                        Log.d("ProgressTest", "得到了数据 code is ${it.code}")
-                        podcastNormalRecommendAdapter.submitList(it.djRadios)
+                        podcastNormalRecommendAdapter.submitList(it.djRadios.take(9))
                     } else {  // 无网络或请求失败
                         if (it != null) {
-                            Log.d("ProgressTest", "code is ${it?.code}")
                             toast("没有请求到normalRecommend数据")
                         }
-
                     }
                 }
             }
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    model.fmProgramsResponseFlow.collectLatest {
-                        if (it != null && it.code == 200) { // 有网络且请求成功
-                            // 处理并向adapter提交数据
-//                            Log.d("ProgressTest", "得到了数据 code is ${it.code}")
-//                            FMVpadapter.submitList(it.programs)
-//                            podcastNormalRecommendAdapter.submitList(it.djRadios)
-                        } else {  // 无网络或请求失败
-                            if (it != null) {
-//                                Log.d("ProgressTest", "code is ${it?.code}")
-                                toast("没有请求到fmProgramsResponse数据")
-                            }
-
+        }
+        // 获得FM的节目列表数据，提交给adapter
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.fmProgramsResponseFlow.collectLatest {
+                    Log.d("ProgressTest", "回调了fmProgramsResponseFlow collectLatest")
+                    if (it != null && it.code == 200) { // 有网络且请求成功
+                        // 处理并向adapter提交数据 )
+                        FMVpadapter.submitList(it.programs)
+                    } else {  // 无网络或请求失败
+                        if (it != null) {
+                            toast("没有请求到fmProgramsResponse数据")
                         }
                     }
                 }
             }
-            lifecycleScope.launch {
-                repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    model.ProgramsResponseFlow.collectLatest {
-                        if (it != null && it.code == 200) { // 有网络且请求成功
-                            // 处理并向adapter提交数据
-//                            Log.d("ProgressTest", "得到了数据 code is ${it.code}")
-                        } else {  // 无网络或请求失败
-                            if (it != null) {
-                                toast("没有请求到ProgramsResponse数据")
-                            }
+        }
+        // 获得音频的url
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                model.programAudioResponseFlow.collectLatest {
+                    if (it != null && it.code == 200) { // 有网络且请求成功
+                        // 处理获得音频的url,可用MusicService播放
 
+                    } else {  // 无网络或请求失败
+                        if (it != null) {
+                            toast("没有请求到ProgramsResponse数据")
                         }
                     }
                 }
             }
         }
     }
+
 
     private fun initEvent() {
 
@@ -173,9 +187,11 @@ class PodcastFragment : Fragment() {
     }
 
     private fun initFMVpAdapter() {
-//        binding.viewPager2.apply {
-//            adapter = FMVpadapter
-//        }
+        binding.podcastVpFm.apply {
+            adapter = FMVpadapter
+            offscreenPageLimit = 3
+            setPageTransformer(MultiplePagesTransformer())
+        }
     }
 
     private fun getFMData() {
@@ -225,43 +241,62 @@ class PodcastFragment : Fragment() {
      * 兴趣推荐的具体item电台 的点击事件交由展示兴趣推荐Fragment实现
      * @param response
      */
-    private fun enterRadioStation1(response: PersonalizeRecommendationData.Data) {
+    private fun enterRadioStation1(response: PersonalizeRecommendationData.Data, sharedView: View) {
         // 进入电台具体页面……
-        ProgramsDisplay.startAction(requireActivity(), response.id)
+        ProgramsDisplay.startWithSharedView(requireActivity(), response.id, sharedView)
     }
 
-    private fun enterRadioStation2(response: NormalRecommendationData.DjRadio) {
+    private fun enterRadioStation2(response: NormalRecommendationData.DjRadio, sharedView: View) {
         // 进入电台具体页面……
-        ProgramsDisplay.startAction(requireActivity(), response.id)
+        ProgramsDisplay.startWithSharedView(requireActivity(), response.id, sharedView)
     }
 
-    private fun onclick(programs: List<FMProgramsData.Program>, i: Int) {
-        // 播放节目
+    private fun onClickFM(programs: List<FMProgramsData.Program>, index: Int) {
+        // 播放FM的节目
+        programs as ArrayList
 
+        val list = ArrayList<WrapPlayInfo>()
+//        /**
+//         * 下方是电台VP的FM节目播放代码
+//         */
+//        for (i in programs) {
+//            val audioName = i.description
+//            val artist = i.name
+//            val audioId = i.mainSong.id
+//            val picUrl = i.coverUrl
+//            val playInfo = WrapPlayInfo(audioName, artist, audioId, picUrl)
+//            list.add(playInfo)
+//        }
+//        playService.setPlayInfoList(list, index)
+//        model.getProgramAudio(programs[index].mainSong.id)
     }
 
 
     override fun onDestroyView() {
         super.onDestroyView()
+        activity?.unbindService(connection)
         _binding = null
     }
 
     companion object {
+        @JvmStatic
         fun newInstance() = PodcastFragment()
     }
 
-    fun dealPersonalizeRecommendData(data: List<PersonalizeRecommendationData.Data>) {
+    private fun dealPersonalizeRecommendData(data: List<PersonalizeRecommendationData.Data>) {
         PersonalizeRadioRecommendAdapter.Data.TitleBean().let {
             dataBuilder.createPersonalizeRecommendAdapterData(it, data).apply {
-                for (i in this) {
-                    if (i.type == 1) {
-                        i as PersonalizeRadioRecommendAdapter.Data.ContentBean
-                        Log.d("datatest", "datadeal: ${i.need.playCount}")
-                    }
-                }
                 podcastPersonalizeRecommendAdapter.submitList(this)
             }
         }
     }
 
+    private fun bindPlayService() {
+        activity?.apply {
+            Intent(this, MusicService::class.java).also { intent ->
+                bindService(intent, connection, AppCompatActivity.BIND_AUTO_CREATE)
+            }
+        }
+
+    }
 }

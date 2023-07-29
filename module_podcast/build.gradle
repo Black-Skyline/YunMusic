@@ -80,5 +80,6 @@ dependencies {
     implementation(Network.gson)
     implementation(Network.converter_gson)
     implementation(Network.okhttp)
+    implementation(Paging.paging_runtime)
     implementation(Android.recyclerview)
 }

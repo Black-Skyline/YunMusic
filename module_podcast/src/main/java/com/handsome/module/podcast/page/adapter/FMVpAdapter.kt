@@ -1,11 +1,12 @@
 package com.handsome.module.podcast.page.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.handsome.lib.util.extention.setImageFromUrl
-import com.handsome.module.podcast.databinding.ItemPodcastNormalRecommendContentBinding
+import com.handsome.module.podcast.databinding.ItemPodcastFmVpContentBinding
 import com.handsome.module.podcast.model.FMProgramsData
 
 /**
@@ -16,19 +17,28 @@ import com.handsome.module.podcast.model.FMProgramsData
  * @Description:
  *
  */
-class FMVpAdapter(private val onClick : (ProgramsList : List<FMProgramsData.Program>, index : Int) -> Unit) : RecyclerView.Adapter<FMVpAdapter.MyHolder>() {
-    private var ProgramsList : List<FMProgramsData.Program> = ArrayList()
+class FMVpAdapter(private val onClick: (ProgramsList: List<FMProgramsData.Program>, index: Int) -> Unit) :
+    RecyclerView.Adapter<FMVpAdapter.MyHolder>() {
+    private var programsList: List<FMProgramsData.Program> = ArrayList()
 
-    inner class MyHolder(val binding : ItemPodcastNormalRecommendContentBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class MyHolder(val binding: ItemPodcastFmVpContentBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.podcastImgNormalRecommendItemBackground .setOnClickListener {
-                onClick(ProgramsList,bindingAdapterPosition%(ProgramsList.size))
-            }
+            if (programsList.isNotEmpty())
+                binding.podcastItemFmContent.setOnClickListener {
+                    onClick(programsList, bindingAdapterPosition % (programsList.size))
+                }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-        return MyHolder(ItemPodcastNormalRecommendContentBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+        return MyHolder(
+            ItemPodcastFmVpContentBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int {
@@ -36,14 +46,19 @@ class FMVpAdapter(private val onClick : (ProgramsList : List<FMProgramsData.Prog
     }
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        if (ProgramsList.isNotEmpty()){  //将数据无限填充下去
-            holder.binding.podcastImgNormalRecommendItemBackground.setImageFromUrl(ProgramsList[position%ProgramsList.size].coverUrl)
+        if (programsList.isNotEmpty()) {  //将数据无限填充下去
+            val item = programsList[position % (programsList.size)]
+            holder.binding.podcastImgFmContentPic.setImageFromUrl(item.coverUrl)
+            holder.binding.podcastTvFmContentTitle.text = item.description
+            holder.binding.podcastTvFmContentSource.text = item.name
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun submitList(ProgramsList: List<FMProgramsData.Program>){
-        this.ProgramsList = ProgramsList
+    fun submitList(ProgramsList: List<FMProgramsData.Program>) {
+        this.programsList = ProgramsList
+        Log.d("LogicTest","进入了submitList")
+        if (programsList.isNotEmpty()) Log.d("LogicTest","数据不为空")
         notifyDataSetChanged()
     }
 }

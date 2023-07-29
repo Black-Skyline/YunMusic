@@ -16,19 +16,20 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="0dp"
-            app:shapeAppearance="@style/normalRoundCorner" />
+            app:shapeAppearance="@style/normalRoundCorner"
+            android:transitionName="RadioStationPicture"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="15dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
                 android:src="@drawable/ic_play_white_24" />
 
@@ -36,7 +37,7 @@
                 android:id="@+id/podcast_tv_interest_recommend_item_play_number"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="end"
+                android:layout_gravity="bottom|end"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:lines="1"
@@ -68,6 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
             android:lines="2"
+            android:ellipsize="end"
             android:text="星穹铁道"
             android:textSize="11sp"/>
     </LinearLayout>
