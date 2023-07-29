@@ -42,8 +42,6 @@ class MineFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //从本地读取照片
-        fromLocalReadImg()
         initTopClick()
         initAdapter()
         getLatestData()
@@ -114,6 +112,13 @@ class MineFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         return mBinding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewLifecycleOwner.lifecycleScope.launch {
+            fromLocalReadImg()
+        }
     }
 
     companion object {
