@@ -23,7 +23,6 @@ class MusicPlayViewModel : ViewModel() {
     // 帮助后台线程获取数据后，完成setValue
     private var timer: Timer? = null
     private var trackTaskHandler: Handler? = null
-    private var trackSongProgress: Runnable? = null
 
     // 控制播放界面的 音乐的播放状态
     private val _isPlaying = MutableLiveData<Boolean>(true)
@@ -122,8 +121,7 @@ class MusicPlayViewModel : ViewModel() {
      * 在服务与activity解除绑定之后移除监听任务,并释放Runnable
      */
     fun removeTrackTask() {
-        trackTaskHandler?.removeCallbacks(trackSongProgress!!)
-        trackSongProgress = null
+        trackTaskHandler?.removeCallbacksAndMessages(null)
         trackTaskHandler = null
     }
 

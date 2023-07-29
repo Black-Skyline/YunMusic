@@ -22,10 +22,9 @@ import android.util.Log
 import android.widget.RemoteViews
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.transition.Transition
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import com.handsome.lib.music.page.view.MusicPlayActivity
 import com.handsome.lib.music.R
 import com.handsome.lib.music.model.WrapPlayInfo
@@ -58,7 +57,7 @@ class MusicService : Service() {
 
     private lateinit var recorder: LatestMusicDao
 
-    //    private val allSongName = listOf("Komorebi.mp3", "岁月成碑.mp3")
+    //    private val allLocalSongName = listOf("Komorebi.mp3", "岁月成碑.mp3")
     private var playInfoList = mutableListOf<WrapPlayInfo>()
     private var curPlayInfo: WrapPlayInfo? = null
     private var curIndex = 0
@@ -78,6 +77,12 @@ class MusicService : Service() {
      * 状态位，MediaPlay对象是否已经准备好了
      */
     var isPrepared = false
+
+    /**
+     * 状态位，播放器的当前播放状态，实时更新，提供给外界观察
+     */
+    private val _isAudioPlaying = MutableLiveData<Boolean>(false)
+    val isAudioPlaying: LiveData<Boolean> get() = _isAudioPlaying.distinctUntilChanged()
 
     /**
      * 状态位，音频的url是否准备好了
@@ -127,13 +132,13 @@ class MusicService : Service() {
             MusicPlayActivity.sentDuration(getCurDuration())
 
             if (isAutoPlay) startPlay()
-            Log.d("ProgressTest", "OnPrepared回调了")
+//            Log.d("ProgressTest", "OnPrepared回调了")
         }
 
         player.setOnCompletionListener {
             if (!player.isLooping) {
                 nextSong()
-                Log.d("ProgressTest", "OnCompletion回调了")
+//                Log.d("ProgressTest", "OnCompletion回调了")
             }
         }
     }
@@ -148,7 +153,7 @@ class MusicService : Service() {
         manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel =
-                NotificationChannel(channelID, "音乐通知", NotificationManager.IMPORTANCE_LOW)
+                NotificationChannel(channelID, "音乐通知", NotificationManager.IMPORTANCE_HIGH)
             channel.apply {
                 enableVibration(false)
                 setSound(null, null)
@@ -324,6 +329,7 @@ class MusicService : Service() {
         if (notificationActionReceiver != null) {
             // 解除动态注册的广播接收器
             unregisterReceiver(notificationActionReceiver)
+            notificationActionReceiver = null
         }
     }
 
@@ -393,12 +399,14 @@ class MusicService : Service() {
             showNotification()
         }
         player.start()
+        _isAudioPlaying.value = true
         curPlayInfo?.let { addPlaybackHistory(it) }
     }
 
     fun pausePlay() {
         if (player.isPlaying) {
             player.pause()
+            _isAudioPlaying.value = false
             MusicPlayActivity.sentAudioPlayState(false)
         }
         showNotification()

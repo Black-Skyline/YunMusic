@@ -238,7 +238,7 @@ class LoginViewModel : ViewModel() {
 
     fun dealEmailLoginResponse(response: EmailData?, action: (() -> Unit)? = null) {
         if (response != null && response.code == 200) {
-            toast("邮箱 登录成功")
+            toast("邮箱登录成功，欢迎你 ${response.profile.nickname}")
             action?.invoke()
         } else toast("邮箱登录失败")
     }

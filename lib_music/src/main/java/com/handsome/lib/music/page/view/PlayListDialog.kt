@@ -19,7 +19,6 @@ import com.handsome.lib.music.R
 import com.handsome.lib.music.model.WrapPlayInfo
 import com.handsome.lib.music.page.adapter.PlaylistAdapter
 import com.handsome.lib.music.utils.ServiceHelper
-import com.handsome.lib.util.extention.toast
 
 /**
  * ...
@@ -35,8 +34,6 @@ class PlayListDialog(private val parent: Activity, private val list: MutableList
     private val listAdapter by lazy { PlaylistAdapter(list, ::onItemClick) }
 
     private lateinit var playlistContent: RecyclerView
-
-    private var screenHeight: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,7 +95,7 @@ class PlayListDialog(private val parent: Activity, private val list: MutableList
     /**
      * 每一个列表项点击后回调的事件
      * @param item
-     * @param position
+     * @param index
      */
     private fun onItemClick(item: View, index: Int) {
         parent as MusicPlayActivity
@@ -106,15 +103,6 @@ class PlayListDialog(private val parent: Activity, private val list: MutableList
             updateCurSong(index)
             MusicPlayActivity.sentAudioNextOrPrevious(ServiceHelper.SENT_AUDIO_CHANGE_NEXT)
         }
-//        toast("点击了${list[index].artistName}的 ${list[index].audioName}")
-    }
-
-    /**
-     * adapter处的list更新后回调该方法，给出更新后的list
-     * @param newList
-     */
-    private fun getNewList(newList: MutableList<WrapPlayInfo>) {
-
     }
 
     /**
