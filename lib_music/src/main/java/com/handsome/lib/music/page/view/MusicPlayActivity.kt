@@ -103,6 +103,7 @@ class MusicPlayActivity : BaseActivity() {
             else if (index >= 0) serviceOperator.updateCurSong(index)
 
             syncData2ViewModel(serviceOperator)
+            overcomeUnexpected()
             Log.d("ProgressTest", "开始判断")
             if (MessageHandler != null) Log.d("LogicTest", "handle不是空的")
             if (MessageHandler == null) {
@@ -133,6 +134,7 @@ class MusicPlayActivity : BaseActivity() {
                                     requestLayout()
                                 }
                             }
+
                             SENT_AUDIO_CHANGE_NEXT -> {
                                 imgNextTranslationAnimate.start()
                                 imgRotationAnimate.view.apply {
@@ -265,6 +267,16 @@ class MusicPlayActivity : BaseActivity() {
         initEvent()
         initObserve()
         bindMusicPlayService()
+    }
+
+    /**
+     * 排除一些因意外进入本活动的情况下的ui异常
+     */
+    private fun overcomeUnexpected() {
+        if (serviceOperator.getPlayInfoList().isEmpty()){
+            btPlayState.setImageResource(R.drawable.ic_media_click_play_60)
+            imgRotationAnimate.stopAnimate()
+        }
     }
 
     /**

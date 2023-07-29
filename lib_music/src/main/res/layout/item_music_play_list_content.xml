@@ -11,6 +11,14 @@
         android:layout_gravity="center"
         android:layout_weight="1">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/icon_bottom_music_play"
+            android:layout_marginStart="4dp"
+            android:visibility="gone"
+            app:tint="#AA1313" />
+
         <TextView
             android:id="@+id/music_tv_playlist_content_audio_name"
             android:layout_width="wrap_content"
@@ -18,7 +26,7 @@
             android:layout_gravity="center"
             android:paddingVertical="8dp"
             android:lines="1"
-            android:maxLength="20"
+            android:maxEms="20"
             android:layout_marginStart="8dp"
             android:textSize="15sp" />
 
@@ -29,7 +37,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="5dp"
             android:lines="1"
-            android:maxLength="20"
+            android:maxEms="15"
             android:text="·"
             android:paddingVertical="8dp"
             android:textSize="10sp" />

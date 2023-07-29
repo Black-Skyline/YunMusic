@@ -13,4 +13,5 @@
     <color name="backgroundGradientColor1">#FFD0B4</color>
     <color name="backgroundGradientColor2">#F3DACC</color>
     <color name="backgroundGradientColor3">@color/white</color>
+
 </resources>
