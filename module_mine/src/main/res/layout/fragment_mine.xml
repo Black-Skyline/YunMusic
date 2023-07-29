@@ -30,6 +30,7 @@
                     android:id="@+id/music_list_collapsing_img"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
+                    android:scaleType="fitXY"
                     android:transitionName="music_detail_list"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

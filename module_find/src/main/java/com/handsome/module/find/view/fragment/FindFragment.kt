@@ -56,10 +56,6 @@ class FindFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initBanner()
-        initBannerBelow()  //banner下面的图标,想不到起什么名字，就叫做bannerBelow了，下面同理
-        initRecommendList()
-        initTopList()
 //        initRefresh()
     }
 
@@ -146,7 +142,7 @@ class FindFragment : Fragment() {
         fun doAfterGet(value: RecommendMusicListData) {
             findRecommendListVpAdapter.submitList(value.result)
         }
-        lifecycleScope.launch(myCoroutineExceptionHandler) {
+        viewLifecycleOwner.lifecycleScope.launch(myCoroutineExceptionHandler) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.recommendListStateFlow.collectLatest {
                     if (it != null) {
@@ -218,7 +214,7 @@ class FindFragment : Fragment() {
         fun doAfterGet(value: BannerBelowData) {
             findBannerBelowRvAdapter.submitList(value.data)
         }
-        lifecycleScope.launch(myCoroutineExceptionHandler) {
+        viewLifecycleOwner.lifecycleScope.launch(myCoroutineExceptionHandler) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.bannerBelowStateFlow.collectLatest {
                     if (it != null) {
@@ -300,12 +296,13 @@ class FindFragment : Fragment() {
             findBannerVpAdapter.submitList(value.banners)
             mBinding.findVpIndicator.setAllDot(value.banners.size)  //设置指示器点的数量
             mBinding.findVpBanner.apply {
-                setCurrentItem(Int.MAX_VALUE / 2, false)
+                setCurrentItem(Int.MAX_VALUE / 2 - 1, false)
+                setCurrentItem(Int.MAX_VALUE / 2, true)
                 offscreenPageLimit = 3
             }
             startAutoScroll()  //banner自动滑动
         }
-        lifecycleScope.launch(myCoroutineExceptionHandler) {
+        viewLifecycleOwner.lifecycleScope.launch(myCoroutineExceptionHandler) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.bannerStateFlow.collectLatest {
                     if (it != null) {
@@ -382,7 +379,7 @@ class FindFragment : Fragment() {
             }
             findTopListVpAdapter.submitList(list)
         }
-        lifecycleScope.launch(myCoroutineExceptionHandler) {
+        viewLifecycleOwner.lifecycleScope.launch(myCoroutineExceptionHandler) {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mViewModel.topListStateFlow.collectLatest {
                     if (it != null) {
@@ -422,6 +419,10 @@ class FindFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        initBanner()
+        initBannerBelow()  //banner下面的图标,想不到起什么名字，就叫做bannerBelow了，下面同理
+        initRecommendList()
+        initTopList()
         return mBinding.root
     }
 

@@ -1,5 +1,7 @@
 package com.handsome.lib.util.base
 
+import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -7,8 +9,10 @@ import androidx.core.view.WindowCompat
 
 abstract class BaseActivity : AppCompatActivity() {
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         initDependStatusBar()
 
     }
