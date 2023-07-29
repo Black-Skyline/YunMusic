@@ -46,8 +46,6 @@ bottomsheetfragment：分享
 
 searchView：搜索
 
-SwipeRefreshLayout刷新
-
 简单使用arouter
 
 ## 详细介绍
