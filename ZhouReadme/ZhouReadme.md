@@ -54,7 +54,7 @@ SwipeRefreshLayout刷新
 
 ### app模块
 
-![image-20230727162257075](C:\Users\周博\AppData\Roaming\Typora\typora-user-images\image-20230727162257075.png)
+![img](first.jpg)
 
 app模块定义了app的雏形，有上面的搜索框，侧边栏(侧边栏里面就做了个本地图片上传)
 

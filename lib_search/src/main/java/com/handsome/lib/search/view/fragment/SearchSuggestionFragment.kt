@@ -29,7 +29,6 @@ class SearchSuggestionFragment(private val keywords : String, onSearchSuggestion
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initSearchSuggestion()
         Log.d("lx", "我被创建了: ")
     }
 
@@ -40,7 +39,7 @@ class SearchSuggestionFragment(private val keywords : String, onSearchSuggestion
     }
 
     private fun initCollect() {
-        lifecycleScope.launch(myCoroutineExceptionHandler){
+        viewLifecycleOwner.lifecycleScope.launch(myCoroutineExceptionHandler){
             repeatOnLifecycle(Lifecycle.State.STARTED){
                 mViewModel.searchSuggestionStateFlow.collectLatest {
                     if (it != null && it.code == 200){
@@ -67,6 +66,7 @@ class SearchSuggestionFragment(private val keywords : String, onSearchSuggestion
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        initSearchSuggestion()
         return mBinding.root
     }
 

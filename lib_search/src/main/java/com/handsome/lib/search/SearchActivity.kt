@@ -159,7 +159,6 @@ class SearchActivity : BaseActivity() {
         if (newText == null) return
         //搜索改变的时候的搜索提示
         if (newText != "") {
-            mBinding.searchFragmentContainer.VISIBLE()  //设置可见
             if (mSearchSuggestionFragment != null  && mSearchSuggestionFragment == supportFragmentManager.findFragmentById(R.id.search_fragment_container)){
                 //当前fragmentContainer是搜索建议fragment界面就只改变里面的数据
                 mSearchSuggestionFragment?.changeData(newText)
@@ -170,6 +169,7 @@ class SearchActivity : BaseActivity() {
                 replaceFragment(mSearchSuggestionFragment!!)   //展示新的
                 Log.d("lx", "doAfterChange: 333")
             }
+            mBinding.searchFragmentContainer.VISIBLE()  //设置可见
             isBack = true
         } else {
             Log.d("lx", "fragments=${supportFragmentManager.fragments}: ")

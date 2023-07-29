@@ -30,7 +30,6 @@ class SearchResultFragment(private val key : String,onClick : (SearchResultData.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initProgressBar()
-        initSearchResult()
     }
 
     //加载状态的设置
@@ -61,7 +60,7 @@ class SearchResultFragment(private val key : String,onClick : (SearchResultData.
     }
 
     private fun getSearchData() {
-        lifecycleScope.launch{
+        viewLifecycleOwner.lifecycleScope.launch{
             mViewModel.searchData(key).catch {
                 it.printStackTrace()
             }.collectLatest {
@@ -82,6 +81,7 @@ class SearchResultFragment(private val key : String,onClick : (SearchResultData.
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        initSearchResult()
         return mBinding.root
     }
 
