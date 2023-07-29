@@ -29,7 +29,7 @@ class RecommendMvRvAdapter(val onRecommendClick : (MvRecommendData.Data) -> Unit
         val item = getItem(position)
         if (item != null){
             holder.binding.apply {
-                mvRvItemRecommendImg.setImageFromUrl(item.cover)
+                item.cover?.let { mvRvItemRecommendImg.setImageFromUrl(it) }
                 mvRvItemRecommendTvSongName.text = item.name
                 mvRvItemRecommendTvSingerName.text = item.artistName
             }

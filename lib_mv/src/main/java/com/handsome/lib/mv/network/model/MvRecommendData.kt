@@ -12,7 +12,7 @@ data class MvRecommendData(
         val artistName: String,
         val artists: List<Artist>,
         val briefDesc: String,
-        val cover: String,
+        val cover: String?,
         val desc: Any,
         val duration: Int,
         val id: Long,

@@ -62,7 +62,7 @@ data class SingleMusicListDetailData(
         val tracks: List<Track>,
         val updateFrequency: Any,
         val updateTime: Long,
-        val userId: Int,
+        val userId: Long,
         val videoIds: Any,
         val videos: Any
     ) {
