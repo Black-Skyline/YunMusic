@@ -127,7 +127,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="重设密码"
-        android:textColor="@color/material_dynamic_primary40"
+        android:textColor="@color/purple_500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_login_by_email" />
