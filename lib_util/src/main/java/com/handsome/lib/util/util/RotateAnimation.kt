@@ -25,7 +25,7 @@ class MyRotationAnimate(val view: View){
         mAnimator.addUpdateListener {
             val value = it.animatedValue as Float
             view.rotation = value
-            // 步骤5：刷新视图，即重新绘制，从而实现动画效果
+            // 刷新视图，即重新绘制，从而实现动画效果
             view.requestLayout();
         }
     }
