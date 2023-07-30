@@ -222,12 +222,15 @@ class SearchActivity : BaseActivity() {
                 remove(fragment)
                 commit()
             }
+            fragment.onDestroy()
         }
     }
 
     private fun removeAllFragment() {
         for (fragment in supportFragmentManager.fragments) {
-            fragment.onDestroy()
+            mSearchResultFragment = null
+            mSearchSuggestionFragment = null
+            removeFragment(fragment)
         }
     }
 
